@@ -21,6 +21,14 @@ jobs:
       JVM_OPTS: -Xmx3200m
       TERM: dumb
 
+    branches:
+      only:
+        - master
+        - /feature\/.*/
+        - /dev\/.*/
+        - /bug\/.*/
+        - /testing\/.*/
+
     steps:
       - checkout
 
