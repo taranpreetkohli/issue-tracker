@@ -11,11 +11,6 @@ public class DeveloperTest {
     }
 
     @Test
-    public void ResolveIssue_DeveloperAssignedToThatIssue_DevelopersListOfIssuesUpdated() {
-        throw new NotImplementedException("Stub!");
-    }
-
-    @Test
     public void ResolveIssue_DeveloperNotAssignedToThatIssue_ExceptionThrown() {
         throw new NotImplementedException("Stub!");
     }
