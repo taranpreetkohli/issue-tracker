@@ -46,22 +46,12 @@ public class AdministratorTest {
     }
 
     @Test
-    public void AssignIssue_ExistingDeveloper_UpdatesDevelopersAssignedList() {
-        throw new NotImplementedException("Stub!");
-    }
-
-    @Test
     public void AssignIssue_DeveloperDoesNotExist_ExceptionThrown() {
         throw new NotImplementedException("Stub!");
     }
 
     @Test
     public void UnassignIssue_DeveloperAssignedToThatIssue_UpdatesIssue() {
-        throw new NotImplementedException("Stub!");
-    }
-
-    @Test
-    public void UnassignIssue_DeveloperAssignedToThatIssue_UpdatesDeveloper() {
         throw new NotImplementedException("Stub!");
     }
 
