@@ -42,7 +42,7 @@ public class AuthenticationManagerTest {
     }
 
     @Test(expected = ValueException.class)
-    public void AddUser_MalformedEmailThrowsException_UserIsNotMadeAndExceptionIsThrown() {
+    public void AddUser_MalformedEmail_UserIsNotMadeAndExceptionIsThrown() {
         throw new NotImplementedException("Stub!");
     }
 
@@ -52,7 +52,7 @@ public class AuthenticationManagerTest {
     }
 
     @Test
-    public void LogOut_UserLogout_UserIsUnableToLogin() {
+    public void LogOut_UserLogout_UserLogsOut() {
         throw new NotImplementedException("Stub!");
     }
 
