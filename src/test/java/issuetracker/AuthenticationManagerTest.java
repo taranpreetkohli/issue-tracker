@@ -62,7 +62,7 @@ public class AuthenticationManagerTest {
     }
 
     @Test
-    public void Login_InvalidPasswordDoesNotAllowLogin_LoginIsFalse() {
+    public void LogIn_InvalidPasswordDoesNotAllowLogin_LoginIsFalse() {
         throw new NotImplementedException("Stub!");
     }
 }
