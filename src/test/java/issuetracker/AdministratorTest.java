@@ -21,6 +21,11 @@ public class AdministratorTest {
     }
 
     @Test
+    public void RemoveForumPost_SinglePostCluster_ClusterGetsDeleted() {
+        throw new NotImplementedException("Stub!");
+    }
+
+    @Test
     public void RemoveForumPost_ClusterDoesNotExist_ExceptionThrown() {
         throw new NotImplementedException("Stub!");
     }
