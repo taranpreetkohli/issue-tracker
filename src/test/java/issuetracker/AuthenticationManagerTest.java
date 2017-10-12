@@ -22,47 +22,47 @@ public class AuthenticationManagerTest {
     }
 
     @Test
-    public void AddUser_NewUserUniqueId_EqualsUnique() {
+    public void AddUser_NewUserUniqueId_UserObjectIsMade() {
         throw new NotImplementedException("Stub!");
     }
 
     @Test
-    public void AddUser_UserNameSetMakesName_EqualsString() {
+    public void AddUser_UserNameSetMakesName_UserObjectIsMade() {
         throw new NotImplementedException("Stub!");
     }
 
     @Test
-    public void AddUser_AdministratorUsersAreAdmins_isTrue() {
+    public void AddUser_AdministratorUsersAreAdmins_UserObjectIsMade() {
         throw new NotImplementedException("Stub!");
     }
 
     @Test
-    public void AddUser_SetUserEmailIsSetCorrectly_StringEquals() {
+    public void AddUser_SetUserEmailIsSetCorrectly_UserObjectIsMade() {
         throw new NotImplementedException("Stub!");
     }
 
     @Test(expected = ValueException.class)
-    public void AddUser_MalformedEmailThrowsException_Exception() {
+    public void AddUser_MalformedEmailThrowsException_UserIsNotMadeAndExceptionIsThrown() {
         throw new NotImplementedException("Stub!");
     }
 
     @Test
-    public void LogIn_UserLogin_LoginIsTrue() {
+    public void LogIn_UserLogin_UserIsLoggedIn() {
         throw new NotImplementedException("Stub!");
     }
 
     @Test
-    public void LogOut_UserLogout_LoginIsFalse() {
+    public void LogOut_UserLogout_UserIsUnableToLogin() {
         throw new NotImplementedException("Stub!");
     }
 
     @Test
-    public void LogIn_InvalidUsernameDoesNotAllowLogin_LoginIsFalse() {
+    public void LogIn_InvalidUsernameDoesNotAllowLogin_UserIsUnableToLogin() {
         throw new NotImplementedException("Stub!");
     }
 
     @Test
-    public void LogIn_InvalidPasswordDoesNotAllowLogin_LoginIsFalse() {
+    public void LogIn_InvalidPasswordDoesNotAllowLogin_UserIsUnableToLogin() {
         throw new NotImplementedException("Stub!");
     }
 }
