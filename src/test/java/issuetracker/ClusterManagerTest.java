@@ -47,5 +47,6 @@ public class ClusterManagerTest {
     @Test
     public void SummariseForumPosts_ValidCluster_CorrectSummaryCreated() { throw new NotImplementedException(); }
 
-
+    @Test
+    public void SortIssues_IssuesList_IssuesOrderedCorrectlyByPriority() { throw new NotImplementedException(); }
 }
