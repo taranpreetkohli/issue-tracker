@@ -1,8 +1,8 @@
 package issuetracker;
 
 import org.junit.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class ClusterManagerTest {
     @BeforeClass
@@ -18,7 +18,14 @@ public class ClusterManagerTest {
     public void tearDown() {}
 
     @Test
-    public void GroupForumPosts_SingleQuestion_ClusterTitleCorrectlySet() { throw new NotImplementedException(); }
+    public void GroupForumPosts_SingleQuestion_ClusterTitleCorrectlySet() {
+        //arrange
+        ClusterManager cm = new ClusterManager();
+        Cluster cluster = cm.groupForumPosts();
+
+        //assert
+        assertNotNull(cluster.getTitle());
+    }
 
     @Test
     public void GroupForumPosts_MultipleQuestions_ClusterTitleCorrectlySet() { throw new NotImplementedException(); }
