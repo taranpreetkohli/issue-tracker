@@ -3,9 +3,12 @@ package issuetracker;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import static org.mockito.Mockito.mock;
 
 public class ClusterManagerTest {
     Cluster singlePostCluster;
@@ -13,8 +16,8 @@ public class ClusterManagerTest {
 
     @BeforeClass
     public static void beforeRun() {
-        singlePostCluster = mock(Cluster.class);
-        singlePostCluster = mock(Cluster.class);
+        singlePostCluster = new Cluster();
+        multiplePostCluster = new Cluster();
     }
 
     @AfterClass
@@ -30,6 +33,8 @@ public class ClusterManagerTest {
     public void GenerateClusterTitle_SinglePostCluster_ClusterTitleCorrectlySet() {
         //arrange
         ClusterManager cm = new ClusterManager();
+
+        //act
         cm.generateClusterTitle(singlePostCluster);
 
         //assert
@@ -38,36 +43,111 @@ public class ClusterManagerTest {
 
     @Test
     public void GenerateClusterTitle_MultiplePostCluster_ClusterTitleCorrectlySet() {
+        //arrange
         ClusterManager cm = new ClusterManager();
+
+        //act
         cm.generateClusterTitle(multiplePostCluster);
 
+        //assert
         assertTrue(!multiplePostCluster.getTitle().isEmpty());
 
     }
 
     @Test
-    public void GroupForumPosts_SingleQuestion_OneForumPostCorrectlyGrouped() { throw new NotImplementedException(); }
+    public void GroupForumPosts_SinglePost_OneForumPostCorrectlyGrouped() {
+        //arrange
+        ClusterManager cm = new ClusterManager();
+
+        //act
+        Cluster newSinglePostCluster = cm.groupForumPosts(singlePostData);
+
+        //assert
+        assertThat(newSinglePostCluster.getPosts(), hasSize(1));
+    }
 
     @Test
-    public void GroupForumPosts_MultipleQuestions_RelatedForumPostsCorrectlyGrouped() { throw new NotImplementedException(); }
+    public void GroupForumPosts_MultiplePosts_RelatedForumPostsCorrectlyGrouped() {
+        //arrange
+        ClusterManager cm = new ClusterManager();
+
+        //act
+        Cluster newMultiplePostCluster = cm.groupForumPosts(multiplePostData);
+
+        //assert
+        assertThat(newMultiplePostCluster.getPosts(), hasSize(3));
+    }
 
     @Test
-    public void GroupForumPosts_SingleQuestion_OnePost() { throw new NotImplementedException(); }
+    public void GroupForumPosts_SinglePost_OnePost() {
+        //arrange
+        ClusterManager cm = new ClusterManager();
+
+        //act
+        Cluster newSinglePostCluster = cm.groupForumPosts(singlePostData);
+
+        //assert
+        assertEquals(1, newSinglePostCluster.getNumPosts());
+    }
 
     @Test
-    public void GroupForumPosts_MultipleQuestions_CorrectNumberOfPosts() { throw new NotImplementedException(); }
+    public void GroupForumPosts_MultiplePosts_CorrectNumberOfPosts() {
+        //arrange
+        ClusterManager cm = new ClusterManager();
+
+        //act
+        Cluster newMultiplePostCluster = cm.groupForumPosts(multiplePostData);
+
+        //assert
+        assertEquals(3, newMultiplePostCluster.getNumPosts());
+    }
 
     @Test
-    public void GroupForumPosts_SingleQuestion_OneUserAffected() { throw new NotImplementedException(); }
+    public void GroupForumPosts_SinglePost_OneUserAffected() {
+        //arrange
+        ClusterManager cm = new ClusterManager();
+
+        //act
+        Cluster newSinglePostCluster = cm.groupForumPosts(singlePostData);
+
+        //assert
+        assertEquals(1, newSinglePostCluster.getNumUsers());
+    }
 
     @Test
-    public void GroupForumPosts_MultipleQuestions_CorrectNumberOfUsersAffected() { throw new NotImplementedException(); }
+    public void GroupForumPosts_MultiplePosts_CorrectNumberOfUsersAffected() {
+        //arrange
+        ClusterManager cm = new ClusterManager();
+
+        //act
+        Cluster newSinglePostCluster = cm.groupForumPosts(singlePostData);
+
+        //assert
+        //guessing number for now
+        assertEquals(2, newSinglePostCluster.getNumUsers());
+    }
 
     @Test
-    public void GroupForumPosts_NoQuestions_ThrowException() { throw new NotImplementedException(); }
+    public void GroupForumPosts_NoPosts_ThrowException() {
+        //arrange
+        ClusterManager cm = new ClusterManager();
+
+        //act
+        //should throw exception
+        Cluster newSinglePostCluster = cm.groupForumPosts(noPostData);
+    }
 
     @Test
-    public void SummariseForumPosts_ValidCluster_CorrectSummaryCreated() { throw new NotImplementedException(); }
+    public void SummariseForumPosts_ValidCluster_CorrectSummaryCreated() {
+        //arrange
+        ClusterManager cm = new ClusterManager();
+
+        //act
+        cm.summarisePosts(multiplePostCluster);
+
+        //assert
+        assertThat(multiplePostCluster.getSummary(), not(isEmptyOrNullString()));
+    }
 
     @Test
     public void SortIssues_IssuesList_IssuesOrderedCorrectlyByPriority() { throw new NotImplementedException(); }
