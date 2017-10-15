@@ -2,6 +2,7 @@ package issuetracker;
 
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.junit.*;
+import org.mockito.Mockito;
 
 public class AuthenticationManagerTest {
     private AuthenticationManager authManager;
@@ -25,11 +26,9 @@ public class AuthenticationManagerTest {
     public void setUp() {
         authManager = new AuthenticationManager();
 
-        newUsername = "newUsername";
         newEmail = "validEmail@gmail.com";
         newPassword = "P4ssword";
 
-        existingUsername = "existingUsername";
         existingEmail = "existingEmail@gmail.com";
         existingPassword = "ex1stingPassword";
     }
@@ -39,13 +38,12 @@ public class AuthenticationManagerTest {
     }
 
     @Test
-    public void AddUser_NonExistantUsername_UserObjectIsMade() {
+    public void AddUser_NonExistentUsername_UserObjectIsMade() {
         //Arrange
         //Act
-        User user = authManager.addUser(newUsername, newPassword, newEmail);
+        User user = authManager.addUser(newEmail, newPassword);
 
         //Assert
-        Assert.assertEquals(newUsername, user.getUsername());
         Assert.assertEquals(newEmail, user.getEmail());
     }
 
@@ -53,7 +51,7 @@ public class AuthenticationManagerTest {
     public void AddUser_ExistingUsername_UserIsNotMadeAndExceptionIsThrown() {
         //Arrange
         //Act
-        authManager.addUser(existingUsername, newPassword, newEmail);
+        authManager.addUser(existingEmail, newPassword);
 
         //Assert
         Assert.fail();
@@ -63,10 +61,9 @@ public class AuthenticationManagerTest {
     public void AddUser_ValidEmail_UserObjectIsMade() {
         //Arrange
         //Act
-        User user = authManager.addUser(newUsername, newPassword, newEmail);
+        User user = authManager.addUser(newEmail, newPassword);
 
         //Assert
-        Assert.assertEquals(newUsername, user.getUsername());
         Assert.assertEquals(newEmail, user.getEmail());
     }
 
@@ -75,20 +72,17 @@ public class AuthenticationManagerTest {
         //Arrange
         String invalidEmail = "invalidEmail";
 
-        //Act
-        authManager.addUser(newUsername, newPassword, invalidEmail);
-
-        //Assert
+        //Act Assert
+        User user = authManager.addUser(invalidEmail, newPassword);
     }
 
-    @Test
-    public void AddUser_ExistingEmail_UserIsNotMadeAndExceptionIsThrown() {
+    @Test(expected = RuntimeException.class)
+    public void AddUser_DeveloperAccount_UserIsNotCreated() {
         //Arrange
-        //Act
-        authManager.addUser(newUsername, newPassword, existingEmail);
+        AuthenticationManager manager = new AuthenticationManager(Mockito.any(Developer.class));
 
-        //Assert
-        Assert.fail();
+        //Act Assert
+        User user = authManager.addUser(newEmail, newPassword);
     }
 
     @Test
@@ -96,7 +90,7 @@ public class AuthenticationManagerTest {
         //Arrange
 
         //Act
-        boolean successfulLogin = authManager.login(existingUsername, existingPassword);
+        boolean successfulLogin = authManager.login(existingEmail, existingPassword);
         User currentUser = authManager.getCurrentUser();
 
         //Assert
