@@ -6,6 +6,8 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,12 +16,15 @@ import java.net.URL;
 
 public class DBContext {
 
+    private static Logger logger = LoggerFactory.getLogger(DBContext.class);
+
     private static DBContext instance;
 
     private DBContext() {
         try {
             URL firebaseResourceURL = getClass().getClassLoader().getResource("firebase.json");
             if (firebaseResourceURL == null) {
+                logger.error("Firebase credentials file not found!");
                 throw new RuntimeException("Firebase credentials file not found!");
             }
             File firebaseJSON = new File(firebaseResourceURL.getFile());
@@ -28,7 +33,10 @@ public class DBContext {
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .setDatabaseUrl("https://clustering754.firebaseio.com/")
                     .build();
+
+            logger.info("Initialising Firebase...");
             FirebaseApp.initializeApp(options);
+            logger.info("Firebase correctly initialised...");
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
