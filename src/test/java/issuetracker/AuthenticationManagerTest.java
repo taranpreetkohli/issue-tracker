@@ -166,19 +166,19 @@ public class AuthenticationManagerTest {
 
     @Test
     public void LogOut_UserLoggedIn_UserLogsOut() {
-        //Arrange
-        //Todo set up logged in state
-        //Act
-        authManager.logout();
+        //Arrange Act
+        boolean loggedOut = authManager.logout();
+
         //Assert
+        Assert.assertTrue(loggedOut);
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void LogOut_NoUserLoggedIn_UserLogsOut() {
         //Arrange
-        //Act
-        authManager.logout();
-        //Assert
-        Assert.fail();
+        IAuthenticationManager noUserAuth = new AuthenticationManager();
+
+        //Act Assert
+        noUserAuth.logout();
     }
 }
