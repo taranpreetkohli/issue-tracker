@@ -49,7 +49,11 @@ public class AuthenticationManagerTest {
     public void AddUser_NonExistentUser_UserObjectIsMade() {
         //Arrange
         //Act
-        IUser user = authManager.addUser(newEmail, newPassword);
+        IUser user = null;
+        try {
+            user = authManager.addUser(newEmail, newPassword);
+        } catch (InvalidPropertiesFormatException e) {
+        }
 
         //Assert
         Assert.assertEquals(newEmail, user.getEmail());
@@ -58,14 +62,21 @@ public class AuthenticationManagerTest {
     @Test(expected = UserException.class)
     public void AddUser_ExistingUser_UserIsNotMadeAndExceptionIsThrown() throws UserException {
         //Arrange Act Assert
-        authManager.addUser(existingEmail, newPassword);
+        try {
+            authManager.addUser(existingEmail, newPassword);
+        } catch (InvalidPropertiesFormatException e) {
+        }
     }
 
     @Test
     public void AddUser_ValidEmail_UserObjectIsMade() {
         //Arrange
         //Act
-        IUser user = authManager.addUser(newEmail, newPassword);
+        IUser user = null;
+        try {
+            user = authManager.addUser(newEmail, newPassword);
+        } catch (InvalidPropertiesFormatException e) {
+        }
 
         //Assert
         Assert.assertEquals(newEmail, user.getEmail());
@@ -88,8 +99,8 @@ public class AuthenticationManagerTest {
         //Act Assert
         try {
             manager.login("dev@gmail.com", "devPassword");
+            IUser user = authManager.addUser(newEmail, newPassword);
         } catch (Exception e) {}
-        IUser user = authManager.addUser(newEmail, newPassword);
     }
 
     @Test
