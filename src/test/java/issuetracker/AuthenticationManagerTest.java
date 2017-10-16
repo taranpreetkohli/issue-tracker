@@ -55,7 +55,7 @@ public class AuthenticationManagerTest {
         Assert.assertEquals(newEmail, user.getEmail());
     }
 
-    @Test(expected = ValueException.class)
+    @Test(expected = UserException.class)
     public void AddUser_ExistingUsername_UserIsNotMadeAndExceptionIsThrown() {
         //Arrange Act Assert
         authManager.addUser(existingEmail, newPassword);
@@ -101,7 +101,7 @@ public class AuthenticationManagerTest {
         Assert.assertTrue(isLoggedIn);
     }
 
-    @Test(expected = InvalidNameException.class)
+    @Test(expected = InvalidPropertiesFormatException.class)
     public void LogIn_InvalidEmail_UserIsUnableToLogin() {
         //Arrange
         String invalidEmail = "invalid";
@@ -124,7 +124,7 @@ public class AuthenticationManagerTest {
     }
 
 
-    @Test(expected = NoEmailException.class)
+    @Test(expected = InstantiationException.class)
     public void LogIn_UserNotInDatabase_UserIsUnableToLogIn() {
         //Arrange
         String noEmail = "MarkaHezawrad@gmail.com";
