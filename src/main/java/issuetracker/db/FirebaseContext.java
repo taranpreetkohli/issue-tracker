@@ -58,16 +58,19 @@ public class FirebaseContext implements IFirebaseContext {
     @Override
     public <T> IFirebaseContext read(DatabaseReference ref, Class<T> type, Callback<T> callback) {
         CountDownLatch countDownLatch = new CountDownLatch(1);
+        logger.info("Reading value from reference with key: " + ref.getKey());
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 T instance = snapshot.getValue(type);
+                logger.info("Successfully read value from reference with key: " + ref.getKey());
                 callback.onCompleted(instance);
                 countDownLatch.countDown();
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
+                logger.error("Failure reading value from reference with key: " + ref.getKey());
                 throw new RuntimeException(error.getMessage());
             }
         });
@@ -76,6 +79,7 @@ public class FirebaseContext implements IFirebaseContext {
             countDownLatch.await();
             return instance;
         } catch (InterruptedException e) {
+            logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -83,12 +87,17 @@ public class FirebaseContext implements IFirebaseContext {
     @Override
     public <T> IFirebaseContext write(DatabaseReference ref, T object) {
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        ref.setValue(object, (error, ref1) -> countDownLatch.countDown());
+        logger.info("Writing value to reference with key: " + ref.getKey());
+        ref.setValue(object, (error, ref1) -> {
+            countDownLatch.countDown();
+            logger.info("Successfully written value to reference with key: " + ref.getKey());
+        });
 
         try {
             countDownLatch.await();
             return instance;
         } catch (InterruptedException e) {
+            logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
