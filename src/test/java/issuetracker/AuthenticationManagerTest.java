@@ -3,15 +3,22 @@ package issuetracker;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.junit.*;
 import org.mockito.Mockito;
+import org.omg.CORBA.UserException;
+
+import javax.naming.InvalidNameException;
+import java.util.HashMap;
+import java.util.InvalidPropertiesFormatException;
+import java.util.Map;
 
 public class AuthenticationManagerTest {
-    private AuthenticationManager authManager;
+    private IAuthenticationManager authManager;
     private String newUsername;
     private String newPassword;
     private String newEmail;
     private String existingUsername;
     private String existingEmail;
     private String existingPassword;
+    private IUser me;
 
 
     @BeforeClass
@@ -25,7 +32,8 @@ public class AuthenticationManagerTest {
     @Before
     public void setUp() {
         authManager = new AuthenticationManager();
-
+        //or
+        me = authManager.login("admin", "adminPassword");
         newEmail = "validEmail@gmail.com";
         newPassword = "P4ssword";
 
@@ -41,48 +49,44 @@ public class AuthenticationManagerTest {
     public void AddUser_NonExistentUsername_UserObjectIsMade() {
         //Arrange
         //Act
-        User user = authManager.addUser(newEmail, newPassword);
-
-        //Assert
-        Assert.assertEquals(newEmail, user.getEmail());
-    }
-
-    @Test
-    public void AddUser_ExistingUsername_UserIsNotMadeAndExceptionIsThrown() {
-        //Arrange
-        //Act
-        authManager.addUser(existingEmail, newPassword);
-
-        //Assert
-        Assert.fail();
-    }
-
-    @Test
-    public void AddUser_ValidEmail_UserObjectIsMade() {
-        //Arrange
-        //Act
-        User user = authManager.addUser(newEmail, newPassword);
+        IUser user = authManager.addUser(newEmail, newPassword);
 
         //Assert
         Assert.assertEquals(newEmail, user.getEmail());
     }
 
     @Test(expected = ValueException.class)
+    public void AddUser_ExistingUsername_UserIsNotMadeAndExceptionIsThrown() {
+        //Arrange Act Assert
+        authManager.addUser(existingEmail, newPassword);
+    }
+
+    @Test
+    public void AddUser_ValidEmail_UserObjectIsMade() {
+        //Arrange
+        //Act
+        IUser user = authManager.addUser(newEmail, newPassword);
+
+        //Assert
+        Assert.assertEquals(newEmail, user.getEmail());
+    }
+
+    @Test(expected = InvalidPropertiesFormatException.class)
     public void AddUser_InvalidEmail_UserIsNotMadeAndExceptionIsThrown() {
         //Arrange
         String invalidEmail = "invalidEmail";
 
         //Act Assert
-        User user = authManager.addUser(invalidEmail, newPassword);
+        IUser user = authManager.addUser(invalidEmail, newPassword);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = UserException.class)
     public void AddUser_DeveloperAccount_UserIsNotCreated() {
         //Arrange
-        AuthenticationManager manager = new AuthenticationManager(Mockito.any(Developer.class));
+        IAuthenticationManager manager = new AuthenticationManager(Mockito.any(Developer.class));
 
         //Act Assert
-        User user = authManager.addUser(newEmail, newPassword);
+        IUser user = authManager.addUser(newEmail, newPassword);
     }
 
     @Test
@@ -90,38 +94,75 @@ public class AuthenticationManagerTest {
         //Arrange
 
         //Act
-        boolean successfulLogin = authManager.login(existingEmail, existingPassword);
-        User currentUser = authManager.getCurrentUser();
+        IUser currentUser = new AuthenticationManager().login(existingEmail, existingPassword);
+        boolean isLoggedIn = currentUser.isLoggedIn();
 
         //Assert
-        Assert.assertTrue(successfulLogin);
-        Assert.assertEquals(existingUsername, currentUser.getUsername());
-        Assert.assertEquals(existingEmail, currentUser.getEmail());
+        Assert.assertTrue(isLoggedIn);
     }
 
-    @Test
-    public void LogIn_InvalidUsernameDoesNotAllowLogin_UserIsUnableToLogin() {
+    @Test(expected = InvalidNameException.class)
+    public void LogIn_InvalidEmail_UserIsUnableToLogin() {
         //Arrange
-        String invalidUsername = "invalid";
+        String invalidEmail = "invalid";
 
-        //Act
-        boolean successfulLogin = authManager.login(invalidUsername, "arbitraryPassword");
-
-        //Assert
-        Assert.assertFalse(successfulLogin);
+        //Act Assert
+        IUser user = new AuthenticationManager().login(invalidEmail, "arbitraryPassword");
     }
 
     @Test
-    public void LogIn_InvalidPasswordDoesNotAllowLogin_UserIsUnableToLogin() {
+    public void LogIn_IncorrectPassword_UserIsUnableToLogin() {
         //Arrange
         String wrongPassword = "wrongPassword";
 
         //Act
-        boolean successfulLogin = authManager.login(existingUsername, wrongPassword);
+        IUser currentUser = new AuthenticationManager().login(existingEmail, wrongPassword);
+        boolean isLoggedIn = currentUser.isLoggedIn();
 
         //Assert
-        Assert.assertFalse(successfulLogin);
+        Assert.assertFalse(isLoggedIn);
     }
+
+
+    @Test(expected = NoEmailException.class)
+    public void LogIn_UserNotInDatabase_UserIsUnableToLogIn() {
+        //Arrange
+        String noEmail = "MarkaHezawrad@gmail.com";
+
+        //Act Assert
+        new AuthenticationManager().login(noEmail, "shouldntworkanyway");
+    }
+
+    @Test
+    public void LogIn_AdminAccount_UserIsShownAdminView() {
+        //Arrange
+        String[] expected = new String[] {
+                "R", "V", "M", "L"
+        };
+
+        //Act
+        Map<String, ICommand> commands = me.getView();
+
+        //Assert
+        Assert.assertArrayEquals(expected, commands.keySet().toArray());
+
+    }
+
+    @Test
+    public void LogIn_DeveloperAccount_UserIsShownDeveloperView() {
+        //Arrange
+        IUser currentUser = new AuthenticationManager().login(existingEmail, existingPassword);
+        String[] expected = new String[] {
+                "V", "M", "L"
+        };
+
+        //Act
+        Map<String, ICommand> commands = currentUser.getView();
+
+        //Assert
+        Assert.assertArrayEquals(expected, commands.keySet().toArray());
+    }
+
 
     @Test
     public void LogOut_UserLoggedIn_UserLogsOut() {
