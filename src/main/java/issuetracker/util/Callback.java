@@ -1,4 +1,4 @@
-package issuetracker.db;
+package issuetracker.util;
 
 public interface Callback<T> {
 

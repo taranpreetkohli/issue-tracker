@@ -1,6 +1,7 @@
 package issuetracker.db;
 
 import com.google.firebase.database.DatabaseReference;
+import issuetracker.util.Callback;
 
 public interface IFirebaseContext {
 
