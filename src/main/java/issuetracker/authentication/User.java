@@ -3,8 +3,10 @@ package issuetracker.authentication;
 import issuetracker.view.ICommand;
 
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public abstract class User implements IUser {
+
     protected boolean loggedIn;
     private String email;
     private String password;
