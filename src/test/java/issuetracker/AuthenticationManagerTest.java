@@ -1,5 +1,11 @@
 package issuetracker;
 
+import com.sun.org.apache.bcel.internal.generic.IUSHR;
+import issuetracker.authentication.AuthenticationManager;
+import issuetracker.authentication.Developer;
+import issuetracker.authentication.IAuthenticationManager;
+import issuetracker.authentication.IUser;
+import issuetracker.view.ICommand;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.junit.*;
 import org.mockito.Mockito;
@@ -12,10 +18,8 @@ import java.util.Map;
 
 public class AuthenticationManagerTest {
     private IAuthenticationManager authManager;
-    private String newUsername;
     private String newPassword;
     private String newEmail;
-    private String existingUsername;
     private String existingEmail;
     private String existingPassword;
     private IUser me;
@@ -83,7 +87,8 @@ public class AuthenticationManagerTest {
     @Test(expected = UserException.class)
     public void AddUser_DeveloperAccount_UserIsNotCreated() {
         //Arrange
-        IAuthenticationManager manager = new AuthenticationManager(Mockito.any(Developer.class));
+        IAuthenticationManager manager = new AuthenticationManager();
+        manager.login("dev", "devPassword");
 
         //Act Assert
         IUser user = authManager.addUser(newEmail, newPassword);
