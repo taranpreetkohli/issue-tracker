@@ -1,19 +1,12 @@
 package issuetracker;
 
-import com.sun.org.apache.bcel.internal.generic.IUSHR;
 import issuetracker.authentication.AuthenticationManager;
-import issuetracker.authentication.Developer;
 import issuetracker.authentication.IAuthenticationManager;
 import issuetracker.authentication.IUser;
 import issuetracker.view.ICommand;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.junit.*;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.omg.CORBA.UserException;
 
-import javax.naming.InvalidNameException;
-import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
 
