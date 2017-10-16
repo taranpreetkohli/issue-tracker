@@ -198,7 +198,7 @@ public class AuthenticationManagerTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void LogOut_NoUserLoggedIn_UserLogsOut() throws IllegalStateException {
+    public void LogOut_NoUserLoggedIn_ExceptionThrown() throws IllegalStateException {
         //Arrange
         IAuthenticationManager noUserAuth = new AuthenticationManager();
 

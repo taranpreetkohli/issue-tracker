@@ -18,7 +18,10 @@ public class AuthenticationManager implements IAuthenticationManager {
         isEmailValid(email);
 
         //TODO: Read Firebase for user that matches email AND password
+        //TODO: create admin or dev based on database result
         currentUser = new Administrator(email, password);
+        currentUser.setLoggedIn(true);
+
         return currentUser;
     }
 
@@ -40,7 +43,14 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     @Override
     public boolean logout() {
-        return false;
+        if (this.currentUser != null) {
+            currentUser.setLoggedIn(false);
+            //TODO: reflect change in database i.e. change status to logged out (?)
+
+            return true;
+        } else {
+            throw new IllegalStateException("No user is logged in.");
+        }
     }
 
     private boolean isEmailValid(String email) throws InvalidPropertiesFormatException {
