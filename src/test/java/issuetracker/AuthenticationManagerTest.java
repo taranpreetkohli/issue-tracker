@@ -8,6 +8,7 @@ import issuetracker.authentication.IUser;
 import issuetracker.view.ICommand;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.junit.*;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.omg.CORBA.UserException;
 
@@ -88,16 +89,15 @@ public class AuthenticationManagerTest {
     public void AddUser_DeveloperAccount_UserIsNotCreated() {
         //Arrange
         IAuthenticationManager manager = new AuthenticationManager();
-        manager.login("dev", "devPassword");
 
         //Act Assert
+        manager.login("dev", "devPassword");
         IUser user = authManager.addUser(newEmail, newPassword);
     }
 
     @Test
     public void LogIn_ValidCredentials_UserIsLoggedIn() {
         //Arrange
-
         //Act
         IUser currentUser = new AuthenticationManager().login(existingEmail, existingPassword);
         boolean isLoggedIn = currentUser.isLoggedIn();
