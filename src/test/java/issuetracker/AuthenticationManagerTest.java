@@ -44,7 +44,7 @@ public class AuthenticationManagerTest {
     }
 
     @Test
-    public void AddUser_NonExistentUsername_UserObjectIsMade() {
+    public void AddUser_NonExistentUser_UserObjectIsMade() {
         //Arrange
         //Act
         IUser user = authManager.addUser(newEmail, newPassword);
@@ -54,7 +54,7 @@ public class AuthenticationManagerTest {
     }
 
     @Test(expected = UserException.class)
-    public void AddUser_ExistingUsername_UserIsNotMadeAndExceptionIsThrown() {
+    public void AddUser_ExistingUser_UserIsNotMadeAndExceptionIsThrown() {
         //Arrange Act Assert
         authManager.addUser(existingEmail, newPassword);
     }
