@@ -3,9 +3,9 @@ package issuetracker;
 import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.IAuthenticationManager;
 import issuetracker.authentication.IUser;
+import issuetracker.exception.UserException;
 import issuetracker.view.ICommand;
 import org.junit.*;
-import org.omg.CORBA.UserException;
 
 import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
@@ -84,7 +84,7 @@ public class AuthenticationManagerTest {
         IAuthenticationManager manager = new AuthenticationManager();
 
         //Act Assert
-        manager.login("dev", "devPassword");
+        manager.login("dev@gmail.com", "devPassword");
         IUser user = authManager.addUser(newEmail, newPassword);
     }
 
