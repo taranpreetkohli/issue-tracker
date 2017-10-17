@@ -5,15 +5,20 @@ import issuetracker.authentication.Developer;
 import issuetracker.authentication.IUser;
 import issuetracker.util.Callback;
 
+import java.security.CryptoPrimitive;
+
 public class FirebaseAdapter {
     protected IFirebaseContext db = FirebaseContext.getInstance();
 
     public FirebaseAdapter registerUser(IUser newUser){
         // Map user to if they're admin or developer.
-        db.write(db.getRoot().child("mappings").child(newUser.getEmail()), newUser.getClass().getSimpleName());
+
+        db.write(db.getRoot().child("mappings")
+                .child("" + newUser.getEmail().hashCode()), newUser.getClass().getSimpleName());
 
         // Write the object to the database
-        db.write(db.getRoot().child(newUser.getClass().getSimpleName()).child(newUser.getEmail()), newUser);
+        db.write(db.getRoot().child("users")
+                .child("" + newUser.getEmail().hashCode()), newUser);
 
         // Return this object for chaining
         return this;
