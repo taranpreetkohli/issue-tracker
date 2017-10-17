@@ -4,7 +4,6 @@ import com.google.firebase.database.DatabaseReference;
 import issuetracker.authentication.Administrator;
 import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
-import issuetracker.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,43 +29,29 @@ public class FirebaseAdapter {
 
     public User getUser(String email) {
         // Check mapping for this email
-        final User[] user = new User[1];
-
         DatabaseReference mappingRef = db.getRoot()
                 .child("mappings")
                 .child(email.hashCode() + "");
 
-        db.read(mappingRef, String.class, value -> {
-            if (value == null || value.trim().isEmpty()) {
-                logger.info("No user found with email: " + email);
-                user[0] = null;
-                return;
-            }
+        String type = db.read(mappingRef, String.class);
 
-            DatabaseReference userRef = db.getRoot()
-                    .child("users")
-                    .child(email.hashCode() + "");
+        if (type == null || type.trim().isEmpty()) {
+            logger.info("No user found with email: " + email);
+            return null;
+        }
 
-            if (value.equals("Developer")) {
-                logger.info("Attempting to retrieve Developer with at: " + userRef.getPath().toString());
-                db.read(userRef, Developer.class, new Callback<Developer>() {
-                    @Override
-                    public void onCompleted(Developer value) {
-                        logger.info("Retrieved developer: " + value.getEmail());
-                    }
-                });
-            } else {
-                logger.info("Attempting to retrieve Administrator with at: " + userRef.getPath().toString());
-                db.read(userRef, Administrator.class, new Callback<Administrator>() {
-                    @Override
-                    public void onCompleted(Administrator value) {
-                        logger.info("Retrieved administrator: " + value.getEmail());
-                    }
-                });
-            }
-        });
+        DatabaseReference userRef = db.getRoot()
+                .child("users")
+                .child(email.hashCode() + "");
 
-        logger.error("returned from method");
-        return user[0];
+        if (type.equals("Developer")) {
+            Developer developer = db.read(userRef, Developer.class);
+            logger.info("Retrieved developer with email: " + developer.getEmail());
+            return developer;
+        } else {
+            Administrator administrator = db.read(userRef, Administrator.class);
+            logger.info("Retrieved administrator with email: " + administrator.getEmail());
+            return administrator;
+        }
     }
 }
