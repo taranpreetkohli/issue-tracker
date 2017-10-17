@@ -156,17 +156,14 @@ public class AuthenticationManagerTest {
 
     @Test
     public void LogIn_AdminAccount_UserIsShownAdminView() {
-        //Arrange
-        String[] expected = new String[] {
-                "R", "V", "M", "L"
-        };
-
-        //Act
+        //Arrange Act
         Map<String, ICommand> commands = me.getView();
 
         //Assert
-        Assert.assertArrayEquals(expected, commands.keySet().toArray());
-
+        Assert.assertTrue(commands.containsKey("R"));
+        Assert.assertTrue(commands.containsKey("V"));
+        Assert.assertTrue(commands.containsKey("M"));
+        Assert.assertTrue(commands.containsKey("L"));
     }
 
     @Test
@@ -176,15 +173,15 @@ public class AuthenticationManagerTest {
         try {
             currentUser = new AuthenticationManager().login(existingEmail, existingPassword);
         } catch (Exception e) {}
-        String[] expected = new String[] {
-                "V", "M", "L"
-        };
 
         //Act
         Map<String, ICommand> commands = currentUser.getView();
 
         //Assert
-        Assert.assertArrayEquals(expected, commands.keySet().toArray());
+        Assert.assertFalse(commands.containsKey("R"));
+        Assert.assertTrue(commands.containsKey("V"));
+        Assert.assertTrue(commands.containsKey("M"));
+        Assert.assertTrue(commands.containsKey("L"));
     }
 
 

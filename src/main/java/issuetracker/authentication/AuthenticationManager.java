@@ -17,7 +17,7 @@ public class AuthenticationManager implements IAuthenticationManager {
     public IUser login(String email, String password) throws InvalidPropertiesFormatException {
         isEmailValid(email);
 
-        //TODO: Read Firebase for user that matches email AND password
+        //TODO: Read Firebase for user that matches email AND password. throw Instantiation exception if no user exists
         //TODO: create admin or dev based on database result
         currentUser = new Administrator(email, password);
         currentUser.setLoggedIn(true);
@@ -31,7 +31,7 @@ public class AuthenticationManager implements IAuthenticationManager {
         if (this.currentUser instanceof Administrator) {
             isPasswordValid(password);
             isEmailValid(email);
-            //TODO: read Firebase to see if email already exists
+            //TODO: read Firebase to see if email already exists, throw UserException if it doesn't exist
             //TODO: if email doesn't exist, then register user/write to database
 
             //TODO: ask Xuyun if admins can add admins
