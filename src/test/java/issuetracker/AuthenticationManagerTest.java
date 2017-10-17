@@ -5,6 +5,7 @@ import issuetracker.authentication.Developer;
 import issuetracker.authentication.IAuthenticationManager;
 import issuetracker.authentication.User;
 import issuetracker.db.FirebaseAdapter;
+import issuetracker.exception.IncorrectPasswordException;
 import issuetracker.exception.UserException;
 import issuetracker.view.ICommand;
 import org.junit.*;
@@ -135,7 +136,7 @@ public class AuthenticationManagerTest {
         User user = new AuthenticationManager(db).login(invalidEmail, "arbitraryPassword");
     }
 
-    @Test
+    @Test(expected = IncorrectPasswordException.class)
     public void LogIn_IncorrectPassword_UserIsUnableToLogin() {
         //Arrange
         String wrongPassword = "wrongPassword";
@@ -145,10 +146,6 @@ public class AuthenticationManagerTest {
         try {
             currentUser = new AuthenticationManager(db).login(existingEmail, wrongPassword);
         } catch (Exception e) {}
-        boolean isLoggedIn = currentUser.isLoggedIn();
-
-        //Assert
-        Assert.assertFalse(isLoggedIn);
     }
 
 
