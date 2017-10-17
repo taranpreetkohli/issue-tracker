@@ -58,15 +58,15 @@ public class FirebaseContext implements IFirebaseContext {
     }
 
     @Override
-    public <T> IFirebaseContext read(DatabaseReference ref, Class<T> type, Callback<T> callback) {
+    public <T> T read(DatabaseReference ref, Class<T> type) {
         CountDownLatch countDownLatch = new CountDownLatch(1);
+        final Object[] instance = new Object[1];
         logger.info("Reading value from reference with key: " + ref.getPath().toString());
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                T instance = snapshot.getValue(type);
+                instance[0] = snapshot.getValue(type);
                 logger.info("Successfully read value from reference with key: " + ref.getPath().toString());
-                callback.onCompleted(instance);
                 countDownLatch.countDown();
             }
 
@@ -79,7 +79,7 @@ public class FirebaseContext implements IFirebaseContext {
 
         try {
             countDownLatch.await();
-            return instance;
+            return (T) instance[0];
         } catch (InterruptedException e) {
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());

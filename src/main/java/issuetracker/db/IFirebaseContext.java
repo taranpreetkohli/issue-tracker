@@ -5,7 +5,7 @@ import issuetracker.util.Callback;
 
 public interface IFirebaseContext {
 
-    <T> IFirebaseContext read(DatabaseReference ref, Class<T> type, Callback<T> callback);
+    <T> T read(DatabaseReference ref, Class<T> type);
 
     <T> IFirebaseContext write(DatabaseReference ref, T object);
 
