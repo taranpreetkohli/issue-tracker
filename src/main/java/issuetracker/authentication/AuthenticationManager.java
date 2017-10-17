@@ -3,16 +3,17 @@ package issuetracker.authentication;
 import issuetracker.db.FirebaseAdapter;
 
 public class AuthenticationManager implements IAuthenticationManager {
+
     private User currentUser;
-    private FirebaseAdapter db;
-    public AuthenticationManager(){
-        this.db = new FirebaseAdapter();
+    private FirebaseAdapter firebaseAdapter;
+
+    public AuthenticationManager(FirebaseAdapter firebaseAdapter) {
+        this.firebaseAdapter = firebaseAdapter;
     }
 
     @Override
     public User login(String email, String password) {
         currentUser = new Developer(email, password);
-        db.updateLoginStatus(currentUser, true);
         return currentUser;
     }
 
