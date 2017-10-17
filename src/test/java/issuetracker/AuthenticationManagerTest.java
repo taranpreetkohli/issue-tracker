@@ -34,6 +34,7 @@ public class AuthenticationManagerTest {
         db = Mockito.mock(FirebaseAdapter.class);
         authManager = new AuthenticationManager(db);
         try {
+            Mockito.doReturn(new Administrator("admin@gmail.com", "adminPassword")).when(db).getUser("admin@gmail.com");
             me = authManager.login("admin@gmail.com", "adminPassword");
         } catch (Exception e) {}
 
@@ -66,6 +67,8 @@ public class AuthenticationManagerTest {
     @Test(expected = UserException.class)
     public void AddUser_ExistingUser_UserIsNotMadeAndExceptionIsThrown() throws UserException {
         //Arrange
+        Mockito.doReturn(new Developer(existingEmail, existingPassword)).when(db).getUser(existingEmail);
+
         // Act Assert
         try {
             authManager.addUser(existingEmail, newPassword);
@@ -99,13 +102,14 @@ public class AuthenticationManagerTest {
     @Test(expected = UserException.class)
     public void AddUser_DeveloperAccount_UserIsNotCreated() throws UserException {
         //Arrange
-        IAuthenticationManager manager = new AuthenticationManager(db);
+        IAuthenticationManager devAuthManager = new AuthenticationManager(db);
+        Mockito.doReturn(new Developer(existingEmail, existingPassword)).when(db).getUser(existingEmail);
 
         //Act Assert
         try {
-            manager.login("dev@gmail.com", "devPassword");
-            User user = authManager.addUser(newEmail, newPassword);
-        } catch (Exception e) {}
+            devAuthManager.login(existingEmail, existingPassword);
+            User user = devAuthManager.addUser(newEmail, newPassword);
+        } catch (InvalidPropertiesFormatException | InstantiationException e) {}
     }
 
     @Test
@@ -163,16 +167,8 @@ public class AuthenticationManagerTest {
 
     @Test
     public void LogIn_AdminAccount_UserIsShownAdminView() {
-        //Arrange
-        User currentUser = null;
-        Mockito.doReturn(new Administrator(existingEmail, existingPassword)).when(db).getUser(existingEmail);
-
-        try {
-            currentUser = new AuthenticationManager(db).login(existingEmail, existingPassword);
-        } catch (Exception e) {}
-
-        // Act
-        Map<String, ICommand> commands = currentUser.getView();
+        //Arrange Act
+        Map<String, ICommand> commands = me.getView();
 
         //Assert
         Assert.assertTrue(commands.containsKey("R"));

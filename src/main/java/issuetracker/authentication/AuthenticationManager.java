@@ -47,11 +47,15 @@ public class AuthenticationManager implements IAuthenticationManager {
         if (this.currentUser instanceof Administrator) {
             isPasswordValid(password);
             isEmailValid(email);
-            //TODO: read Firebase to see if email already exists, throw UserException if it doesn't exist
-            //TODO: if email doesn't exist, then register user/write to database
 
-            //TODO: ask Xuyun if admins can add admins
-            return new Developer(email, password);
+            if (firebaseAdapter.getUser(email) != null) {
+                throw new UserException("User already exists");
+            }
+
+            User newUser = new Developer(email, password);
+            firebaseAdapter.registerUser(newUser);
+
+            return newUser;
         } else {
             throw new UserException("Only administrators can create accounts.");
         }
@@ -59,9 +63,9 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     @Override
     public boolean logout() {
-        if (this.currentUser != null) {
+        if (currentUser != null) {
             currentUser.setLoggedIn(false);
-            //TODO: reflect change in database i.e. change status to logged out (?)
+            firebaseAdapter.updateLoginStatus(currentUser, false);
 
             return true;
         } else {
