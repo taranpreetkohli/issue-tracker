@@ -1,7 +1,6 @@
 package issuetracker.authentication;
 
 import issuetracker.exception.UserException;
-import org.omg.CORBA.DynAnyPackage.Invalid;
 
 import java.util.InvalidPropertiesFormatException;
 import java.util.regex.Matcher;
@@ -11,10 +10,10 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     public final Pattern VALID_EMAIL_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
-    private IUser currentUser;
+    private User currentUser;
 
     @Override
-    public IUser login(String email, String password) throws InvalidPropertiesFormatException {
+    public User login(String email, String password) throws InvalidPropertiesFormatException {
         isEmailValid(email);
 
         //TODO: Read Firebase for user that matches email AND password. throw Instantiation exception if no user exists
@@ -26,7 +25,7 @@ public class AuthenticationManager implements IAuthenticationManager {
     }
 
     @Override
-    public IUser addUser(String email, String password) throws InvalidPropertiesFormatException {
+    public User addUser(String email, String password) throws InvalidPropertiesFormatException {
 
         if (this.currentUser instanceof Administrator) {
             isPasswordValid(password);

@@ -2,7 +2,7 @@ package issuetracker;
 
 import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.IAuthenticationManager;
-import issuetracker.authentication.IUser;
+import issuetracker.authentication.User;
 import issuetracker.exception.UserException;
 import issuetracker.view.ICommand;
 import org.junit.*;
@@ -16,7 +16,7 @@ public class AuthenticationManagerTest {
     private String newEmail;
     private String existingEmail;
     private String existingPassword;
-    private IUser me;
+    private User me;
 
 
     @BeforeClass
@@ -49,7 +49,7 @@ public class AuthenticationManagerTest {
     public void AddUser_NonExistentUser_UserObjectIsMade() {
         //Arrange
         //Act
-        IUser user = null;
+        User user = null;
         try {
             user = authManager.addUser(newEmail, newPassword);
         } catch (InvalidPropertiesFormatException e) {
@@ -72,7 +72,7 @@ public class AuthenticationManagerTest {
     public void AddUser_ValidEmail_UserObjectIsMade() {
         //Arrange
         //Act
-        IUser user = null;
+        User user = null;
         try {
             user = authManager.addUser(newEmail, newPassword);
         } catch (InvalidPropertiesFormatException e) {
@@ -88,7 +88,7 @@ public class AuthenticationManagerTest {
         String invalidEmail = "invalidEmail";
 
         //Act Assert
-        IUser user = authManager.addUser(invalidEmail, newPassword);
+        User user = authManager.addUser(invalidEmail, newPassword);
     }
 
     @Test(expected = UserException.class)
@@ -99,14 +99,14 @@ public class AuthenticationManagerTest {
         //Act Assert
         try {
             manager.login("dev@gmail.com", "devPassword");
-            IUser user = authManager.addUser(newEmail, newPassword);
+            User user = authManager.addUser(newEmail, newPassword);
         } catch (Exception e) {}
     }
 
     @Test
     public void LogIn_ValidCredentials_UserIsLoggedIn() {
         //Arrange
-        IUser currentUser = null;
+        User currentUser = null;
 
         //Act
         try {
@@ -124,14 +124,14 @@ public class AuthenticationManagerTest {
         String invalidEmail = "invalid";
 
         //Act Assert
-        IUser user = new AuthenticationManager().login(invalidEmail, "arbitraryPassword");
+        User user = new AuthenticationManager().login(invalidEmail, "arbitraryPassword");
     }
 
     @Test
     public void LogIn_IncorrectPassword_UserIsUnableToLogin() {
         //Arrange
         String wrongPassword = "wrongPassword";
-        IUser currentUser = null;
+        User currentUser = null;
         //Act
         try {
             currentUser = new AuthenticationManager().login(existingEmail, wrongPassword);
@@ -169,7 +169,7 @@ public class AuthenticationManagerTest {
     @Test
     public void LogIn_DeveloperAccount_UserIsShownDeveloperView() {
         //Arrange
-        IUser currentUser = null;
+        User currentUser = null;
         try {
             currentUser = new AuthenticationManager().login(existingEmail, existingPassword);
         } catch (Exception e) {}
