@@ -1,5 +1,6 @@
 package issuetracker.authentication;
 
+import issuetracker.exception.IncorrectPasswordException;
 import issuetracker.exception.UserException;
 import issuetracker.db.FirebaseAdapter;
 
@@ -20,12 +21,21 @@ public class AuthenticationManager implements IAuthenticationManager {
     }
 
     @Override
-    public User login(String email, String password) throws InvalidPropertiesFormatException {
+    public User login(String email, String password) throws InvalidPropertiesFormatException, InstantiationException {
         isEmailValid(email);
 
-        //TODO: Read Firebase for user that matches email AND password. throw Instantiation exception if no user exists
-        //TODO: create admin or dev based on database result
-        currentUser = new Administrator(email, password);
+        User retrievedUser = firebaseAdapter.getUser(email);
+
+        if (retrievedUser == null) {
+            throw new InstantiationException("User does not exist");
+        }
+
+        if (!retrievedUser.getPassword().equals(password)) {
+            throw new IncorrectPasswordException("Incorrect password");
+        }
+
+        currentUser = retrievedUser;
+        firebaseAdapter.updateLoginStatus(currentUser, true);
         currentUser.setLoggedIn(true);
 
         return currentUser;

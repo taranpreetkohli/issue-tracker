@@ -1,9 +1,6 @@
 package issuetracker;
 
-import issuetracker.authentication.AuthenticationManager;
-import issuetracker.authentication.Developer;
-import issuetracker.authentication.IAuthenticationManager;
-import issuetracker.authentication.User;
+import issuetracker.authentication.*;
 import issuetracker.db.FirebaseAdapter;
 import issuetracker.exception.IncorrectPasswordException;
 import issuetracker.exception.UserException;
@@ -69,7 +66,6 @@ public class AuthenticationManagerTest {
     @Test(expected = UserException.class)
     public void AddUser_ExistingUser_UserIsNotMadeAndExceptionIsThrown() throws UserException {
         //Arrange
-        Mockito.doReturn(new Developer(existingEmail, existingPassword)).when(db).getUser(existingEmail);
         // Act Assert
         try {
             authManager.addUser(existingEmail, newPassword);
@@ -116,6 +112,7 @@ public class AuthenticationManagerTest {
     public void LogIn_ValidCredentials_UserIsLoggedIn() {
         //Arrange
         User currentUser = null;
+        Mockito.doReturn(new Developer(existingEmail, existingPassword)).when(db).getUser(existingEmail);
 
         //Act
         try {
@@ -133,7 +130,10 @@ public class AuthenticationManagerTest {
         String invalidEmail = "invalid";
 
         //Act Assert
-        User user = new AuthenticationManager(db).login(invalidEmail, "arbitraryPassword");
+        try {
+            User user = new AuthenticationManager(db).login(invalidEmail, "arbitraryPassword");
+        } catch (InstantiationException e) {}
+
     }
 
     @Test(expected = IncorrectPasswordException.class)
@@ -145,7 +145,7 @@ public class AuthenticationManagerTest {
         //Act
         try {
             currentUser = new AuthenticationManager(db).login(existingEmail, wrongPassword);
-        } catch (Exception e) {}
+        } catch (InvalidPropertiesFormatException | InstantiationException e) {}
     }
 
 
@@ -158,13 +158,21 @@ public class AuthenticationManagerTest {
         //Act Assert
         try {
             new AuthenticationManager(db).login(noEmail, "shouldntworkanyway");
-        } catch (Exception e) {}
+        } catch (InvalidPropertiesFormatException e) {}
     }
 
     @Test
     public void LogIn_AdminAccount_UserIsShownAdminView() {
-        //Arrange Act
-        Map<String, ICommand> commands = me.getView();
+        //Arrange
+        User currentUser = null;
+        Mockito.doReturn(new Administrator(existingEmail, existingPassword)).when(db).getUser(existingEmail);
+
+        try {
+            currentUser = new AuthenticationManager(db).login(existingEmail, existingPassword);
+        } catch (Exception e) {}
+
+        // Act
+        Map<String, ICommand> commands = currentUser.getView();
 
         //Assert
         Assert.assertTrue(commands.containsKey("R"));
@@ -177,6 +185,8 @@ public class AuthenticationManagerTest {
     public void LogIn_DeveloperAccount_UserIsShownDeveloperView() {
         //Arrange
         User currentUser = null;
+        Mockito.doReturn(new Developer(existingEmail, existingPassword)).when(db).getUser(existingEmail);
+
         try {
             currentUser = new AuthenticationManager(db).login(existingEmail, existingPassword);
         } catch (Exception e) {}
