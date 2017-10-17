@@ -4,8 +4,7 @@ import com.google.firebase.database.DatabaseReference;
 import issuetracker.authentication.Administrator;
 import issuetracker.authentication.Developer;
 import issuetracker.authentication.IUser;
-
-import java.security.CryptoPrimitive;
+import issuetracker.authentication.User;
 
 public class FirebaseAdapter {
     protected IFirebaseContext db = FirebaseContext.getInstance();
@@ -24,9 +23,9 @@ public class FirebaseAdapter {
         return this;
     }
 
-    public IUser getUser(String email){
+    public User getUser(String email) {
         // Check mapping for this email
-        final IUser[] user = new IUser[1];
+        final User[] user = new User[1];
 
         DatabaseReference mappingRef = db.getRoot()
                 .child("mappings")

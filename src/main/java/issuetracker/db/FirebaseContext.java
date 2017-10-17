@@ -92,7 +92,11 @@ public class FirebaseContext implements IFirebaseContext {
         logger.info("Writing value to reference with key: " + ref.getKey());
         ref.setValue(object, (error, ref1) -> {
             countDownLatch.countDown();
-            logger.info("Successfully written value to reference with key: " + ref.getKey());
+            if (error == null) {
+                logger.info("Successfully written value to reference with key: " + ref.getKey());
+            } else {
+                logger.error(error.getMessage());
+            }
         });
 
         try {
