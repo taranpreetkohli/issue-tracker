@@ -4,6 +4,7 @@ import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.Developer;
 import issuetracker.authentication.IAuthenticationManager;
 import issuetracker.authentication.User;
+import issuetracker.db.FirebaseAdapter;
 import issuetracker.exception.UserException;
 import issuetracker.view.ICommand;
 import org.junit.*;
@@ -32,7 +33,8 @@ public class AuthenticationManagerTest {
 
     @Before
     public void setUp() {
-        authManager = new AuthenticationManager();
+        db = Mockito.mock(FirebaseAdapter.class);
+        authManager = new AuthenticationManager(db);
         try {
             me = authManager.login("admin@gmail.com", "adminPassword");
         } catch (Exception e) {}
@@ -42,9 +44,6 @@ public class AuthenticationManagerTest {
 
         existingEmail = "existingEmail@gmail.com";
         existingPassword = "ex1stingPassword";
-
-        db = Mockito.mock(FirebaseAdapter.class);
-        authManager.setDb(db);
     }
 
     @After
@@ -103,7 +102,7 @@ public class AuthenticationManagerTest {
     @Test(expected = UserException.class)
     public void AddUser_DeveloperAccount_UserIsNotCreated() throws UserException {
         //Arrange
-        IAuthenticationManager manager = new AuthenticationManager();
+        IAuthenticationManager manager = new AuthenticationManager(db);
 
         //Act Assert
         try {
@@ -119,7 +118,7 @@ public class AuthenticationManagerTest {
 
         //Act
         try {
-            currentUser = new AuthenticationManager().login(existingEmail, existingPassword);
+            currentUser = new AuthenticationManager(db).login(existingEmail, existingPassword);
         } catch (Exception e) {}
         boolean isLoggedIn = currentUser.isLoggedIn();
 
@@ -133,7 +132,7 @@ public class AuthenticationManagerTest {
         String invalidEmail = "invalid";
 
         //Act Assert
-        User user = new AuthenticationManager().login(invalidEmail, "arbitraryPassword");
+        User user = new AuthenticationManager(db).login(invalidEmail, "arbitraryPassword");
     }
 
     @Test
@@ -144,7 +143,7 @@ public class AuthenticationManagerTest {
         User currentUser = null;
         //Act
         try {
-            currentUser = new AuthenticationManager().login(existingEmail, wrongPassword);
+            currentUser = new AuthenticationManager(db).login(existingEmail, wrongPassword);
         } catch (Exception e) {}
         boolean isLoggedIn = currentUser.isLoggedIn();
 
@@ -161,7 +160,7 @@ public class AuthenticationManagerTest {
 
         //Act Assert
         try {
-            new AuthenticationManager().login(noEmail, "shouldntworkanyway");
+            new AuthenticationManager(db).login(noEmail, "shouldntworkanyway");
         } catch (Exception e) {}
     }
 
@@ -182,7 +181,7 @@ public class AuthenticationManagerTest {
         //Arrange
         User currentUser = null;
         try {
-            currentUser = new AuthenticationManager().login(existingEmail, existingPassword);
+            currentUser = new AuthenticationManager(db).login(existingEmail, existingPassword);
         } catch (Exception e) {}
 
         //Act
@@ -208,7 +207,7 @@ public class AuthenticationManagerTest {
     @Test(expected = IllegalStateException.class)
     public void LogOut_NoUserLoggedIn_ExceptionThrown() throws IllegalStateException {
         //Arrange
-        IAuthenticationManager noUserAuth = new AuthenticationManager();
+        IAuthenticationManager noUserAuth = new AuthenticationManager(db);
 
         //Act Assert
         noUserAuth.logout();

@@ -3,10 +3,7 @@ package issuetracker.db;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.*;
 import issuetracker.util.Callback;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -56,28 +53,33 @@ public class FirebaseContext implements IFirebaseContext {
     }
 
     @Override
-    public <T> IFirebaseContext read(DatabaseReference ref, Class<T> type, Callback<T> callback) {
+    public DatabaseReference getRoot(){
+        return FirebaseDatabase.getInstance().getReference();
+    }
+
+    @Override
+    public <T> T read(DatabaseReference ref, Class<T> type) {
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        logger.info("Reading value from reference with key: " + ref.getKey());
+        final Object[] instance = new Object[1];
+        logger.info("Reading value from reference with key: " + ref.getPath().toString());
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                T instance = snapshot.getValue(type);
-                logger.info("Successfully read value from reference with key: " + ref.getKey());
-                callback.onCompleted(instance);
+                instance[0] = snapshot.getValue(type);
+                logger.info("Successfully read value from reference with key: " + ref.getPath().toString());
                 countDownLatch.countDown();
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                logger.error("Failure reading value from reference with key: " + ref.getKey());
+                logger.error("Failure reading value from reference with key: " + ref.getPath().toString());
                 throw new RuntimeException(error.getMessage());
             }
         });
 
         try {
             countDownLatch.await();
-            return instance;
+            return (T) instance[0];
         } catch (InterruptedException e) {
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
@@ -90,7 +92,11 @@ public class FirebaseContext implements IFirebaseContext {
         logger.info("Writing value to reference with key: " + ref.getKey());
         ref.setValue(object, (error, ref1) -> {
             countDownLatch.countDown();
-            logger.info("Successfully written value to reference with key: " + ref.getKey());
+            if (error == null) {
+                logger.info("Successfully written value to reference with key: " + ref.getKey());
+            } else {
+                logger.error(error.getMessage());
+            }
         });
 
         try {

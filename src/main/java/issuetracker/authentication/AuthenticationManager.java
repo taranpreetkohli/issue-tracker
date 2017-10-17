@@ -1,6 +1,7 @@
 package issuetracker.authentication;
 
 import issuetracker.exception.UserException;
+import issuetracker.db.FirebaseAdapter;
 
 import java.util.InvalidPropertiesFormatException;
 import java.util.regex.Matcher;
@@ -12,7 +13,11 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     private User currentUser;
 
-    private FirebaseAdapter db;
+    private FirebaseAdapter firebaseAdapter;
+
+    public AuthenticationManager(FirebaseAdapter firebaseAdapter) {
+        this.firebaseAdapter = firebaseAdapter;
+    }
 
     @Override
     public User login(String email, String password) throws InvalidPropertiesFormatException {
@@ -71,11 +76,13 @@ public class AuthenticationManager implements IAuthenticationManager {
         }
     }
 
+    @Override
     public FirebaseAdapter getDb() {
-        return db;
+        return firebaseAdapter;
     }
 
+    @Override
     public void setDb(FirebaseAdapter db) {
-        this.db = db;
+        this.firebaseAdapter = db;
     }
 }
