@@ -22,7 +22,7 @@ public class FirebaseAdapter {
     public IUser getUser(String email){
         // Check mapping for this email
         final IUser[] user = new IUser[1];
-        db.read(db.getRoot().child("mappings"), String.class, new Callback<String>() {
+        db.read(db.getRoot().child("mappings").child(email), String.class, new Callback<String>() {
             @Override
             public void onCompleted(String value) {
                 if(value.equals("Developer")){
