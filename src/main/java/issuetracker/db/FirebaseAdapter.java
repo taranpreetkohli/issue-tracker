@@ -10,10 +10,17 @@ public class FirebaseAdapter {
 
     public FirebaseAdapter registerUser(IUser newUser){
         // Map user to if they're admin or developer.
-        db.write(db.getRoot().child("mappings").child(newUser.getEmail()), newUser.getClass().getSimpleName());
+        String newID = db.getRoot()
+                .child("mappings")
+                .child(newUser.getClass().getSimpleName())
+                .push().getKey();
+        db.write(db.getRoot()
+                .child("mappings")
+                .child(newUser.getClass().getSimpleName())
+                .push(), newUser);
 
         // Write the object to the database
-        db.write(db.getRoot().child(newUser.getClass().getSimpleName()).child(newUser.getEmail()), newUser);
+        db.write(db.getRoot().child(newUser.getClass().getSimpleName()).child(newID), newUser);
 
         // Return this object for chaining
         return this;
