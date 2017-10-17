@@ -5,6 +5,11 @@ import issuetracker.view.ICommand;
 import java.util.HashMap;
 
 public class Developer extends User {
+
+    public Developer() {
+        super();
+    }
+
     public Developer(String email, String password) {
         super(email, password);
     }
