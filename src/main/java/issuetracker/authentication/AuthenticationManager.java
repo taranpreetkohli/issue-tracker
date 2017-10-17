@@ -12,6 +12,8 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     private User currentUser;
 
+    private FirebaseAdapter db;
+
     @Override
     public User login(String email, String password) throws InvalidPropertiesFormatException {
         isEmailValid(email);
@@ -67,5 +69,13 @@ public class AuthenticationManager implements IAuthenticationManager {
         } else {
             return true;
         }
+    }
+
+    public FirebaseAdapter getDb() {
+        return db;
+    }
+
+    public void setDb(FirebaseAdapter db) {
+        this.db = db;
     }
 }

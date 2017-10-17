@@ -1,11 +1,13 @@
 package issuetracker;
 
 import issuetracker.authentication.AuthenticationManager;
+import issuetracker.authentication.Developer;
 import issuetracker.authentication.IAuthenticationManager;
 import issuetracker.authentication.User;
 import issuetracker.exception.UserException;
 import issuetracker.view.ICommand;
 import org.junit.*;
+import org.mockito.Mockito;
 
 import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
@@ -17,6 +19,7 @@ public class AuthenticationManagerTest {
     private String existingEmail;
     private String existingPassword;
     private User me;
+    private FirebaseAdapter db;
 
 
     @BeforeClass
@@ -30,19 +33,23 @@ public class AuthenticationManagerTest {
     @Before
     public void setUp() {
         authManager = new AuthenticationManager();
-        //or
         try {
             me = authManager.login("admin@gmail.com", "adminPassword");
         } catch (Exception e) {}
+
         newEmail = "validEmail@gmail.com";
         newPassword = "P4ssword";
 
         existingEmail = "existingEmail@gmail.com";
         existingPassword = "ex1stingPassword";
+
+        db = Mockito.mock(FirebaseAdapter.class);
+        authManager.setDb(db);
     }
 
     @After
     public void tearDown() {
+        db = Mockito.mock(FirebaseAdapter.class);
     }
 
     @Test
@@ -61,7 +68,9 @@ public class AuthenticationManagerTest {
 
     @Test(expected = UserException.class)
     public void AddUser_ExistingUser_UserIsNotMadeAndExceptionIsThrown() throws UserException {
-        //Arrange Act Assert
+        //Arrange
+        Mockito.doReturn(new Developer(existingEmail, existingPassword)).when(db).getUser(existingEmail);
+        // Act Assert
         try {
             authManager.addUser(existingEmail, newPassword);
         } catch (InvalidPropertiesFormatException e) {
@@ -131,6 +140,7 @@ public class AuthenticationManagerTest {
     public void LogIn_IncorrectPassword_UserIsUnableToLogin() {
         //Arrange
         String wrongPassword = "wrongPassword";
+        Mockito.doReturn(new Developer(existingEmail, existingPassword)).when(db).getUser(existingEmail);
         User currentUser = null;
         //Act
         try {
@@ -147,6 +157,7 @@ public class AuthenticationManagerTest {
     public void LogIn_UserNotInDatabase_UserIsUnableToLogIn() throws InstantiationException {
         //Arrange
         String noEmail = "MarkaHezawrad@gmail.com";
+        Mockito.doReturn(null).when(db).getUser(noEmail);
 
         //Act Assert
         try {
