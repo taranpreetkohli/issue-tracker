@@ -1,16 +1,16 @@
 package issuetracker.authentication;
 
 public class AuthenticationManager implements IAuthenticationManager {
-    private IUser currentUser;
+    private User currentUser;
 
     @Override
-    public IUser login(String email, String password) {
+    public User login(String email, String password) {
         currentUser = new Developer(email, password);
         return currentUser;
     }
 
     @Override
-    public IUser addUser(String email, String password) {
+    public User addUser(String email, String password) {
         // TODO ask Xuyun if admins can add admins
         return new Developer(email, password);
     }

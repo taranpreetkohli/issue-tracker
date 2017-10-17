@@ -3,13 +3,12 @@ package issuetracker.db;
 import com.google.firebase.database.DatabaseReference;
 import issuetracker.authentication.Administrator;
 import issuetracker.authentication.Developer;
-import issuetracker.authentication.IUser;
 import issuetracker.authentication.User;
 
 public class FirebaseAdapter {
     protected IFirebaseContext db = FirebaseContext.getInstance();
 
-    public FirebaseAdapter registerUser(IUser newUser){
+    public FirebaseAdapter registerUser(User newUser){
         // Map user to if they're admin or developer.
 
         db.write(db.getRoot().child("mappings")
