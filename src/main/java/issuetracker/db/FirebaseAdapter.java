@@ -4,6 +4,7 @@ import com.google.firebase.database.DatabaseReference;
 import issuetracker.authentication.Administrator;
 import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
+import issuetracker.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,13 +49,24 @@ public class FirebaseAdapter {
 
             if (value.equals("Developer")) {
                 logger.info("Attempting to retrieve Developer with at: " + userRef.getPath().toString());
-                db.read(userRef, Developer.class, developer -> user[0] = developer);
+                db.read(userRef, Developer.class, new Callback<Developer>() {
+                    @Override
+                    public void onCompleted(Developer value) {
+                        logger.info("Retrieved developer: " + value.getEmail());
+                    }
+                });
             } else {
                 logger.info("Attempting to retrieve Administrator with at: " + userRef.getPath().toString());
-                db.read(userRef, Administrator.class, admin -> user[0] = admin);
+                db.read(userRef, Administrator.class, new Callback<Administrator>() {
+                    @Override
+                    public void onCompleted(Administrator value) {
+                        logger.info("Retrieved administrator: " + value.getEmail());
+                    }
+                });
             }
         });
 
+        logger.error("returned from method");
         return user[0];
     }
 }
