@@ -3,10 +3,7 @@ package issuetracker.db;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.*;
 import issuetracker.util.Callback;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -53,6 +50,11 @@ public class FirebaseContext implements IFirebaseContext {
         }
 
         return instance;
+    }
+
+    @Override
+    public DatabaseReference getRoot(){
+        return FirebaseDatabase.getInstance().getReference();
     }
 
     @Override

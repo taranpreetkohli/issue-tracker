@@ -9,4 +9,6 @@ public interface IFirebaseContext {
 
     <T> IFirebaseContext write(DatabaseReference ref, T object);
 
+    DatabaseReference getRoot();
+
 }
