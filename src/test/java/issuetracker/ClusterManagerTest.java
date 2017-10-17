@@ -3,7 +3,7 @@ package issuetracker;
 import org.junit.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-
+@Ignore
 public class ClusterManagerTest {
     @BeforeClass
     public static void beforeRun() {}
