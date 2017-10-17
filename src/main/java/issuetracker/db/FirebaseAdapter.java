@@ -1,9 +1,9 @@
 package issuetracker.db;
 
+import com.google.firebase.database.DatabaseReference;
 import issuetracker.authentication.Administrator;
 import issuetracker.authentication.Developer;
 import issuetracker.authentication.IUser;
-import issuetracker.util.Callback;
 
 public class FirebaseAdapter {
     protected IFirebaseContext db = FirebaseContext.getInstance();
@@ -22,29 +22,28 @@ public class FirebaseAdapter {
     public IUser getUser(String email){
         // Check mapping for this email
         final IUser[] user = new IUser[1];
-        db.read(db.getRoot().child("mappings").child(email), String.class, new Callback<String>() {
-            @Override
-            public void onCompleted(String value) {
-                if(value.equals("Developer")){
-                    db.read(db.getRoot().child(value).child(email), Developer.class, new Callback<Developer>() {
-                        @Override
-                        public void onCompleted(Developer value) {
-                            user[0] = value;
-                        }
-                    });
-                }else {
-                    db.read(db.getRoot().child(value).child(email), Administrator.class, new Callback<Administrator>() {
-                        @Override
-                        public void onCompleted(Administrator value) {
-                            user[0] = value;
-                        }
-                    });
-                }
+
+        DatabaseReference mappingRef = db.getRoot()
+                .child("mappings")
+                .child(email.hashCode() + "");
+
+        db.read(mappingRef, String.class, value -> {
+            if (value == null || value.trim().isEmpty()) {
+                user[0] = null;
+                return;
+            }
+
+            DatabaseReference userRef = db.getRoot()
+                    .child("users")
+                    .child(email.hashCode() + "");
+
+            if (value.equals("Developer")) {
+                db.read(userRef, Developer.class, developer -> user[0] = developer);
+            } else {
+                db.read(userRef, Administrator.class, admin -> user[0] = admin);
             }
         });
+
         return user[0];
     }
-
-
-
 }
