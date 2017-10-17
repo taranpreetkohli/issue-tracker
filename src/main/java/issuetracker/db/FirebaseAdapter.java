@@ -27,6 +27,11 @@ public class FirebaseAdapter {
         return this;
     }
 
+    public FirebaseAdapter updateLoginStatus(User user, boolean isLoggedin) {
+        db.write(db.getRoot().child("users").child(user.getEmail().hashCode() + "").child("loggedIn"), isLoggedin);
+        return this;
+    }
+
     public User getUser(String email) {
         // Check mapping for this email
         DatabaseReference mappingRef = db.getRoot()
