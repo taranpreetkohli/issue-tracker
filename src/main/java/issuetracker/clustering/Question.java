@@ -29,56 +29,63 @@ public class Question {
         return questionID;
     }
 
-    public void setQuestionID(long questionID) {
+    public Question setQuestionID(long questionID) {
         this.questionID = questionID;
+        return this;
     }
 
     public String getQuestion() {
         return question;
     }
 
-    public void setQuestion(String question) {
+    public Question setQuestion(String question) {
         this.question = question;
+        return this;
     }
 
     public Date getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public Question setDate(Date date) {
         this.date = date;
+        return this;
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public Question setAuthor(String author) {
         this.author = author;
+        return this;
     }
 
     public long getForumID() {
         return forumID;
     }
 
-    public void setForumID(long forumID) {
+    public Question setForumID(long forumID) {
         this.forumID = forumID;
+        return this;
     }
 
     public String getInformation() {
         return information;
     }
 
-    public void setInformation(String information) {
+    public Question setInformation(String information) {
         this.information = information;
+        return this;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public Question setUrl(String url) {
         this.url = url;
+        return this;
     }
 
     @Override
