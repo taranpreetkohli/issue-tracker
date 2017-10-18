@@ -1,13 +1,12 @@
 package issuetracker.clustering;
 
-import java.util.Date;
 import java.util.List;
 
 public class Question {
 
     private long questionID;
     private String question;
-    private Date date;
+    private String date;
     private String author;
     private long forumID;
     private String information;
@@ -43,11 +42,11 @@ public class Question {
         return this;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public Question setDate(Date date) {
+    public Question setDate(String date) {
         this.date = date;
         return this;
     }
