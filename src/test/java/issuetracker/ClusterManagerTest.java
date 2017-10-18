@@ -9,7 +9,7 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-
+@Ignore
 public class ClusterManagerTest {
     Cluster singlePostCluster;
     Cluster multiplePostCluster;
