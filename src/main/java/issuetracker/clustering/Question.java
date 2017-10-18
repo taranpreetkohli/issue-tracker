@@ -1,5 +1,7 @@
 package issuetracker.clustering;
 
+import issuetracker.exception.InvalidQuestionFormatException;
+
 import java.util.List;
 
 public class Question {
@@ -13,6 +15,10 @@ public class Question {
     private String url;
 
     public static String toARFF(List<Question> questions) {
+        if (questions == null || questions.size() == 0) {
+            throw new IllegalArgumentException("Input question list must not be null or empty");
+        }
+
         StringBuilder sb = Question.initARFF();
         for (Question q : questions) {
             sb.append(q.toARFF(false));
@@ -125,7 +131,12 @@ public class Question {
         return this.toARFF(true);
     }
 
-    public String toARFF(Boolean whole) {
+    public String toARFF(boolean whole) {
+        if (getQuestion() == null || getDate() == null || getAuthor() == null
+                || getInformation() == null || getUrl() == null) {
+            throw new InvalidQuestionFormatException("One or more fields null: \n" + this.toString());
+        }
+
         StringBuilder sb;
         if (whole) {
             sb = Question.initARFF();
