@@ -1,5 +1,7 @@
 package issuetracker.authentication;
 
+import issuetracker.db.FirebaseContext;
+import issuetracker.db.IFirebaseContext;
 import issuetracker.exception.IncorrectPasswordException;
 import issuetracker.exception.UserException;
 import issuetracker.db.FirebaseAdapter;
@@ -16,8 +18,18 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     private FirebaseAdapter firebaseAdapter;
 
+    private static AuthenticationManager instance;
+
     public AuthenticationManager(FirebaseAdapter firebaseAdapter) {
         this.firebaseAdapter = firebaseAdapter;
+    }
+
+    public static AuthenticationManager getInstance() {
+        if (instance == null) {
+            instance = new AuthenticationManager(new FirebaseAdapter());
+        }
+
+        return instance;
     }
 
     @Override
