@@ -2,9 +2,21 @@ package issuetracker.cli;
 
 import issuetracker.exception.NoInputException;
 
+import java.util.HashMap;
+
 public class CLIManager {
 
-    public boolean isValidCommand(String command) { return false; }
+    public boolean isValidCommand(String command, HashMap view) {
+        if (command.isEmpty()){
+            throw new NoInputException("No command given");
+        }
+
+        if (view.keySet().contains(command)){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public boolean checkUserDetailFormat(String validInput) {
 
