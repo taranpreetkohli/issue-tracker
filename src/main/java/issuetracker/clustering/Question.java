@@ -1,6 +1,7 @@
 package issuetracker.clustering;
 
 import java.util.Date;
+import java.util.List;
 
 public class Question {
 
@@ -11,6 +12,14 @@ public class Question {
     private long forumID;
     private String information;
     private String url;
+
+    public static String toARFF(List<Question> questions) {
+        StringBuilder sb = Question.initARFF();
+        for (Question q : questions) {
+            sb.append(q.toARFF(false));
+        }
+        return sb.toString();
+    }
 
     public Question() {
         // required empty constructor
@@ -83,5 +92,34 @@ public class Question {
                 ", information='" + information + '\'' +
                 ", url='" + url + '\'' +
                 '}';
+    }
+
+    private static StringBuilder initARFF() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("@relation questions\n\n");
+        sb.append("@attribute questionID LONG\\n\" +\n" +
+                "                \"@attribute question STRING\\n\" +\n" +
+                "                \"@attribute date STRING\\n\" +\n" +
+                "                \"@attribute author STRING\\n\" +\n" +
+                "                \"@attribute forumID LONG\\n\" +\n" +
+                "                \"@attribute information INFORMATION\\n\" +\n" +
+                "                \"@attribute url STRING\\n\\n\" +\n" +
+                "                \"@data\\n\"");
+        return sb;
+    }
+
+    public String toARFF() {
+        return this.toARFF(true);
+    }
+
+    public String toARFF(Boolean whole) {
+        StringBuilder sb;
+        if (whole) {
+            sb = Question.initARFF();
+        } else {
+            sb = new StringBuilder();
+        }
+        sb.append(questionID + "," + question + "," + date + "," + author + "," + forumID + "," + information + "," + url);
+        return sb.toString();
     }
 }
