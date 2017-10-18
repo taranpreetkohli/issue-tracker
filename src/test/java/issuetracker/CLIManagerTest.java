@@ -1,11 +1,8 @@
 package issuetracker;
 
 import issuetracker.cli.CLIManager;
-import issuetracker.view.Command;
-import org.apache.commons.lang3.NotImplementedException;
+import issuetracker.exception.NoInputException;
 import org.junit.*;
-
-import java.util.HashMap;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -88,7 +85,7 @@ public class CLIManagerTest {
     @Test
     public void IsValidCommand_InvalidCommand_ReturnsFalse() {
         //Arrange
-        String invalidCommand = "[zxc]"
+        String invalidCommand = "[zxc]";
 
         //Act
         boolean isValid = cliManager.isValidCommand(invalidCommand);
