@@ -1,6 +1,7 @@
 package clustering;
 
 import issuetracker.clustering.Question;
+import issuetracker.exception.InvalidQuestionFormatException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -10,10 +11,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionTests {
@@ -103,16 +103,24 @@ public class QuestionTests {
         Assert.assertEquals(doubleQuestionExpectedARFF, actual);
     }
 
-    @Test(expected = DataFormatException.class)
+    @Test(expected = InvalidQuestionFormatException.class)
     public void toARFF_MalformedQuestion_ThrowsFormatException() {
         // Arrange
         String actual = "";
-        Question toConvert = spy(questionOne);
-        when(questionOne.getAuthor()).thenReturn(null);
-        when(questionOne.getInformation()).thenReturn(null);
+        Question questionSpy = spy(questionOne);
+        doReturn(null).when(questionSpy).getAuthor();
+
         // Act
-        actual = toConvert.toARFF();
-        // Assert
-        Assert.fail();
+        actual = questionSpy.toARFF();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void toARFF_QuestionListNull_ThrowsException() {
+        Question.toARFF(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void toARFF_QuestionListEmpty_ThrowsException() {
+        Question.toARFF(new ArrayList<>());
     }
 }
