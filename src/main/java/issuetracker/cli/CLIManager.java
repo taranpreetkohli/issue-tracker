@@ -6,6 +6,8 @@ import java.util.HashMap;
 
 public class CLIManager {
 
+    public void startCLI() {}
+
     public boolean isValidCommand(String command, HashMap view) {
         if (command.isEmpty()){
             throw new NoInputException("No command given");
