@@ -13,19 +13,7 @@ public class Runner {
 
     private static Logger logger = LoggerFactory.getLogger(Runner.class);
 
-    @Command(description="Command description")
-    public String test(
-            @Param(name="param1", description="Description of param1")
-                    int param1,
-            @Param(name="param2", description="Description of param2")
-                    int param2) {
-
-        return "Hello Testing";
-    }
-
     public static void main(String[] args) throws IOException {
-        ShellFactory.createConsoleShell("hello", "", new Runner())
-                .commandLoop();
 
     }
 

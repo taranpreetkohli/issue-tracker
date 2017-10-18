@@ -27,47 +27,47 @@ public class CLIManagerTest {
     }
 
     @Test
-    public void CheckInputFormat_ValidInput_ReturnsTrue() {
+    public void CheckUserDetailFormat_ValidFormat_ReturnsTrue() {
         //Arrange
         String validInput = "developer@gmail.com password";
 
         //Act
-        boolean isValid = cliManager.checkInputFormat(validInput);
+        boolean isValid = cliManager.checkUserDetailFormat(validInput);
 
         //Assert
         assertTrue(isValid) ;
     }
 
     @Test
-    public void CheckInputFormat_NotEnoughInputs_ReturnsFalse() {
+    public void CheckUserDetailFormat_NotEnoughInputs_ReturnsFalse() {
         //Arrange
         String invalidInput = "developer@gmail.compassword";
         //Act
-        boolean isValid = cliManager.checkInputFormat(invalidInput);
+        boolean isValid = cliManager.checkUserDetailFormat(invalidInput);
 
         //Assert
         assertFalse(isValid) ;
     }
 
     @Test
-    public void CheckInputFormat_TooManyInputs_ReturnsFalse() {
+    public void CheckUserDetailFormat_TooManyInputs_ReturnsFalse() {
         //Arrange
         String invalidInput = "developer@gmail.com password another input";
 
         //Act
-        boolean isValid = cliManager.checkInputFormat(invalidInput);
+        boolean isValid = cliManager.checkUserDetailFormat(invalidInput);
 
         //Assert
         assertFalse(isValid) ;
     }
 
     @Test(expected = NoInputException.class)
-    public void CheckInputFormat_NoInput_NoInputExceptionThrown() {
+    public void CheckUserDetailFormat_NoInput_NoInputExceptionThrown() {
         //Arrange
         String noInput = "";
 
         //Act Assert
-        boolean isValid = cliManager.checkInputFormat(noInput);
+        boolean isValid = cliManager.checkUserDetailFormat(noInput);
     }
 
     @Test
