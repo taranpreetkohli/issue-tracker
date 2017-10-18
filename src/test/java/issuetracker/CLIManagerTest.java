@@ -1,8 +1,14 @@
 package issuetracker;
 
 import issuetracker.cli.CLIManager;
+import issuetracker.view.Command;
 import org.apache.commons.lang3.NotImplementedException;
 import org.junit.*;
+
+import java.util.HashMap;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class CLIManagerTest {
     private CLIManager cliManager;
@@ -26,60 +32,77 @@ public class CLIManagerTest {
     @Test
     public void CheckInputFormat_ValidInput_ReturnsTrue() {
         //Arrange
+        String validInput = "developer@gmail.com password";
 
         //Act
+        boolean isValid = cliManager.checkInputFormat(validInput);
 
         //Assert
-        throw new NotImplementedException("Stub!");
+        assertTrue(isValid) ;
     }
 
     @Test
-    public void CheckInputFormat_InvalidInput_ReturnsFalse() {
+    public void CheckInputFormat_NotEnoughInputs_ReturnsFalse() {
         //Arrange
-
+        String invalidInput = "developer@gmail.compassword";
         //Act
+        boolean isValid = cliManager.checkInputFormat(invalidInput);
 
         //Assert
-        throw new NotImplementedException("Stub!");
+        assertFalse(isValid) ;
     }
 
     @Test
+    public void CheckInputFormat_TooManyInputs_ReturnsFalse() {
+        //Arrange
+        String invalidInput = "developer@gmail.com password another input";
+
+        //Act
+        boolean isValid = cliManager.checkInputFormat(invalidInput);
+
+        //Assert
+        assertFalse(isValid) ;
+    }
+
+    @Test(expected = NoInputException.class)
     public void CheckInputFormat_NoInput_NoInputExceptionThrown() {
         //Arrange
+        String noInput = "";
 
-        //Act
-
-        //Assert
-        throw new NotImplementedException("Stub!");
+        //Act Assert
+        boolean isValid = cliManager.checkInputFormat(noInput);
     }
 
     @Test
     public void IsValidCommand_ValidCommand_ReturnsTrue() {
         //Arrange
+        String validCommand = "L";
 
         //Act
+        boolean isValid = cliManager.isValidCommand(validCommand);
 
         //Assert
-        throw new NotImplementedException("Stub!");
+        assertTrue(isValid);
     }
 
     @Test
-    public void IsValidCommand_InvalidFormat_ReturnsFalse() {
+    public void IsValidCommand_InvalidCommand_ReturnsFalse() {
         //Arrange
+        String invalidCommand = "[zxc]"
 
         //Act
+        boolean isValid = cliManager.isValidCommand(invalidCommand);
 
         //Assert
-        throw new NotImplementedException("Stub!");
+        assertFalse(isValid);
     }
 
-    @Test
+    @Test(expected = NoInputException.class)
     public void IsValidCommand_NoCommand_NoInputExceptionThrown() {
         //Arrange
+        String noCommand = "";
 
-        //Act
-
-        //Assert
-        throw new NotImplementedException("Stub!");
+        //Act Assert
+        boolean isValid = cliManager.isValidCommand(noCommand);
     }
 }
