@@ -58,10 +58,7 @@ public class ClusterManagerTest {
     @Test
     public void GenerateClusterTitle_SinglePostCluster_ClusterTitleCorrectlySet() {
         //arrange
-        List<Question> singleQuestion = new ArrayList<>();
-        singleQuestion.add(questionOne);
-
-        String input = Question.toARFF(singleQuestion);
+        String input = buildInput(questionOne);
 
         //act
         Cluster cluster = clusterManager.generateCluster(input);
@@ -73,12 +70,7 @@ public class ClusterManagerTest {
     @Test
     public void GenerateClusterTitle_MultiplePostCluster_ClusterTitleCorrectlySet() {
         //arrange
-        List<Question> questions = new ArrayList<>();
-        questions.add(questionOne);
-        questions.add(questionTwo);
-        questions.add(questionThree);
-
-        String input = Question.toARFF(questions);
+        String input = buildInput(questionOne, questionTwo, questionThree);
 
         //act
         Cluster cluster = clusterManager.generateCluster(input);
@@ -90,10 +82,7 @@ public class ClusterManagerTest {
     @Test
     public void GroupForumPosts_SinglePost_OneForumPostCorrectlyGrouped() {
         //arrange
-        List<Question> singleQuestion = new ArrayList<>();
-        singleQuestion.add(questionOne);
-
-        String input = Question.toARFF(singleQuestion);
+        String input = buildInput(questionOne);
 
         //act
         Cluster cluster = clusterManager.generateCluster(input);
@@ -105,12 +94,7 @@ public class ClusterManagerTest {
     @Test
     public void GroupForumPosts_MultiplePosts_RelatedForumPostsCorrectlyGrouped() {
         //arrange
-        List<Question> questions = new ArrayList<>();
-        questions.add(questionOne);
-        questions.add(questionTwo);
-        questions.add(questionThree);
-
-        String input = Question.toARFF(questions);
+        String input = buildInput(questionOne, questionTwo, questionThree);
 
         //act
         Cluster cluster = clusterManager.generateCluster(input);
@@ -122,10 +106,7 @@ public class ClusterManagerTest {
     @Test
     public void GroupForumPosts_SinglePost_OneUserAffected() {
         //arrange
-        List<Question> singleQuestion = new ArrayList<>();
-        singleQuestion.add(questionOne);
-
-        String input = Question.toARFF(singleQuestion);
+        String input = buildInput(questionOne);
 
         //act
         Cluster cluster = clusterManager.generateCluster(input);
@@ -137,12 +118,7 @@ public class ClusterManagerTest {
     @Test
     public void GroupForumPosts_MultiplePosts_CorrectNumberOfUsersAffected() {
         //arrange
-        List<Question> questions = new ArrayList<>();
-        questions.add(questionOne);
-        questions.add(questionTwo);
-        questions.add(questionThree);
-
-        String input = Question.toARFF(questions);
+        String input = buildInput(questionOne, questionTwo, questionThree);
 
         //act
         Cluster cluster = clusterManager.generateCluster(input);
@@ -168,22 +144,33 @@ public class ClusterManagerTest {
     }
 
     @Test
-    public void SummariseForumPosts_ValidCluster_CorrectSummaryCreated() {
-        // Arrange
-        // Act
-        // Assert
+    public void GroupForumPosts_MultiplePosts_CorrectSummaryCreated() {
+        //arrange
+        String input = buildInput(questionOne, questionTwo, questionThree);
+
+        //act
+        Cluster cluster = clusterManager.generateCluster(input);
+
+        //assert
+        assertFalse(cluster.getSummary().isEmpty());
+    }
+
+    @Test
+    public void SortIssues_IssuesList_IssuesOrderedCorrectlyByPriority() {
         throw new NotImplementedException();
     }
 
     @Test
-    public void SortIssues_IssuesList_IssuesOrderedCorrectlyByPriority() { throw new NotImplementedException(); }
-
-    @Test
     public void AddForumPost_ExistingCluster_ClusterHasNewForumPost() {
         // Arrange
+        String input = buildInput(questionOne);
+
         // Act
+        Cluster cluster = clusterManager.generateCluster(input);
+        clusterManager.addQuestion(cluster, questionTwo);
+
         // Assert
-        throw new NotImplementedException();
+        assertThat(cluster.getPosts(), hasSize(2));
     }
 
     @Test
@@ -197,17 +184,27 @@ public class ClusterManagerTest {
     @Test
     public void RemoveForumPost_ExistingCluster_ClusterNoLongerContainsForumPost() {
         // Arrange
+        String input = buildInput(questionOne, questionTwo, questionThree);
+
         // Act
+        Cluster cluster = clusterManager.generateCluster(input);
+        clusterManager.removeQuestion(cluster, questionTwo);
+
         // Assert
-        throw new NotImplementedException();
+        assertThat(cluster.getPosts(), hasSize(2));
     }
 
     @Test
     public void RemoveForumPost_SinglePostCluster_ClusterGetsDeleted() {
         // Arrange
+        String input = buildInput(questionOne);
+
         // Act
+        Cluster cluster = clusterManager.generateCluster(input);
+        clusterManager.removeQuestion(cluster, questionOne);
+
         // Assert
-        throw new NotImplementedException();
+        // TODO
     }
 
     @Test
@@ -240,6 +237,19 @@ public class ClusterManagerTest {
         // Act
         // Assert
         throw new NotImplementedException();
+    }
+
+    private String buildInput(Question... questions) {
+        if (questions == null) {
+            return null;
+        }
+
+        List<Question> questionList = new ArrayList<>();
+        for (Question question : questions) {
+            questionList.add(question);
+        }
+
+        return Question.toARFF(questionList);
     }
 
 }

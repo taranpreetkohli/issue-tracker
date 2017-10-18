@@ -39,4 +39,14 @@ public class ClusterManager {
     public Cluster generateCluster(String input) {
         return null;
     }
+
+    public void addQuestion(Cluster cluster, Question question) {
+        // add question to cluster
+        // update DB
+    }
+
+    public void removeQuestion(Cluster cluster, Question question) {
+        // remove question from cluster
+        // update DB
+    }
 }
