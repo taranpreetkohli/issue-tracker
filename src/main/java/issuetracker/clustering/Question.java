@@ -87,31 +87,38 @@ public class Question {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return "Question{" +
-                "questionID=" + getQuestionID() +
-                ", question='" + getQuestion() + '\'' +
-                ", date=" + getDate() +
-                ", author='" + getAuthor() + '\'' +
-                ", forumID=" + getForumID() +
-                ", information='" + getInformation() + '\'' +
-                ", url='" + getUrl() + '\'' +
-                '}';
-    }
-
     private static StringBuilder initARFF() {
         StringBuilder sb = new StringBuilder();
-        sb.append("@relation questions\n\n");
-        sb.append("@attribute questionID LONG\\n\" +\n" +
-                "                \"@attribute question STRING\\n\" +\n" +
-                "                \"@attribute date STRING\\n\" +\n" +
-                "                \"@attribute author STRING\\n\" +\n" +
-                "                \"@attribute forumID LONG\\n\" +\n" +
-                "                \"@attribute information INFORMATION\\n\" +\n" +
-                "                \"@attribute url STRING\\n\\n\" +\n" +
-                "                \"@data\\n\"");
+        sb.append("@relation questions\n\n" +
+                "@attribute questionID LONG\n" +
+                "@attribute question STRING\n" +
+                "@attribute date STRING\n" +
+                "@attribute author STRING\n" +
+                "@attribute forumID LONG\n" +
+                "@attribute information STRING\n" +
+                "@attribute url STRING\n\n" +
+                "@data\n");
         return sb;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder()
+                .append(questionID)
+                .append(",")
+                .append(question)
+                .append(",")
+                .append(author)
+                .append(",")
+                .append(date)
+                .append(",")
+                .append(forumID)
+                .append(",")
+                .append(information)
+                .append(",")
+                .append(url);
+
+        return sb.toString();
     }
 
     public String toARFF() {
@@ -125,7 +132,8 @@ public class Question {
         } else {
             sb = new StringBuilder();
         }
-        sb.append(getQuestionID() + "," + getQuestion() + "," + getDate() + "," + getAuthor() + "," + getForumID() + "," + getInformation() + "," + getUrl());
+        sb.append(getQuestionID() + "," + getQuestion() + "," + getDate() + "," + getAuthor()
+                + "," + getForumID() + "," + getInformation() + "," + getUrl() + "\n");
         return sb.toString();
     }
 }
