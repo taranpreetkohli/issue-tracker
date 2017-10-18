@@ -84,13 +84,13 @@ public class Question {
     @Override
     public String toString() {
         return "Question{" +
-                "questionID=" + questionID +
-                ", question='" + question + '\'' +
-                ", date=" + date +
-                ", author='" + author + '\'' +
-                ", forumID=" + forumID +
-                ", information='" + information + '\'' +
-                ", url='" + url + '\'' +
+                "questionID=" + getQuestionID() +
+                ", question='" + getQuestion() + '\'' +
+                ", date=" + getDate() +
+                ", author='" + getAuthor() + '\'' +
+                ", forumID=" + getForumID() +
+                ", information='" + getInformation() + '\'' +
+                ", url='" + getUrl() + '\'' +
                 '}';
     }
 
@@ -119,7 +119,7 @@ public class Question {
         } else {
             sb = new StringBuilder();
         }
-        sb.append(questionID + "," + question + "," + date + "," + author + "," + forumID + "," + information + "," + url);
+        sb.append(getQuestionID() + "," + getQuestion() + "," + getDate() + "," + getAuthor() + "," + getForumID() + "," + getInformation() + "," + getUrl());
         return sb.toString();
     }
 }
