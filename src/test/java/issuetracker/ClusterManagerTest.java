@@ -1,152 +1,116 @@
 package issuetracker;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-
+import issuetracker.clustering.Cluster;
+import issuetracker.clustering.ClusterManager;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.junit.Assert.*;
 
 @Ignore
 public class ClusterManagerTest {
-    Cluster singlePostCluster;
-    Cluster multiplePostCluster;
 
-    @BeforeClass
-    public static void beforeRun() {
-        singlePostCluster = new Cluster();
-        multiplePostCluster = new Cluster();
-    }
+    String singlePostInput;
+    String multiplePostInput;
 
-    @AfterClass
-    public static void afterRun() {}
-
+    ClusterManager clusterManager;
+    
     @Before
-    public void setUp() {}
-
-    @After
-    public void tearDown() {}
+    public void setup() {
+        clusterManager = new ClusterManager();
+    }
 
     @Test
     public void GenerateClusterTitle_SinglePostCluster_ClusterTitleCorrectlySet() {
         //arrange
-        ClusterManager cm = new ClusterManager();
 
         //act
-        cm.generateClusterTitle(singlePostCluster);
+        Cluster cluster = clusterManager.generateCluster(singlePostInput);
 
         //assert
-        assertTrue(!singlePostCluster.getTitle().isEmpty());
+        assertFalse(cluster.getTitle().isEmpty());
     }
 
     @Test
     public void GenerateClusterTitle_MultiplePostCluster_ClusterTitleCorrectlySet() {
         //arrange
-        ClusterManager cm = new ClusterManager();
 
         //act
-        cm.generateClusterTitle(multiplePostCluster);
+        Cluster cluster = clusterManager.generateCluster(multiplePostInput);
 
         //assert
-        assertTrue(!multiplePostCluster.getTitle().isEmpty());
-
+        assertFalse(cluster.getTitle().isEmpty());
     }
 
     @Test
     public void GroupForumPosts_SinglePost_OneForumPostCorrectlyGrouped() {
         //arrange
-        ClusterManager cm = new ClusterManager();
 
         //act
-        Cluster newSinglePostCluster = cm.groupForumPosts(singlePostData);
+        Cluster cluster = clusterManager.generateCluster(singlePostInput);
 
         //assert
-        assertThat(newSinglePostCluster.getPosts(), hasSize(1));
+        assertThat(cluster.getPosts(), hasSize(1));
     }
 
     @Test
     public void GroupForumPosts_MultiplePosts_RelatedForumPostsCorrectlyGrouped() {
         //arrange
-        ClusterManager cm = new ClusterManager();
 
         //act
-        Cluster newMultiplePostCluster = cm.groupForumPosts(multiplePostData);
+        Cluster cluster = clusterManager.generateCluster(multiplePostInput);
 
         //assert
-        assertThat(newMultiplePostCluster.getPosts(), hasSize(3));
-    }
-
-    @Test
-    public void GroupForumPosts_SinglePost_OnePost() {
-        //arrange
-        ClusterManager cm = new ClusterManager();
-
-        //act
-        Cluster newSinglePostCluster = cm.groupForumPosts(singlePostData);
-
-        //assert
-        assertEquals(1, newSinglePostCluster.getNumPosts());
-    }
-
-    @Test
-    public void GroupForumPosts_MultiplePosts_CorrectNumberOfPosts() {
-        //arrange
-        ClusterManager cm = new ClusterManager();
-
-        //act
-        Cluster newMultiplePostCluster = cm.groupForumPosts(multiplePostData);
-
-        //assert
-        assertEquals(3, newMultiplePostCluster.getNumPosts());
+        assertThat(cluster.getPosts(), hasSize(3));
     }
 
     @Test
     public void GroupForumPosts_SinglePost_OneUserAffected() {
         //arrange
-        ClusterManager cm = new ClusterManager();
 
         //act
-        Cluster newSinglePostCluster = cm.groupForumPosts(singlePostData);
+        Cluster newSinglePostCluster = clusterManager.generateCluster(singlePostInput);
 
         //assert
-        assertEquals(1, newSinglePostCluster.getNumUsers());
+        assertEquals(1, newSinglePostCluster.getUsers());
     }
 
     @Test
     public void GroupForumPosts_MultiplePosts_CorrectNumberOfUsersAffected() {
         //arrange
-        ClusterManager cm = new ClusterManager();
 
         //act
-        Cluster newSinglePostCluster = cm.groupForumPosts(singlePostData);
+        Cluster newSinglePostCluster = clusterManager.generateCluster(multiplePostInput);
 
         //assert
-        //guessing number for now
-        assertEquals(2, newSinglePostCluster.getNumUsers());
+        assertEquals(2, newSinglePostCluster.getUsers());
     }
 
-    @Test
-    public void GroupForumPosts_NoPosts_ThrowException() {
+    @Test(expected = IllegalArgumentException.class)
+    public void GroupForumPosts_NullInput_ThrowException() {
         //arrange
-        ClusterManager cm = new ClusterManager();
-
         //act
         //should throw exception
-        Cluster newSinglePostCluster = cm.groupForumPosts(noPostData);
+        Cluster newSinglePostCluster = clusterManager.generateCluster(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void GroupForumPosts_NoInput_ThrowException() {
+        //arrange
+        //act
+        //should throw exception
+        Cluster newSinglePostCluster = clusterManager.generateCluster("");
     }
 
     @Test
     public void SummariseForumPosts_ValidCluster_CorrectSummaryCreated() {
-        //arrange
-        ClusterManager cm = new ClusterManager();
-
-        //act
-        cm.summarisePosts(multiplePostCluster);
-
-        //assert
-        assertThat(multiplePostCluster.getSummary(), not(isEmptyOrNullString()));
+        // Arrange
+        // Act
+        // Assert
+        throw new NotImplementedException();
     }
 
     @Test
