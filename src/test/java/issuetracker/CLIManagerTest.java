@@ -111,4 +111,22 @@ public class CLIManagerTest {
         //Act Assert
         boolean isValid = cliManager.isValidCommand(noCommand, authenticationManager.getCurrentUser().getView());
     }
+
+    @Test
+    public void StartCLI_ValidLoginFormat_LoginCalled() {
+        //Arrange
+
+        //Act
+
+        //Assert
+    }
+
+    @Test
+    public void StartCLI_InvalidLoginFormat_LoginNotCalled() {
+        //Arrange
+
+        //Act
+
+        //Assert
+    }
 }
