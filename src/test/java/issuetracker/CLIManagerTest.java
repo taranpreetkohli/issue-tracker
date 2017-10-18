@@ -1,14 +1,18 @@
 package issuetracker;
 
+import issuetracker.authentication.AuthenticationManager;
+import issuetracker.authentication.Developer;
 import issuetracker.cli.CLIManager;
 import issuetracker.exception.NoInputException;
 import org.junit.*;
+import org.mockito.Mockito;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class CLIManagerTest {
     private CLIManager cliManager;
+    private AuthenticationManager authenticationManager;
     @BeforeClass
     public static void beforeRun() {
     }
@@ -20,10 +24,12 @@ public class CLIManagerTest {
     @Before
     public void setUp() {
         cliManager = new CLIManager();
+        authenticationManager = Mockito.mock(AuthenticationManager.class);
     }
 
     @After
     public void tearDown(){
+        authenticationManager = Mockito.mock(AuthenticationManager.class);
     }
 
     @Test
@@ -74,9 +80,10 @@ public class CLIManagerTest {
     public void IsValidCommand_ValidCommand_ReturnsTrue() {
         //Arrange
         String validCommand = "L";
+        Mockito.doReturn(new Developer("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
 
         //Act
-        boolean isValid = cliManager.isValidCommand(validCommand);
+        boolean isValid = cliManager.isValidCommand(validCommand, authenticationManager.getCurrentUser().getView());
 
         //Assert
         assertTrue(isValid);
@@ -86,9 +93,10 @@ public class CLIManagerTest {
     public void IsValidCommand_InvalidCommand_ReturnsFalse() {
         //Arrange
         String invalidCommand = "[zxc]";
+        Mockito.doReturn(new Developer("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
 
         //Act
-        boolean isValid = cliManager.isValidCommand(invalidCommand);
+        boolean isValid = cliManager.isValidCommand(invalidCommand, authenticationManager.getCurrentUser().getView());
 
         //Assert
         assertFalse(isValid);
@@ -98,8 +106,9 @@ public class CLIManagerTest {
     public void IsValidCommand_NoCommand_NoInputExceptionThrown() {
         //Arrange
         String noCommand = "";
+        Mockito.doReturn(new Developer("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
 
         //Act Assert
-        boolean isValid = cliManager.isValidCommand(noCommand);
+        boolean isValid = cliManager.isValidCommand(noCommand, authenticationManager.getCurrentUser().getView());
     }
 }
