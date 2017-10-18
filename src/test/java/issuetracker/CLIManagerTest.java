@@ -7,8 +7,15 @@ import issuetracker.exception.NoInputException;
 import org.junit.*;
 import org.mockito.Mockito;
 
+import java.util.InvalidPropertiesFormatException;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class CLIManagerTest {
     private CLIManager cliManager;
@@ -113,20 +120,30 @@ public class CLIManagerTest {
     }
 
     @Test
-    public void StartCLI_ValidLoginFormat_LoginCalled() {
+    public void StartCLI_ValidLoginFormat_LoginCalled() throws InstantiationException, InvalidPropertiesFormatException {
         //Arrange
+        String validInput = "developer@gmail.com password";
+        CLIManager cliManagerSpy = Mockito.spy(cliManager);
+        Mockito.doReturn(true).when(cliManagerSpy).checkUserDetailFormat(validInput);
 
         //Act
+        cliManager.startCLI();
 
         //Assert
+        verify(authenticationManager, times(1)).login(anyString(),anyString());
     }
 
     @Test
-    public void StartCLI_InvalidLoginFormat_LoginNotCalled() {
+    public void StartCLI_InvalidLoginFormat_LoginNotCalled() throws InstantiationException, InvalidPropertiesFormatException {
         //Arrange
+        String invalidInput = "developer@gmail.compassword";
+        CLIManager cliManagerSpy = Mockito.spy(cliManager);
+        Mockito.doReturn(false).when(cliManagerSpy).checkUserDetailFormat(invalidInput);
 
         //Act
+        cliManager.startCLI();
 
         //Assert
+        verify(authenticationManager, never()).login(anyString(),anyString());
     }
 }
