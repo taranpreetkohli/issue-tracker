@@ -16,9 +16,7 @@ public class ClusterManager {
 
     private static Logger logger = LoggerFactory.getLogger(ClusterManager.class);
 
-    private static ClusterManager instance;
-
-    private ClusterManager() {
+    public ClusterManager() {
         try {
             URL testResourceURL = getClass().getClassLoader().getResource("test.arff");
             File testFile = new File(testResourceURL.getFile());
@@ -27,6 +25,7 @@ public class ClusterManager {
             s.setInputFormat(instances);
             instances = Filter.useFilter(instances, s);
             DBSCAN dbscan = new DBSCAN();
+            System.out.println(instances.toString());
             dbscan.setEpsilon(1);
             dbscan.setMinPoints(1);
             dbscan.buildClusterer(instances);
@@ -37,13 +36,7 @@ public class ClusterManager {
         }
     }
 
-    public static ClusterManager getInstance() {
-        if (instance == null) {
-            instance = new ClusterManager();
-        }
-
-        return instance;
+    public Cluster generateCluster(String input) {
+        return null;
     }
-
-
 }
