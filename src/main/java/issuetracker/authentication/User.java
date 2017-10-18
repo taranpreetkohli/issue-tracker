@@ -1,6 +1,6 @@
 package issuetracker.authentication;
 
-import issuetracker.view.ICommand;
+import issuetracker.cli.view.ICommand;
 
 import java.util.HashMap;
 

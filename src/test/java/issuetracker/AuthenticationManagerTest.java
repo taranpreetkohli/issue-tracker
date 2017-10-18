@@ -4,7 +4,7 @@ import issuetracker.authentication.*;
 import issuetracker.db.FirebaseAdapter;
 import issuetracker.exception.IncorrectPasswordException;
 import issuetracker.exception.UserException;
-import issuetracker.view.ICommand;
+import issuetracker.cli.view.ICommand;
 import org.junit.*;
 import org.mockito.Mockito;
 
