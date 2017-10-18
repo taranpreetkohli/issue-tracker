@@ -3,6 +3,7 @@ package issuetracker;
 import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.Developer;
 import issuetracker.cli.CLIManager;
+import issuetracker.clustering.ClusterManager;
 import issuetracker.exception.NoInputException;
 import org.junit.*;
 import org.mockito.Mockito;
@@ -20,6 +21,7 @@ import static org.mockito.Mockito.verify;
 public class CLIManagerTest {
     private CLIManager cliManager;
     private AuthenticationManager authenticationManager;
+    private ClusterManager clusterManager;
     @BeforeClass
     public static void beforeRun() {
     }
@@ -30,8 +32,9 @@ public class CLIManagerTest {
 
     @Before
     public void setUp() {
-        cliManager = new CLIManager();
         authenticationManager = Mockito.mock(AuthenticationManager.class);
+        clusterManager = Mockito.mock(ClusterManager.class);
+        cliManager = new CLIManager(authenticationManager, clusterManager);
     }
 
     @After
@@ -90,7 +93,7 @@ public class CLIManagerTest {
         Mockito.doReturn(new Developer("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
 
         //Act
-        boolean isValid = cliManager.isValidCommand(validCommand, authenticationManager.getCurrentUser().getView());
+        boolean isValid = cliManager.isValidCommand(validCommand);
 
         //Assert
         assertTrue(isValid);
@@ -103,7 +106,7 @@ public class CLIManagerTest {
         Mockito.doReturn(new Developer("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
 
         //Act
-        boolean isValid = cliManager.isValidCommand(invalidCommand, authenticationManager.getCurrentUser().getView());
+        boolean isValid = cliManager.isValidCommand(invalidCommand);
 
         //Assert
         assertFalse(isValid);
@@ -116,7 +119,7 @@ public class CLIManagerTest {
         Mockito.doReturn(new Developer("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
 
         //Act Assert
-        boolean isValid = cliManager.isValidCommand(noCommand, authenticationManager.getCurrentUser().getView());
+        boolean isValid = cliManager.isValidCommand(noCommand);
     }
 
     @Test
