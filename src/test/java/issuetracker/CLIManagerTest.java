@@ -90,6 +90,62 @@ public class CLIManagerTest {
     }
 
     @Test
+    public void CheckConfirmationFormat_ValidInputYes_ReturnTrue() {
+        //Arrange
+        String validInputUpper = "Y";
+        String validInputLower = "y";
+        //Act
+        boolean isValidUpper = cliManager.checkUserConfirmationFormat(validInputUpper);
+        boolean isValidLower = cliManager.checkUserConfirmationFormat(validInputLower);
+        //Assert
+        assertTrue(isValidUpper);
+        assertTrue(isValidLower);
+    }
+
+    @Test
+    public void CheckConfirmationFormat_ValidInputNo_ReturnTrue() {
+        //Arrange
+        String validInputUpper = "N";
+        String validInputLower = "n";
+        //Act
+        boolean isValidUpper = cliManager.checkUserConfirmationFormat(validInputUpper);
+        boolean isValidLower = cliManager.checkUserConfirmationFormat(validInputLower);
+        //Assert
+        assertTrue(isValidUpper);
+        assertTrue(isValidLower);
+    }
+
+    @Test
+    public void CheckConfirmationFormat_NoInput_ReturnFalse() {
+        //Arrange
+        String emptyInput = "";
+        //Act Assert
+        boolean isValid = cliManager.checkUserConfirmationFormat(emptyInput);
+        //Assert
+        assertFalse(isValid);
+    }
+
+    @Test
+    public void CheckConfirmationFormat_TooManyInputs_ReturnFalse() {
+        //Arrange
+        String invalidInput = "Y N";
+        //Act Assert
+        boolean isValid = cliManager.checkUserConfirmationFormat(invalidInput);
+        //Assert
+        assertFalse(isValid);
+    }
+
+    @Test
+    public void CheckConfirmationFormat_InvalidCharacter_ReturnFalse() {
+        //Arrange
+        String invalidInput = "W";
+        //Act Assert
+        boolean isValid = cliManager.checkUserConfirmationFormat(invalidInput);
+        //Assert
+        assertFalse(isValid);
+    }
+
+    @Test
     public void IsValidCommand_ValidCommand_ReturnsTrue() {
         //Arrange
         String validCommand = "L";
