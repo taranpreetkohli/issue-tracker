@@ -6,8 +6,10 @@ import issuetracker.cli.CLIManager;
 import issuetracker.clustering.ClusterManager;
 import issuetracker.exception.NoInputException;
 import org.junit.*;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import java.io.ByteArrayInputStream;
 import java.util.InvalidPropertiesFormatException;
 
 import static org.junit.Assert.assertFalse;
@@ -126,6 +128,8 @@ public class CLIManagerTest {
     public void StartCLI_ValidLoginFormat_LoginCalled() throws InstantiationException, InvalidPropertiesFormatException {
         //Arrange
         String validInput = "developer@gmail.com password";
+        ByteArrayInputStream in = new ByteArrayInputStream(validInput.getBytes());
+        System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
         Mockito.doReturn(true).when(cliManagerSpy).checkUserDetailFormat(validInput);
 
@@ -140,6 +144,8 @@ public class CLIManagerTest {
     public void StartCLI_InvalidLoginFormat_LoginNotCalled() throws InstantiationException, InvalidPropertiesFormatException {
         //Arrange
         String invalidInput = "developer@gmail.compassword";
+        ByteArrayInputStream in = new ByteArrayInputStream(invalidInput.getBytes());
+        System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
         Mockito.doReturn(false).when(cliManagerSpy).checkUserDetailFormat(invalidInput);
 
