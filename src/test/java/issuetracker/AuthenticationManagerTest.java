@@ -168,7 +168,7 @@ public class AuthenticationManagerTest {
     @Test
     public void LogIn_AdminAccount_UserIsShownAdminView() {
         //Arrange Act
-        Map<String, ICommand> commands = me.getView();
+        Map<String, ICommand> commands = me.getViewMap();
 
         //Assert
         Assert.assertTrue(commands.containsKey("R"));
@@ -188,7 +188,7 @@ public class AuthenticationManagerTest {
         } catch (Exception e) {}
 
         //Act
-        Map<String, ICommand> commands = currentUser.getView();
+        Map<String, ICommand> commands = currentUser.getViewMap();
 
         //Assert
         Assert.assertFalse(commands.containsKey("R"));

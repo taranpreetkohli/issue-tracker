@@ -5,9 +5,8 @@ import issuetracker.cli.CLIManager;
 
 import java.util.InvalidPropertiesFormatException;
 
-public class Command implements ICommand {
+public class Command {
 
-    @Override
     public void run(AuthenticationManager authenticationManager, String userInput, CLIManager cliManager) {
         String[] parts = userInput.split(" ");
         try {

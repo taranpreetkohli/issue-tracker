@@ -9,7 +9,6 @@ import issuetracker.cli.view.ICommand;
 import issuetracker.clustering.ClusterManager;
 import issuetracker.exception.NoInputException;
 import org.junit.*;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayInputStream;
@@ -19,7 +18,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.booleanThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -257,7 +255,7 @@ public class CLIManagerTest {
         Command mockedCommand = Mockito.mock(Command.class);
 
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedHm).when(mockedAdmin).getView();
+        Mockito.doReturn(mockedHm).when(mockedAdmin).getViewMap();
         Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
@@ -284,7 +282,7 @@ public class CLIManagerTest {
         Command mockedCommand = Mockito.mock(Command.class);
 
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedHm).when(mockedAdmin).getView();
+        Mockito.doReturn(mockedHm).when(mockedAdmin).getViewMap();
         Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
@@ -311,7 +309,7 @@ public class CLIManagerTest {
         Command mockedCommand = Mockito.mock(Command.class);
 
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedHm).when(mockedAdmin).getView();
+        Mockito.doReturn(mockedHm).when(mockedAdmin).getViewMap();
         Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act

@@ -1,5 +1,6 @@
 package issuetracker.authentication;
 
+import issuetracker.cli.view.Command;
 import issuetracker.cli.view.ICommand;
 
 import java.util.HashMap;
@@ -8,9 +9,9 @@ import java.util.Map;
 public abstract class User {
 
     protected boolean loggedIn;
-    private String email;
-    private String password;
-    protected Map<String, ICommand> viewMap;
+    protected String email;
+    protected String password;
+    protected Map<String, Command> viewMap;
 
     public User(String email, String password) {
         this.email = email;
@@ -21,11 +22,11 @@ public abstract class User {
 
     }
 
-    public Map<String, ICommand> getView() {
+    public Map<String, Command> getViewMap() {
         return viewMap;
     }
 
-    public void setView(Map<String, ICommand> viewMap) {
+    public void setViewMap(Map<String, Command> viewMap) {
         this.viewMap = viewMap;
     }
 
