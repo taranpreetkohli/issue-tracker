@@ -178,6 +178,7 @@ public class CLIManagerTest {
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
 
         Mockito.doReturn(true).when(cliManagerSpy).checkUserConfirmationFormat(anyString());
+        Mockito.doReturn(true).when(cliManagerSpy).checkUserConfirmation(anyString());
 
         Administrator mockedAdmin = Mockito.mock(Administrator.class);
         HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
@@ -205,6 +206,7 @@ public class CLIManagerTest {
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
 
         Mockito.doReturn(true).when(cliManagerSpy).checkUserConfirmationFormat(anyString());
+        Mockito.doReturn(false).when(cliManagerSpy).checkUserConfirmation(anyString());
 
         Administrator mockedAdmin = Mockito.mock(Administrator.class);
         HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
