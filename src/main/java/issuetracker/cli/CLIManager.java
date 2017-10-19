@@ -177,19 +177,28 @@ public class CLIManager {
         boolean isCorrectFormat = false;
 
         try {
-            isCorrectFormat = checkUserDetailFormat(userInput);
+            isCorrectFormat = checkUserConfirmationFormat(userInput);
         } catch (NoInputException e) {
             logoutCLI();
         }
 
         if (isCorrectFormat) {
-            authenticationManager.getCurrentUser().getView().get("L").run(authenticationManager, userInput, this);
+            if(checkUserConfirmation(userInput)){
+                authenticationManager.getCurrentUser().getViewMap().get("L").run(authenticationManager, userInput, this);
+            } else {
+                showMenu();
+            }
         } else {
             System.out.println("You must confirm by entering [Y/y], or cancel by entering [N/n])");
             registerCLI();
         }
     }
 
-    public boolean checkUserConfirmation(String validInputLower) {
+    public boolean checkUserConfirmation(String input) {
+        if (input.equals("Y") || input.equals("y")){
+            return true;
+        } else {
+            return false;
+        }
     }
 }
