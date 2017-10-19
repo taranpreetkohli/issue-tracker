@@ -112,7 +112,7 @@ public class IssueManagerTest {
         Issue issue = issueManager.generateCluster(input);
 
         //assert
-        assertEquals(1, issue.getUsers());
+        assertEquals(1, issue.getUsers().size());
     }
 
     @Test
@@ -124,7 +124,7 @@ public class IssueManagerTest {
         Issue issue = issueManager.generateCluster(input);
 
         //assert
-        assertEquals(3, issue.getUsers());
+        assertEquals(3, issue.getUsers().size());
     }
 
     @Test(expected = IllegalArgumentException.class)
