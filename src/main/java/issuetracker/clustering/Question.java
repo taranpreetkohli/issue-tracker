@@ -4,7 +4,7 @@ import issuetracker.exception.InvalidQuestionFormatException;
 
 import java.util.List;
 
-public class Question {
+public class Question implements Comparable<Question>{
 
     private long questionID;
     private String question;
@@ -146,5 +146,10 @@ public class Question {
         sb.append(getQuestionID() + "," + getQuestion() + "," + getDate() + "," + getAuthor()
                 + "," + getForumID() + "," + getInformation() + "," + getUrl() + "\n");
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(Question o) {
+        return (int) (this.getQuestionID() - o.getQuestionID());
     }
 }

@@ -1,19 +1,27 @@
 package issuetracker.clustering;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class Cluster {
+public class Issue {
 
     private String title;
     private Set<Question> posts;
     private Set<String> users;
     private String summary;
 
+    public Issue(){
+        posts = new HashSet<>();
+        users = new HashSet<>();
+    }
+
     public String getTitle() {
         return title;
     }
 
-    public Set<Question> getPosts() {
+    public Set<Question> getQuestions() {
         return posts;
     }
 
@@ -26,10 +34,10 @@ public class Cluster {
     }
 
     public void addQuestion(Question question) {
-        // add question to set of posts
+        posts.add(question);
     }
 
     public void removeQuestion(Question question) {
-        // remove question from set of posts
+        posts.remove(question);
     }
 }

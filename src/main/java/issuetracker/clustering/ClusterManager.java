@@ -27,16 +27,16 @@ public class ClusterManager {
 //        }
     }
 
-    public Cluster generateCluster(String input) {
+    public Issue generateCluster(String input) {
         return null;
     }
 
-    public void addQuestion(Cluster cluster, Question question) {
+    public void addQuestion(Issue issue, Question question) {
         // add question to cluster
         // update DB
     }
 
-    public void removeQuestion(Cluster cluster, Question question) {
+    public void removeQuestion(Issue issue, Question question) {
         // remove question from cluster
         // update DB
     }
