@@ -147,6 +147,32 @@ public class CLIManagerTest {
     }
 
     @Test
+    public void CheckConfirmation_ConfirmationYes_ReturnTrue() {
+        //Arrange
+        String validInputUpper = "Y";
+        String validInputLower = "y";
+        //Act
+        boolean isValidUpper = cliManager.checkUserConfirmation(validInputUpper);
+        boolean isValidLower = cliManager.checkUserConfirmation(validInputLower);
+        //Assert
+        assertTrue(isValidUpper);
+        assertTrue(isValidLower);
+    }
+
+    @Test
+    public void CheckConfirmation_ConfirmationNo_ReturnFalse() {
+        //Arrange
+        String validInputUpper = "N";
+        String validInputLower = "n";
+        //Act
+        boolean isValidUpper = cliManager.checkUserConfirmation(validInputUpper);
+        boolean isValidLower = cliManager.checkUserConfirmation(validInputLower);
+        //Assert
+        assertFalse(isValidUpper);
+        assertFalse(isValidLower);
+    }
+
+    @Test
     public void logoutCLI_LogoutConfirmed_RunCalled() throws InvalidPropertiesFormatException {
         //Arrange
         String logoutCommand = "Y";

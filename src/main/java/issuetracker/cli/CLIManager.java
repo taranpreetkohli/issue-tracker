@@ -158,7 +158,6 @@ public class CLIManager {
     }
 
     public boolean checkUserConfirmationFormat(String input) {
-
         if (input.isEmpty()){
             throw new NoInputException("No Confirmation Provided");
         }
@@ -169,5 +168,29 @@ public class CLIManager {
         } else {
             return false;
         }
+    }
+
+    public void logoutCLI() {
+        System.out.println("Are you sure you want to logout?");
+        System.out.println("Please enter [Y/y] to confirm, or [N/n] to cancel");
+
+        String userInput = retrieveUserInput();
+        boolean isCorrectFormat = false;
+
+        try {
+            isCorrectFormat = checkUserDetailFormat(userInput);
+        } catch (NoInputException e) {
+            logoutCLI();
+        }
+
+        if (isCorrectFormat) {
+            authenticationManager.getCurrentUser().getView().get("L").run(authenticationManager, userInput, this);
+        } else {
+            System.out.println("You must confirm by entering [Y/y], or cancel by entering [N/n])");
+            registerCLI();
+        }
+    }
+
+    public boolean checkUserConfirmation(String validInputLower) {
     }
 }
