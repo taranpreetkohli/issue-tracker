@@ -1,11 +1,13 @@
 package issuetracker.cli;
 
+import issuetracker.authentication.Administrator;
 import issuetracker.authentication.AuthenticationManager;
+import issuetracker.authentication.User;
+import issuetracker.cli.view.ICommand;
 import issuetracker.clustering.ClusterManager;
 import issuetracker.exception.NoInputException;
 
-import java.util.InvalidPropertiesFormatException;
-import java.util.Scanner;
+import java.util.*;
 
 public class CLIManager {
     private AuthenticationManager authenticationManager;
@@ -46,7 +48,54 @@ public class CLIManager {
 
     public void registerCLI() {}
 
-    public void showMenu() {}
+    public void showMenu() {
+        User currentUser = authenticationManager.getCurrentUser();
+        HashMap<String, ICommand> userView = currentUser.getView();
+        String commandSet;
+
+        if (currentUser instanceof Administrator) {
+            commandSet = "R/V/M/L";
+        } else {
+            commandSet = "V/M/L";
+        }
+
+        for (Map.Entry<String, ICommand> entry : userView.entrySet()) {
+            switch (entry.getKey()) {
+                case "R":
+                    System.out.println("(R)egister");
+                    break;
+                case "V":
+                    System.out.println("(V)iew issues");
+                    break;
+                case "M":
+                    System.out.println("(M)anage issues");
+                    break;
+                case "L":
+                    System.out.println("(L)og out");
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        System.out.println("Please enter your command (" + commandSet + "): ");
+
+        String userInput = retrieveUserInput().toUpperCase();
+        if (isValidCommand(userInput)) {
+            switch (userInput) {
+                    case "R":
+                        registerCLI();
+                        break;
+                    case "V":
+                        break;
+                    case "M":
+                        break;
+                    case "L":
+                    break;
+
+            }
+        }
+    }
 
     private String retrieveUserInput() {
         Scanner scanner = new Scanner(System.in);
@@ -59,6 +108,7 @@ public class CLIManager {
         }
 
         if (authenticationManager.getCurrentUser().getView().keySet().contains(command.toUpperCase())){
+            System.out.println("I'm true!");
             return true;
         } else {
             return false;
