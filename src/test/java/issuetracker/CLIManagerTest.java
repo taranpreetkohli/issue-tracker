@@ -147,6 +147,60 @@ public class CLIManagerTest {
     }
 
     @Test
+    public void logoutCLI_LogoutConfirmed_RunCalled() throws InvalidPropertiesFormatException {
+        //Arrange
+        String logoutCommand = "Y";
+        ByteArrayInputStream in = new ByteArrayInputStream(logoutCommand.getBytes());
+        System.setIn(in);
+        CLIManager cliManagerSpy = Mockito.spy(cliManager);
+
+        Mockito.doReturn(true).when(cliManagerSpy).checkUserConfirmationFormat(anyString());
+
+        Administrator mockedAdmin = Mockito.mock(Administrator.class);
+        HashMap<String, ICommand> mockedHm = Mockito.mock(LinkedHashMap.class);
+        Command mockedCommand = Mockito.mock(Command.class);
+
+        Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
+        Mockito.doReturn(mockedHm).when(mockedAdmin).getView();
+        Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
+
+        //Act
+        try {
+            cliManager.logoutCLI();
+        } catch (NoSuchElementException e) {}
+
+        //Assert
+        verify(mockedCommand, times(1)).run(anyObject(), anyObject(), anyObject());
+    }
+
+    @Test
+    public void logoutCLI_LogoutNotConfirmed_RunNotCalled() throws InvalidPropertiesFormatException {
+        //Arrange
+        String logoutCommand = "N";
+        ByteArrayInputStream in = new ByteArrayInputStream(logoutCommand.getBytes());
+        System.setIn(in);
+        CLIManager cliManagerSpy = Mockito.spy(cliManager);
+
+        Mockito.doReturn(true).when(cliManagerSpy).checkUserConfirmationFormat(anyString());
+
+        Administrator mockedAdmin = Mockito.mock(Administrator.class);
+        HashMap<String, ICommand> mockedHm = Mockito.mock(LinkedHashMap.class);
+        Command mockedCommand = Mockito.mock(Command.class);
+
+        Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
+        Mockito.doReturn(mockedHm).when(mockedAdmin).getView();
+        Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
+
+        //Act
+        try {
+            cliManager.logoutCLI();
+        } catch (NoSuchElementException e) {}
+
+        //Assert
+        verify(mockedCommand, never()).run(anyObject(), anyObject(), anyObject());
+    }
+
+    @Test
     public void IsValidCommand_ValidCommand_ReturnsTrue() {
         //Arrange
         String validCommand = "L";
@@ -297,7 +351,7 @@ public class CLIManagerTest {
     }
 
     @Test
-    public void registerCLI_RegisterCommandAsDeveloper_AddUserNotCalled() throws InvalidPropertiesFormatException {
+    public void registerCLI_RegisterCommandAsDeveloper_RunNotCalled() throws InvalidPropertiesFormatException {
         //Arrange
         String registerCommand = "email@gmail.comp4ssword";
         ByteArrayInputStream in = new ByteArrayInputStream(registerCommand.getBytes());
