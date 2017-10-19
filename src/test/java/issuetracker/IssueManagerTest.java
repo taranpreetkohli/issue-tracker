@@ -3,10 +3,10 @@ package issuetracker;
 import issuetracker.clustering.Issue;
 import issuetracker.clustering.IssueManager;
 import issuetracker.clustering.Question;
+import org.apache.commons.lang3.NotImplementedException;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -157,7 +157,7 @@ public class IssueManagerTest {
 
     @Test
     public void SortIssues_IssuesList_IssuesOrderedCorrectlyByPriority() {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Stub");
     }
 
     @Test
@@ -178,7 +178,7 @@ public class IssueManagerTest {
         // Arrange
         // Act
         // Assert
-        throw new NotImplementedException();
+        throw new NotImplementedException("Stub");
     }
 
     @Test
@@ -205,6 +205,7 @@ public class IssueManagerTest {
 
         // Assert
         // TODO
+        throw new NotImplementedException("Not done yet");
     }
 
     @Test
@@ -212,7 +213,8 @@ public class IssueManagerTest {
         // Arrange
         // Act
         // Assert
-        throw new NotImplementedException();
+        throw new NotImplementedException("Stub!");
+
     }
 
     @Test
@@ -220,7 +222,7 @@ public class IssueManagerTest {
         // Arrange
         // Act
         // Assert
-        throw new NotImplementedException();
+        throw new NotImplementedException("Stub!");
     }
 
     @Test
@@ -228,7 +230,8 @@ public class IssueManagerTest {
         // Arrange
         // Act
         // Assert
-        throw new NotImplementedException();
+        throw new NotImplementedException("Stub!");
+
     }
 
     @Test
@@ -236,7 +239,8 @@ public class IssueManagerTest {
         // Arrange
         // Act
         // Assert
-        throw new NotImplementedException();
+        throw new NotImplementedException("Stub!");
+
     }
 
     private String buildInput(Question... questions) {
