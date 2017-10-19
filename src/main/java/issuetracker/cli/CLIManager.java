@@ -5,6 +5,7 @@ import issuetracker.clustering.ClusterManager;
 import issuetracker.exception.NoInputException;
 
 import java.util.HashMap;
+import java.util.InvalidPropertiesFormatException;
 import java.util.Scanner;
 
 public class CLIManager {
@@ -17,6 +18,24 @@ public class CLIManager {
     }
 
     public void startCLI() {
+        System.out.print("Login using your [email password]: ");
+        String userInput = retrieveUserInput();
+
+        if (checkUserDetailFormat(userInput)) {
+            String[] parts = userInput.split(" ");
+            try {
+                authenticationManager.login(parts[0], parts[1]);
+            } catch (InvalidPropertiesFormatException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public String retrieveUserInput() {
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
     }
 
     public boolean isValidCommand(String command) {
