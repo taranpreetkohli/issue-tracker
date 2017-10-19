@@ -3,6 +3,7 @@ package issuetracker.cli;
 import issuetracker.authentication.Administrator;
 import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.User;
+import issuetracker.cli.view.Command;
 import issuetracker.cli.view.ICommand;
 import issuetracker.clustering.ClusterManager;
 import issuetracker.exception.NoInputException;
@@ -63,7 +64,7 @@ public class CLIManager {
         }
 
         if (isCorrectFormat) {
-            authenticationManager.getCurrentUser().getView().get("R").run(authenticationManager, userInput, this);
+            authenticationManager.getCurrentUser().getViewMap().get("R").run(authenticationManager, userInput, this);
         } else {
             System.out.println("Email and password not entered in correct format");
             registerCLI();
@@ -72,7 +73,7 @@ public class CLIManager {
 
     public void showMenu() {
         User currentUser = authenticationManager.getCurrentUser();
-        Map<String, ICommand> userView = currentUser.getView();
+        Map<String, Command> userView = currentUser.getViewMap();
         String commandSet;
 
         if (currentUser instanceof Administrator) {
@@ -81,7 +82,7 @@ public class CLIManager {
             commandSet = "V/M/L";
         }
 
-        for (Map.Entry<String, ICommand> entry : userView.entrySet()) {
+        for (Map.Entry<String, Command> entry : userView.entrySet()) {
             switch (entry.getKey()) {
                 case "R":
                     System.out.println("(R)egister");
@@ -135,7 +136,7 @@ public class CLIManager {
             throw new NoInputException("No command given");
         }
 
-        if (authenticationManager.getCurrentUser().getView().keySet().contains(command.toUpperCase())){
+        if (authenticationManager.getCurrentUser().getViewMap().keySet().contains(command.toUpperCase())){
             System.out.println("I'm true!");
             return true;
         } else {
