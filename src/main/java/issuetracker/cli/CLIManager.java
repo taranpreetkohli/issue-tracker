@@ -56,7 +56,7 @@ public class CLIManager {
             throw new NoInputException("No command given");
         }
 
-        if (authenticationManager.getCurrentUser().getView().keySet().contains(command)){
+        if (authenticationManager.getCurrentUser().getView().keySet().contains(command.toUpperCase())){
             return true;
         } else {
             return false;
