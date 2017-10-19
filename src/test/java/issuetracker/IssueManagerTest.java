@@ -3,18 +3,27 @@ package issuetracker;
 import issuetracker.clustering.Issue;
 import issuetracker.clustering.IssueManager;
 import issuetracker.clustering.Question;
+import issuetracker.db.FirebaseAdapter;
 import org.apache.commons.lang3.NotImplementedException;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.times;
 
 @Ignore
+@RunWith(MockitoJUnitRunner.class)
 public class IssueManagerTest {
 
     private Question questionOne;
@@ -23,9 +32,12 @@ public class IssueManagerTest {
 
     private IssueManager issueManager;
 
+    @Mock
+    private FirebaseAdapter firebaseAdapter;
+
     @Before
     public void setup() {
-        issueManager = new IssueManager();
+        issueManager = new IssueManager(firebaseAdapter);
 
         questionOne = new Question()
                 .setQuestionID(44330)
@@ -56,7 +68,7 @@ public class IssueManagerTest {
     }
 
     @Test
-    public void GenerateClusterTitle_SinglePostCluster_ClusterTitleCorrectlySet() {
+    public void GenerateIssueTitle_SinglePostIssue_IssueTitleCorrectlySet() {
         //arrange
         String input = buildInput(questionOne);
 
@@ -68,7 +80,7 @@ public class IssueManagerTest {
     }
 
     @Test
-    public void GenerateClusterTitle_MultiplePostCluster_ClusterTitleCorrectlySet() {
+    public void GenerateIssueTitle_MultiplePostIssue_IssueTitleCorrectlySet() {
         //arrange
         String input = buildInput(questionOne, questionTwo, questionThree);
 
@@ -161,86 +173,60 @@ public class IssueManagerTest {
     }
 
     @Test
-    public void AddForumPost_ExistingCluster_ClusterHasNewForumPost() {
+    public void AddForumPost_ExistingIssue_IssueHasNewForumPost() {
         // Arrange
-        String input = buildInput(questionOne);
+        Issue issue = Mockito.mock(Issue.class);
+        Question existingQuestion = Mockito.mock(Question.class);
+        Set<Question> questions = new HashSet<>();
+        questions.add(existingQuestion);
+        Mockito.doReturn(questions).when(issue.getPosts());
 
         // Act
-        Issue issue = issueManager.generateCluster(input);
-        issueManager.addQuestion(issue, questionTwo);
+        issueManager.addQuestion(issue, questionOne);
 
         // Assert
+        Mockito.verify(firebaseAdapter, times(1)).updateIssue(issue);
         assertThat(issue.getQuestions(), hasSize(2));
     }
 
     @Test
-    public void AddForumPost_ClusterDoesNotExist_ExceptionThrown() {
+    public void RemoveForumPost_ExistingIssue_IssueNoLongerContainsForumPost() {
         // Arrange
-        // Act
-        // Assert
-        throw new NotImplementedException("Stub");
-    }
-
-    @Test
-    public void RemoveForumPost_ExistingCluster_ClusterNoLongerContainsForumPost() {
-        // Arrange
-        String input = buildInput(questionOne, questionTwo, questionThree);
+        Issue issue = new Issue();
+        issue.addQuestion(questionOne);
+        issue.addQuestion(questionTwo);
+        issue.addQuestion(questionThree);
 
         // Act
-        Issue issue = issueManager.generateCluster(input);
         issueManager.removeQuestion(issue, questionTwo);
 
         // Assert
+        Mockito.verify(firebaseAdapter, times(1)).updateIssue(issue);
         assertThat(issue.getQuestions(), hasSize(2));
     }
 
     @Test
-    public void RemoveForumPost_SinglePostCluster_ClusterGetsDeleted() {
+    public void RemoveForumPost_SinglePostIssue_IssueGetsDeleted() {
         // Arrange
-        String input = buildInput(questionOne);
+        Issue issue = new Issue();
+        issue.addQuestion(questionOne);
 
         // Act
-        Issue issue = issueManager.generateCluster(input);
         issueManager.removeQuestion(issue, questionOne);
 
         // Assert
-        // TODO
-        throw new NotImplementedException("Not done yet");
+        Mockito.verify(firebaseAdapter, times(1)).deleteIssue(issue);
+        assertThat(issue.getQuestions(), hasSize(0));
     }
 
     @Test
-    public void RemoveForumPost_ClusterDoesNotExist_ExceptionThrown() {
+    public void DeleteIssue_ExistingIssue_RemovesIssueFromDatabase() {
         // Arrange
+        Issue issue = Mockito.mock(Issue.class);
         // Act
+        issueManager.deleteIssue(issue);
         // Assert
-        throw new NotImplementedException("Stub!");
-
-    }
-
-    @Test
-    public void DeleteCluster_ExistingCluster_ForumPostsPutIntoIndividualClusters() {
-        // Arrange
-        // Act
-        // Assert
-        throw new NotImplementedException("Stub!");
-    }
-
-    @Test
-    public void DeleteCluster_ExistingCluster_RemovesClusterFromDatabase() {
-        // Arrange
-        // Act
-        // Assert
-        throw new NotImplementedException("Stub!");
-
-    }
-
-    @Test
-    public void DeleteCluster_ClusterDoesNotExist_ExceptionThrown() {
-        // Arrange
-        // Act
-        // Assert
-        throw new NotImplementedException("Stub!");
-
+        Mockito.verify(firebaseAdapter, times(1)).deleteIssue(issue);
     }
 
     private String buildInput(Question... questions) {

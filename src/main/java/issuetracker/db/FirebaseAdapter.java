@@ -4,6 +4,7 @@ import com.google.firebase.database.DatabaseReference;
 import issuetracker.authentication.Administrator;
 import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
+import issuetracker.clustering.Issue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,5 +59,13 @@ public class FirebaseAdapter {
             logger.info("Retrieved administrator with email: " + administrator.getEmail());
             return administrator;
         }
+    }
+
+    public void updateIssue(Issue issue) {
+        // saves the issue in the database
+    }
+
+    public void deleteIssue(Issue issue) {
+        // deletes the issue from the database
     }
 }

@@ -1,30 +1,16 @@
 package issuetracker.clustering;
 
+import issuetracker.db.FirebaseAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class IssueManager {
 
     private static Logger logger = LoggerFactory.getLogger(IssueManager.class);
+    private FirebaseAdapter firebaseAdapter;
 
-    public IssueManager() {
-//        try {
-//            URL testResourceURL = getClass().getClassLoader().getResource("test.arff");
-//            File testFile = new File(testResourceURL.getFile());
-//            Instances instances = new Instances(new BufferedReader(new FileReader(testFile)));
-//            StringToWordVector s = new StringToWordVector();
-//            s.setInputFormat(instances);
-//            instances = Filter.useFilter(instances, s);
-//            DBSCAN dbscan = new DBSCAN();
-//            System.out.println(instances.toString());
-//            dbscan.setEpsilon(1);
-//            dbscan.setMinPoints(1);
-//            dbscan.buildClusterer(instances);
-//            System.out.println(dbscan.toString());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException(e.getMessage());
-//        }
+    public IssueManager(FirebaseAdapter firebaseAdapter) {
+        this.firebaseAdapter = firebaseAdapter;
     }
 
     public Issue generateCluster(String input) {
@@ -39,5 +25,9 @@ public class IssueManager {
     public void removeQuestion(Issue issue, Question question) {
         // remove question from cluster
         // update DB
+    }
+
+    public void deleteIssue(Issue issue) {
+        // deletes issue from db
     }
 }
