@@ -1,7 +1,7 @@
 package issuetracker;
 
 import issuetracker.clustering.Issue;
-import issuetracker.clustering.ClusterManager;
+import issuetracker.clustering.IssueManager;
 import issuetracker.clustering.Question;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -21,11 +21,11 @@ public class IssueManagerTest {
     private Question questionTwo;
     private Question questionThree;
 
-    private ClusterManager clusterManager;
+    private IssueManager issueManager;
 
     @Before
     public void setup() {
-        clusterManager = new ClusterManager();
+        issueManager = new IssueManager();
 
         questionOne = new Question()
                 .setQuestionID(44330)
@@ -61,7 +61,7 @@ public class IssueManagerTest {
         String input = buildInput(questionOne);
 
         //act
-        Issue issue = clusterManager.generateCluster(input);
+        Issue issue = issueManager.generateCluster(input);
 
         //assert
         assertFalse(issue.getTitle().isEmpty());
@@ -73,7 +73,7 @@ public class IssueManagerTest {
         String input = buildInput(questionOne, questionTwo, questionThree);
 
         //act
-        Issue issue = clusterManager.generateCluster(input);
+        Issue issue = issueManager.generateCluster(input);
 
         //assert
         assertFalse(issue.getTitle().isEmpty());
@@ -85,7 +85,7 @@ public class IssueManagerTest {
         String input = buildInput(questionOne);
 
         //act
-        Issue issue = clusterManager.generateCluster(input);
+        Issue issue = issueManager.generateCluster(input);
 
         //assert
         assertThat(issue.getQuestions(), hasSize(1));
@@ -97,7 +97,7 @@ public class IssueManagerTest {
         String input = buildInput(questionOne, questionTwo, questionThree);
 
         //act
-        Issue issue = clusterManager.generateCluster(input);
+        Issue issue = issueManager.generateCluster(input);
 
         //assert
         assertThat(issue.getQuestions(), hasSize(3));
@@ -109,7 +109,7 @@ public class IssueManagerTest {
         String input = buildInput(questionOne);
 
         //act
-        Issue issue = clusterManager.generateCluster(input);
+        Issue issue = issueManager.generateCluster(input);
 
         //assert
         assertEquals(1, issue.getUsers());
@@ -121,7 +121,7 @@ public class IssueManagerTest {
         String input = buildInput(questionOne, questionTwo, questionThree);
 
         //act
-        Issue issue = clusterManager.generateCluster(input);
+        Issue issue = issueManager.generateCluster(input);
 
         //assert
         assertEquals(3, issue.getUsers());
@@ -132,7 +132,7 @@ public class IssueManagerTest {
         //arrange
         //act
         //should throw exception
-        clusterManager.generateCluster(null);
+        issueManager.generateCluster(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -140,7 +140,7 @@ public class IssueManagerTest {
         //arrange
         //act
         //should throw exception
-        clusterManager.generateCluster("");
+        issueManager.generateCluster("");
     }
 
     @Test
@@ -149,7 +149,7 @@ public class IssueManagerTest {
         String input = buildInput(questionOne, questionTwo, questionThree);
 
         //act
-        Issue issue = clusterManager.generateCluster(input);
+        Issue issue = issueManager.generateCluster(input);
 
         //assert
         assertFalse(issue.getSummary().isEmpty());
@@ -166,8 +166,8 @@ public class IssueManagerTest {
         String input = buildInput(questionOne);
 
         // Act
-        Issue issue = clusterManager.generateCluster(input);
-        clusterManager.addQuestion(issue, questionTwo);
+        Issue issue = issueManager.generateCluster(input);
+        issueManager.addQuestion(issue, questionTwo);
 
         // Assert
         assertThat(issue.getQuestions(), hasSize(2));
@@ -187,8 +187,8 @@ public class IssueManagerTest {
         String input = buildInput(questionOne, questionTwo, questionThree);
 
         // Act
-        Issue issue = clusterManager.generateCluster(input);
-        clusterManager.removeQuestion(issue, questionTwo);
+        Issue issue = issueManager.generateCluster(input);
+        issueManager.removeQuestion(issue, questionTwo);
 
         // Assert
         assertThat(issue.getQuestions(), hasSize(2));
@@ -200,8 +200,8 @@ public class IssueManagerTest {
         String input = buildInput(questionOne);
 
         // Act
-        Issue issue = clusterManager.generateCluster(input);
-        clusterManager.removeQuestion(issue, questionOne);
+        Issue issue = issueManager.generateCluster(input);
+        issueManager.removeQuestion(issue, questionOne);
 
         // Assert
         // TODO

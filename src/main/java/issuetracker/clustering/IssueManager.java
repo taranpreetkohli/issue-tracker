@@ -3,11 +3,11 @@ package issuetracker.clustering;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ClusterManager {
+public class IssueManager {
 
-    private static Logger logger = LoggerFactory.getLogger(ClusterManager.class);
+    private static Logger logger = LoggerFactory.getLogger(IssueManager.class);
 
-    public ClusterManager() {
+    public IssueManager() {
 //        try {
 //            URL testResourceURL = getClass().getClassLoader().getResource("test.arff");
 //            File testFile = new File(testResourceURL.getFile());

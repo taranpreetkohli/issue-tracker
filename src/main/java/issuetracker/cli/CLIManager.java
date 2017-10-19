@@ -1,20 +1,19 @@
 package issuetracker.cli;
 
 import issuetracker.authentication.AuthenticationManager;
-import issuetracker.clustering.ClusterManager;
+import issuetracker.clustering.IssueManager;
 import issuetracker.exception.NoInputException;
 
-import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Scanner;
 
 public class CLIManager {
     private AuthenticationManager authenticationManager;
-    private ClusterManager clusterManager;
+    private IssueManager issueManager;
 
-    public CLIManager(AuthenticationManager authenticationManager, ClusterManager clusterManager) {
+    public CLIManager(AuthenticationManager authenticationManager, IssueManager issueManager) {
         this.authenticationManager = authenticationManager;
-        this.clusterManager = clusterManager;
+        this.issueManager = issueManager;
     }
 
     public void startCLI() {
