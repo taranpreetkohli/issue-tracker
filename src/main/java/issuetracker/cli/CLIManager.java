@@ -46,7 +46,28 @@ public class CLIManager {
         }
     }
 
-    public void registerCLI() {}
+    public void registerCLI() {
+        System.out.println("Register a developer using a valid email and password");
+        System.out.println("Password must be 8 or more characters containing no spaces");
+        System.out.println("Please enter the details in the format [email password]: ");
+
+        String userInput = retrieveUserInput();
+        System.out.println("Retrieved user input for register is: " + userInput);
+        boolean isCorrectFormat = false;
+
+        try {
+            isCorrectFormat = checkUserDetailFormat(userInput);
+        } catch (NoInputException e) {
+            registerCLI();
+        }
+
+        if (isCorrectFormat) {
+            authenticationManager.getCurrentUser().getView().get("R").run(authenticationManager, userInput, this);
+        } else {
+            System.out.println("Email and password not entered in correct format");
+            registerCLI();
+        }
+    }
 
     public void showMenu() {
         User currentUser = authenticationManager.getCurrentUser();
@@ -81,9 +102,13 @@ public class CLIManager {
         System.out.println("Please enter your command (" + commandSet + "): ");
 
         String userInput = retrieveUserInput().toUpperCase();
+
+        System.out.println("Passed retrieve user input, user input is: " + userInput);
         if (isValidCommand(userInput)) {
+            System.out.println("User input is: " + userInput);
             switch (userInput) {
                     case "R":
+                        System.out.println("In R case");
                         registerCLI();
                         break;
                     case "V":
@@ -94,10 +119,12 @@ public class CLIManager {
                     break;
 
             }
+        } else {
+            System.out.println("Valid command false, user command is: " + userInput);
         }
     }
 
-    private String retrieveUserInput() {
+    public String retrieveUserInput() {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
