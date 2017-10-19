@@ -193,6 +193,7 @@ public class CLIManagerTest {
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
         Mockito.doReturn(true).when(cliManagerSpy).isValidCommand(registerCommand);
+        Mockito.doReturn(new Administrator("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
 
         //Act
         cliManager.showMenu();
@@ -209,6 +210,7 @@ public class CLIManagerTest {
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
         Mockito.doReturn(false).when(cliManagerSpy).isValidCommand(registerCommand);
+        Mockito.doReturn(new Developer("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
 
         //Act
         cliManager.showMenu();
