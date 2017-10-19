@@ -1,9 +1,7 @@
 package issuetracker.authentication;
 
 import issuetracker.cli.view.Command;
-import issuetracker.cli.view.ICommand;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class User {

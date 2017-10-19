@@ -5,7 +5,6 @@ import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.Developer;
 import issuetracker.cli.CLIManager;
 import issuetracker.cli.view.Command;
-import issuetracker.cli.view.ICommand;
 import issuetracker.clustering.ClusterManager;
 import issuetracker.exception.NoInputException;
 import org.junit.*;
@@ -181,11 +180,11 @@ public class CLIManagerTest {
         Mockito.doReturn(true).when(cliManagerSpy).checkUserConfirmationFormat(anyString());
 
         Administrator mockedAdmin = Mockito.mock(Administrator.class);
-        HashMap<String, ICommand> mockedHm = Mockito.mock(LinkedHashMap.class);
+        HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
         Command mockedCommand = Mockito.mock(Command.class);
 
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedHm).when(mockedAdmin).getView();
+        Mockito.doReturn(mockedHm).when(mockedAdmin).getViewMap();
         Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
@@ -208,11 +207,11 @@ public class CLIManagerTest {
         Mockito.doReturn(true).when(cliManagerSpy).checkUserConfirmationFormat(anyString());
 
         Administrator mockedAdmin = Mockito.mock(Administrator.class);
-        HashMap<String, ICommand> mockedHm = Mockito.mock(LinkedHashMap.class);
+        HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
         Command mockedCommand = Mockito.mock(Command.class);
 
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedHm).when(mockedAdmin).getView();
+        Mockito.doReturn(mockedHm).when(mockedAdmin).getViewMap();
         Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
@@ -331,7 +330,7 @@ public class CLIManagerTest {
         Mockito.doReturn(true).when(cliManagerSpy).checkUserDetailFormat(anyString());
 
         Administrator mockedAdmin = Mockito.mock(Administrator.class);
-        HashMap<String, ICommand> mockedHm = Mockito.mock(LinkedHashMap.class);
+        HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
         Command mockedCommand = Mockito.mock(Command.class);
 
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
@@ -358,7 +357,7 @@ public class CLIManagerTest {
         Mockito.doReturn(false).when(cliManagerSpy).checkUserDetailFormat(anyString());
 
         Administrator mockedAdmin = Mockito.mock(Administrator.class);
-        HashMap<String, ICommand> mockedHm = Mockito.mock(LinkedHashMap.class);
+        HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
         Command mockedCommand = Mockito.mock(Command.class);
 
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
@@ -385,7 +384,7 @@ public class CLIManagerTest {
         Mockito.doReturn(false).when(cliManagerSpy).checkUserDetailFormat(anyString());
 
         Administrator mockedAdmin = Mockito.mock(Administrator.class);
-        HashMap<String, ICommand> mockedHm = Mockito.mock(LinkedHashMap.class);
+        HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
         Command mockedCommand = Mockito.mock(Command.class);
 
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();

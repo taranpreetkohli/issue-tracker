@@ -1,10 +1,10 @@
 package issuetracker;
 
 import issuetracker.authentication.*;
+import issuetracker.cli.view.Command;
 import issuetracker.db.FirebaseAdapter;
 import issuetracker.exception.IncorrectPasswordException;
 import issuetracker.exception.UserException;
-import issuetracker.cli.view.ICommand;
 import org.junit.*;
 import org.mockito.Mockito;
 
@@ -168,7 +168,7 @@ public class AuthenticationManagerTest {
     @Test
     public void LogIn_AdminAccount_UserIsShownAdminView() {
         //Arrange Act
-        Map<String, ICommand> commands = me.getViewMap();
+        Map<String, Command> commands = me.getViewMap();
 
         //Assert
         Assert.assertTrue(commands.containsKey("R"));
@@ -188,7 +188,7 @@ public class AuthenticationManagerTest {
         } catch (Exception e) {}
 
         //Act
-        Map<String, ICommand> commands = currentUser.getViewMap();
+        Map<String, Command> commands = currentUser.getViewMap();
 
         //Assert
         Assert.assertFalse(commands.containsKey("R"));
