@@ -4,17 +4,20 @@ import issuetracker.authentication.Administrator;
 import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.Developer;
 import issuetracker.cli.CLIManager;
+import issuetracker.cli.view.Command;
+import issuetracker.cli.view.ICommand;
 import issuetracker.clustering.ClusterManager;
 import issuetracker.exception.NoInputException;
 import org.junit.*;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayInputStream;
-import java.util.InvalidPropertiesFormatException;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.booleanThat;
 import static org.mockito.Mockito.never;
@@ -186,36 +189,84 @@ public class CLIManagerTest {
     }
 
     @Test
-    public void ShowMenu_RegisterCommandAsAdministrator_RegisterCalled() throws InvalidPropertiesFormatException {
+    public void registerCLI_RegisterCommandAsAdministratorAndCorrectFormat_RunCalled() throws InvalidPropertiesFormatException {
         //Arrange
-        String registerCommand = "R";
+        String registerCommand = "email@gmail.com p4ssword";
         ByteArrayInputStream in = new ByteArrayInputStream(registerCommand.getBytes());
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
-        Mockito.doReturn(true).when(cliManagerSpy).isValidCommand(registerCommand);
-        Mockito.doReturn(new Administrator("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
+
+        Mockito.doReturn(true).when(cliManagerSpy).checkUserDetailFormat(anyString());
+
+        Administrator mockedAdmin = Mockito.mock(Administrator.class);
+        HashMap<String, ICommand> mockedHm = Mockito.mock(LinkedHashMap.class);
+        Command mockedCommand = Mockito.mock(Command.class);
+
+        Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
+        Mockito.doReturn(mockedHm).when(mockedAdmin).getView();
+        Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
-        cliManager.showMenu();
+        try {
+            cliManager.registerCLI();
+        } catch (NoSuchElementException e) {}
 
         //Assert
-        verify(cliManagerSpy, times(1)).registerCLI();
+        verify(mockedCommand, times(1)).run(anyObject(), anyObject(), anyObject());
     }
 
     @Test
-    public void ShowMenu_RegisterCommandAsDeveloper_RegisterNotCalled() throws InvalidPropertiesFormatException {
+    public void registerCLI_RegisterCommandAsAdministratorAndIncorrectFormat_RunNotCalled() throws InvalidPropertiesFormatException {
         //Arrange
-        String registerCommand = "R";
+        String registerCommand = "email@gmail.comp4ssword";
         ByteArrayInputStream in = new ByteArrayInputStream(registerCommand.getBytes());
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
-        Mockito.doReturn(false).when(cliManagerSpy).isValidCommand(registerCommand);
-        Mockito.doReturn(new Developer("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
+
+        Mockito.doReturn(false).when(cliManagerSpy).checkUserDetailFormat(anyString());
+
+        Administrator mockedAdmin = Mockito.mock(Administrator.class);
+        HashMap<String, ICommand> mockedHm = Mockito.mock(LinkedHashMap.class);
+        Command mockedCommand = Mockito.mock(Command.class);
+
+        Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
+        Mockito.doReturn(mockedHm).when(mockedAdmin).getView();
+        Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
-        cliManager.showMenu();
+        try {
+            cliManager.registerCLI();
+        } catch (NoSuchElementException e) {}
 
         //Assert
-        verify(cliManagerSpy, never()).registerCLI();
+        verify(mockedCommand, never()).run(anyObject(), anyObject(), anyObject());
     }
+
+    @Test
+    public void registerCLI_RegisterCommandAsDeveloper_AddUserNotCalled() throws InvalidPropertiesFormatException {
+        //Arrange
+        String registerCommand = "email@gmail.comp4ssword";
+        ByteArrayInputStream in = new ByteArrayInputStream(registerCommand.getBytes());
+        System.setIn(in);
+        CLIManager cliManagerSpy = Mockito.spy(cliManager);
+
+        Mockito.doReturn(false).when(cliManagerSpy).checkUserDetailFormat(anyString());
+
+        Administrator mockedAdmin = Mockito.mock(Administrator.class);
+        HashMap<String, ICommand> mockedHm = Mockito.mock(LinkedHashMap.class);
+        Command mockedCommand = Mockito.mock(Command.class);
+
+        Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
+        Mockito.doReturn(mockedHm).when(mockedAdmin).getView();
+        Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
+
+        //Act
+        try {
+            cliManager.registerCLI();
+        } catch (NoSuchElementException e) {}
+
+        //Assert
+        verify(mockedCommand, never()).run(anyObject(), anyObject(), anyObject());
+    }
+
 }
