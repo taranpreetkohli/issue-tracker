@@ -1,4 +1,4 @@
-package issuetracker.view;
+package issuetracker.cli.view;
 
 public interface ICommand {
 }
