@@ -19,8 +19,15 @@ public class CLIManager {
     public void loginCLI() {
         System.out.print("Login using your [email password]: ");
         String userInput = retrieveUserInput();
+        boolean isCorrectFormat = false;
 
-        if (checkUserDetailFormat(userInput)) {
+        try {
+            isCorrectFormat = checkUserDetailFormat(userInput);
+        } catch (NoInputException e) {
+            loginCLI();
+        }
+
+        if (isCorrectFormat) {
             String[] parts = userInput.split(" ");
             try {
                 authenticationManager.login(parts[0], parts[1]);
