@@ -198,7 +198,7 @@ public class CLIManagerTest {
         cliManager.showMenu();
 
         //Assert
-        verify(authenticationManager, times(1)).addUser(anyString(), anyString());
+        verify(cliManagerSpy, times(1)).registerCLI();
     }
 
     @Test
@@ -214,6 +214,6 @@ public class CLIManagerTest {
         cliManager.showMenu();
 
         //Assert
-        verify(authenticationManager, never()).addUser(anyString(), anyString());
+        verify(cliManagerSpy, never()).registerCLI();
     }
 }
