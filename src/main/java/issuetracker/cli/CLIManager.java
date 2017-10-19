@@ -33,6 +33,7 @@ public class CLIManager {
             String[] parts = userInput.split(" ");
             try {
                 authenticationManager.login(parts[0], parts[1]);
+                showMenu();
             } catch (InvalidPropertiesFormatException e) {
                 System.out.println(e.getMessage() + ". Please try again");
                 loginCLI();
