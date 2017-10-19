@@ -115,21 +115,19 @@ public class CLIManagerTest {
         assertTrue(isValidLower);
     }
 
-    @Test
+    @Test(expected = NoInputException.class)
     public void CheckConfirmationFormat_NoInput_ReturnFalse() {
         //Arrange
         String emptyInput = "";
         //Act Assert
         boolean isValid = cliManager.checkUserConfirmationFormat(emptyInput);
-        //Assert
-        assertFalse(isValid);
     }
 
     @Test
     public void CheckConfirmationFormat_TooManyInputs_ReturnFalse() {
         //Arrange
         String invalidInput = "Y N";
-        //Act Assert
+        //Act
         boolean isValid = cliManager.checkUserConfirmationFormat(invalidInput);
         //Assert
         assertFalse(isValid);
@@ -139,7 +137,7 @@ public class CLIManagerTest {
     public void CheckConfirmationFormat_InvalidCharacter_ReturnFalse() {
         //Arrange
         String invalidInput = "W";
-        //Act Assert
+        //Act
         boolean isValid = cliManager.checkUserConfirmationFormat(invalidInput);
         //Assert
         assertFalse(isValid);
