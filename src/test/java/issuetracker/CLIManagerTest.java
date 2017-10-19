@@ -6,7 +6,6 @@ import issuetracker.cli.CLIManager;
 import issuetracker.clustering.ClusterManager;
 import issuetracker.exception.NoInputException;
 import org.junit.*;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayInputStream;
@@ -14,7 +13,6 @@ import java.util.InvalidPropertiesFormatException;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -125,7 +123,7 @@ public class CLIManagerTest {
     }
 
     @Test
-    public void StartCLI_ValidLoginFormat_LoginCalled() throws InstantiationException, InvalidPropertiesFormatException {
+    public void LoginCLI_ValidLoginFormat_LoginCalled() throws InstantiationException, InvalidPropertiesFormatException {
         //Arrange
         String validInput = "developer@gmail.com password";
         ByteArrayInputStream in = new ByteArrayInputStream(validInput.getBytes());
@@ -134,14 +132,14 @@ public class CLIManagerTest {
         Mockito.doReturn(true).when(cliManagerSpy).checkUserDetailFormat(validInput);
 
         //Act
-        cliManager.startCLI();
+        cliManager.loginCLI();
 
         //Assert
         verify(authenticationManager, times(1)).login(anyString(),anyString());
     }
 
     @Test
-    public void StartCLI_InvalidLoginFormat_LoginNotCalled() throws InstantiationException, InvalidPropertiesFormatException {
+    public void LoginCLI_InvalidLoginFormat_LoginNotCalled() throws InstantiationException, InvalidPropertiesFormatException {
         //Arrange
         String invalidInput = "developer@gmail.compassword";
         ByteArrayInputStream in = new ByteArrayInputStream(invalidInput.getBytes());
@@ -150,7 +148,7 @@ public class CLIManagerTest {
         Mockito.doReturn(false).when(cliManagerSpy).checkUserDetailFormat(invalidInput);
 
         //Act
-        cliManager.startCLI();
+        cliManager.loginCLI();
 
         //Assert
         verify(authenticationManager, never()).login(anyString(),anyString());
