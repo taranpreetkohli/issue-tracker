@@ -1,9 +1,13 @@
 package issuetracker;
 
+import issuetracker.authentication.Administrator;
+import issuetracker.authentication.Developer;
 import issuetracker.clustering.Issue;
 import issuetracker.clustering.IssueManager;
 import issuetracker.clustering.Question;
 import issuetracker.db.FirebaseAdapter;
+import issuetracker.exception.DeveloperNotAssignedException;
+import issuetracker.exception.IssueAlreadyResolved;
 import org.apache.commons.lang3.NotImplementedException;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -245,57 +249,83 @@ public class IssueManagerTest {
     @Test
     public void AdminAssignIssue_ExistingDeveloper_UpdatesIssue() {
         // Arrange
-        // Act
-        // Assert
-        throw new org.apache.commons.lang3.NotImplementedException("Stub!");
-    }
+        Issue issue = Mockito.mock(Issue.class);
+        Administrator admin = Mockito.mock(Administrator.class);
+        Developer developer = Mockito.mock(Developer.class);
 
-    @Test
-    public void AdminAssignIssue_DeveloperDoesNotExist_ExceptionThrown() {
-        // Arrange
         // Act
+        issueManager.assignIssue(admin, issue, developer);
         // Assert
-        throw new org.apache.commons.lang3.NotImplementedException("Stub!");
+        Mockito.verify(issue, times(1)).addAssignee(developer);
+        Mockito.verify(firebaseAdapter, times(1)).updateIssue(issue);
     }
 
     @Test
     public void AdminUnassignIssue_DeveloperAssignedToThatIssue_UpdatesIssue() {
         // Arrange
+        Issue issue = Mockito.mock(Issue.class);
+        Administrator admin = Mockito.mock(Administrator.class);
+        Developer developer = Mockito.mock(Developer.class);
+        issueManager.assignIssue(admin, issue, developer);
+
         // Act
+        issueManager.unAssignIssue(admin, issue, developer);
         // Assert
-        throw new org.apache.commons.lang3.NotImplementedException("Stub!");
+        Mockito.verify(issue, times(1)).removeAssignee(developer);
+        Mockito.verify(firebaseAdapter, times(1)).updateIssue(issue);
     }
 
-    @Test
+    @Test(expected = DeveloperNotAssignedException.class)
     public void AdminUnassignIssue_DeveloperNotAssignedToThatIssue_ExceptionThrown() {
         // Arrange
+        Issue issue = Mockito.mock(Issue.class);
+        Administrator admin = Mockito.mock(Administrator.class);
+        Developer developer = Mockito.mock(Developer.class);
+
         // Act
-        // Assert
-        throw new org.apache.commons.lang3.NotImplementedException("Stub!");
+        issueManager.assignIssue(admin, issue, developer);
+        // should throw an exception
     }
 
     @Test
     public void DevResolveIssue_DeveloperAssignedToThatIssue_IssueResolved() {
         // Arrange
+        Issue issue = Mockito.mock(Issue.class);
+        Developer developer = Mockito.mock(Developer.class);
+        Administrator admin = Mockito.mock(Administrator.class);
+        issueManager.assignIssue(admin, issue, developer);
+
         // Act
+        issueManager.resolveIssue(developer, issue);
         // Assert
-        throw new org.apache.commons.lang3.NotImplementedException("Stub!");
+        Mockito.verify(issue, times(1)).resolve(developer);
+        Mockito.verify(firebaseAdapter, times(1)).updateIssue(issue);
     }
 
-    @Test
+    @Test(expected = DeveloperNotAssignedException.class)
     public void DevResolveIssue_DeveloperNotAssignedToThatIssue_ExceptionThrown() {
         // Arrange
+        Issue issue = Mockito.mock(Issue.class);
+        Developer developer = Mockito.mock(Developer.class);
+        Administrator admin = Mockito.mock(Administrator.class);
+
         // Act
-        // Assert
-        throw new org.apache.commons.lang3.NotImplementedException("Stub!");
+        issueManager.resolveIssue(developer, issue);
+        // show throw exception
     }
 
-    @Test
-    public void DevResolveIssue_IssueDoesNotExist_ExceptionThrown() {
+    @Test(expected = IssueAlreadyResolved.class)
+    public void DevResolveIssue_IssueAlreadyResolved_ExceptionThrown() {
         // Arrange
+        Issue issue = Mockito.mock(Issue.class);
+        Developer developer = Mockito.mock(Developer.class);
+        Administrator admin = Mockito.mock(Administrator.class);
+        issueManager.assignIssue(admin, issue, developer);
+
         // Act
-        // Assert
-        throw new org.apache.commons.lang3.NotImplementedException("Stub!");
+        issueManager.resolveIssue(developer, issue);
+        issueManager.resolveIssue(developer, issue);
+        // should throw exception
     }
 
 }

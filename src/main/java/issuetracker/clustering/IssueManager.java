@@ -1,5 +1,7 @@
 package issuetracker.clustering;
 
+import issuetracker.authentication.Administrator;
+import issuetracker.authentication.Developer;
 import issuetracker.db.FirebaseAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,5 +31,17 @@ public class IssueManager {
 
     public void deleteIssue(Issue issue) {
         // deletes issue from db
+    }
+
+    public void assignIssue(Administrator admin, Issue issue, Developer developer) {
+        // lets admin assign issue to developer
+    }
+
+    public void unAssignIssue(Administrator admin, Issue issue, Developer developer) {
+        // lets admin assign issue from a developer
+    }
+
+    public void resolveIssue(Developer developer, Issue issue) {
+        // lets developer resolve an issue
     }
 }

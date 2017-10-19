@@ -1,5 +1,7 @@
 package issuetracker.clustering;
 
+import issuetracker.authentication.Developer;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,5 +59,17 @@ public class Issue {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public void addAssignee(Developer developer) {
+        // assigns a developer to this issue
+    }
+
+    public void removeAssignee(Developer developer) {
+        // unassigns a developer from this issue
+    }
+
+    public void resolve(Developer developer) {
+        // sets the status of this issue to resolved
     }
 }
