@@ -4,7 +4,6 @@ import issuetracker.authentication.Administrator;
 import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.User;
 import issuetracker.cli.view.Command;
-import issuetracker.cli.view.ICommand;
 import issuetracker.clustering.ClusterManager;
 import issuetracker.exception.NoInputException;
 
@@ -34,7 +33,6 @@ public class CLIManager {
             String[] parts = userInput.split(" ");
             try {
                 authenticationManager.login(parts[0], parts[1]);
-                showMenu();
             } catch (InvalidPropertiesFormatException e) {
                 System.out.println(e.getMessage() + ". Please try again");
                 loginCLI();
