@@ -33,7 +33,7 @@ public class CLIManager {
             }
         } else {
             System.out.println("Email and password not entered in correct format");
-            //loginCLI();
+            loginCLI();
         }
     }
 
