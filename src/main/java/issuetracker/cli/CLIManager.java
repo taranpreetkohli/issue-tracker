@@ -4,7 +4,6 @@ import issuetracker.authentication.AuthenticationManager;
 import issuetracker.clustering.ClusterManager;
 import issuetracker.exception.NoInputException;
 
-import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Scanner;
 
@@ -17,7 +16,7 @@ public class CLIManager {
         this.clusterManager = clusterManager;
     }
 
-    public void startCLI() {
+    public void loginCLI() {
         System.out.print("Login using your [email password]: ");
         String userInput = retrieveUserInput();
 
@@ -26,14 +25,19 @@ public class CLIManager {
             try {
                 authenticationManager.login(parts[0], parts[1]);
             } catch (InvalidPropertiesFormatException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage() + ". Please try again");
+                loginCLI();
             } catch (InstantiationException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage() + ". Please try again");
+                loginCLI();
             }
+        } else {
+            System.out.println("Email and password not entered in correct format");
+            //loginCLI();
         }
     }
 
-    public String retrieveUserInput() {
+    private String retrieveUserInput() {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
