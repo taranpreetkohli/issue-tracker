@@ -44,6 +44,8 @@ public class CLIManager {
         }
     }
 
+    public void showMenu() {}
+
     private String retrieveUserInput() {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
