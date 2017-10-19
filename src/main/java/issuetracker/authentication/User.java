@@ -25,6 +25,10 @@ public abstract class User {
         return viewMap;
     }
 
+    public void setView(Map<String, ICommand> viewMap) {
+        this.viewMap = viewMap;
+    }
+
     public String getEmail() {
         return email;
     }

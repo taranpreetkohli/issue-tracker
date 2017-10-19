@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
 
 public class Administrator extends User{
 
+    public Administrator() {}
+
     public Administrator(String email, String password) {
         super(email, password);
         viewMap = new LinkedHashMap<String, ICommand>();
