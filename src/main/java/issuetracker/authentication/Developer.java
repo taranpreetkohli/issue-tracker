@@ -8,8 +8,6 @@ import java.util.LinkedHashMap;
 
 public class Developer extends User {
 
-    private HashMap<String, ICommand> viewMap;
-
     public Developer() {
         super();
     }
@@ -23,8 +21,4 @@ public class Developer extends User {
         viewMap.put("L", new Command());
     }
 
-    @Override
-    public HashMap<String, ICommand> getView() {
-        return this.viewMap;
-    }
 }

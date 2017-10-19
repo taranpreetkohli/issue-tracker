@@ -71,7 +71,7 @@ public class CLIManager {
 
     public void showMenu() {
         User currentUser = authenticationManager.getCurrentUser();
-        HashMap<String, ICommand> userView = currentUser.getView();
+        Map<String, ICommand> userView = currentUser.getView();
         String commandSet;
 
         if (currentUser instanceof Administrator) {

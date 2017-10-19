@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class Administrator extends User{
-    private HashMap<String, ICommand> viewMap;
 
     public Administrator(String email, String password) {
         super(email, password);
@@ -18,8 +17,5 @@ public class Administrator extends User{
         viewMap.put("L", new Command());
     }
 
-    @Override
-    public HashMap<String, ICommand> getView() {
-        return this.viewMap;
-    }
+
 }
