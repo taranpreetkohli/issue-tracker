@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 
 import java.io.ByteArrayInputStream;
 import java.util.InvalidPropertiesFormatException;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -148,7 +149,9 @@ public class CLIManagerTest {
         Mockito.doReturn(false).when(cliManagerSpy).checkUserDetailFormat(invalidInput);
 
         //Act
-        cliManager.loginCLI();
+        try {
+            cliManager.loginCLI();
+        } catch (NoSuchElementException e) {}
 
         //Assert
         verify(authenticationManager, never()).login(anyString(),anyString());
