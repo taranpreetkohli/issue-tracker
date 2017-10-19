@@ -44,6 +44,8 @@ public class CLIManager {
         }
     }
 
+    public void registerCLI() {}
+
     public void showMenu() {}
 
     private String retrieveUserInput() {
