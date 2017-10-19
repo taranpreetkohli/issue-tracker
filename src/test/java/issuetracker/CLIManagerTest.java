@@ -1,5 +1,6 @@
 package issuetracker;
 
+import issuetracker.authentication.Administrator;
 import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.Developer;
 import issuetracker.cli.CLIManager;
@@ -15,6 +16,7 @@ import java.util.NoSuchElementException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.booleanThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -124,6 +126,32 @@ public class CLIManagerTest {
     }
 
     @Test
+    public void IsValidCommand_RegisterUserUsingDeveloperAccount_ReturnsFalse() {
+        //Arrange
+        String registerCommand = "R";
+        Mockito.doReturn(new Developer("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
+
+        //Act
+        boolean isValid = cliManager.isValidCommand(registerCommand);
+
+        //Assert
+        assertFalse(isValid);
+    }
+
+    @Test
+    public void IsValidCommand_LowerCaseValidCommand_ReturnsTrue() {
+        //Arrange
+        String lowerCaseCommand = "l";
+        Mockito.doReturn(new Developer("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
+
+        //Act
+        boolean isValid = cliManager.isValidCommand(lowerCaseCommand);
+
+        //Assert
+        assertTrue(isValid);
+    }
+
+    @Test
     public void LoginCLI_ValidLoginFormat_LoginCalled() throws InstantiationException, InvalidPropertiesFormatException {
         //Arrange
         String validInput = "developer@gmail.com password";
@@ -155,5 +183,37 @@ public class CLIManagerTest {
 
         //Assert
         verify(authenticationManager, never()).login(anyString(),anyString());
+    }
+
+    @Test
+    public void ShowMenu_RegisterCommandAsAdministrator_RegisterCalled() throws InvalidPropertiesFormatException {
+        //Arrange
+        String registerCommand = "R";
+        ByteArrayInputStream in = new ByteArrayInputStream(registerCommand.getBytes());
+        System.setIn(in);
+        CLIManager cliManagerSpy = Mockito.spy(cliManager);
+        Mockito.doReturn(true).when(cliManagerSpy).isValidCommand(registerCommand);
+
+        //Act
+        cliManager.showMenu();
+
+        //Assert
+        verify(authenticationManager, times(1)).addUser(anyString(), anyString());
+    }
+
+    @Test
+    public void ShowMenu_RegisterCommandAsDeveloper_RegisterNotCalled() throws InvalidPropertiesFormatException {
+        //Arrange
+        String registerCommand = "R";
+        ByteArrayInputStream in = new ByteArrayInputStream(registerCommand.getBytes());
+        System.setIn(in);
+        CLIManager cliManagerSpy = Mockito.spy(cliManager);
+        Mockito.doReturn(false).when(cliManagerSpy).isValidCommand(registerCommand);
+
+        //Act
+        cliManager.showMenu();
+
+        //Assert
+        verify(authenticationManager, never()).addUser(anyString(), anyString());
     }
 }
