@@ -142,14 +142,28 @@ public class CLIManager {
         }
     }
 
-    public boolean checkUserDetailFormat(String validInput) {
+    public boolean checkUserDetailFormat(String input) {
 
-        if (validInput.isEmpty()){
+        if (input.isEmpty()){
             throw new NoInputException("No Email or Password Provided");
         }
 
-        String[] parts = validInput.split(" ");
+        String[] parts = input.split(" ");
         if (parts.length == 2){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean checkUserConfirmationFormat(String input) {
+
+        if (input.isEmpty()){
+            throw new NoInputException("No Confirmation Provided");
+        }
+
+        String[] parts = input.split(" ");
+        if (parts.length == 1 && (input.equals("Y") || input.equals("y") || input.equals("N")) || input.equals("n")){
             return true;
         } else {
             return false;
