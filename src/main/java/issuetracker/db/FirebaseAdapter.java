@@ -8,6 +8,8 @@ import issuetracker.clustering.Issue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class FirebaseAdapter {
 
     private static Logger logger = LoggerFactory.getLogger(FirebaseAdapter.class);
@@ -94,5 +96,9 @@ public class FirebaseAdapter {
                 .child("issues")
                 .child(issue.getId());
         db.deleteValue(issuesRef);
+    }
+
+    public List<Issue> retrieveAllIssues() {
+        return null;
     }
 }

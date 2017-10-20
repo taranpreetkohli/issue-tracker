@@ -8,25 +8,19 @@ import issuetracker.clustering.Question;
 import issuetracker.db.FirebaseAdapter;
 import issuetracker.exception.DeveloperNotAssignedException;
 import issuetracker.exception.IssueAlreadyResolvedException;
-import org.apache.commons.lang3.NotImplementedException;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.times;
 
-@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class IssueManagerTest {
 
@@ -189,7 +183,27 @@ public class IssueManagerTest {
 
     @Test
     public void SortIssues_IssuesList_IssuesOrderedCorrectlyByPriority() {
-        throw new NotImplementedException("Stub");
+        //Arrange
+        List<Issue> issues = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Issue mock = Mockito.mock(Issue.class);
+            int upper = 100;
+            int lower = 1;
+            int randomNum = new Random().nextInt((upper - lower) + 1) + lower;
+            Mockito.doReturn(randomNum).when(mock).getPriority();
+            issues.add(mock);
+        }
+
+        Mockito.doReturn(issues).when(firebaseAdapter).retrieveAllIssues();
+
+        // Act
+        List<Issue> returnedIssues = issueManager.retrieveIssuesOrderedByPriority();
+
+        // Assert
+        assertNotNull(returnedIssues);
+        for (int i = 1; i < returnedIssues.size(); i++) {
+            assertTrue(returnedIssues.get(i - 1).getPriority() > returnedIssues.get(i).getPriority());
+        }
     }
 
     @Test

@@ -130,6 +130,10 @@ public class Issue {
                 .toHashCode();
     }
 
+    public int getPriority() {
+        return users.size();
+    }
+
     private enum IssueStatus {
         UNRESOLVED,
         RESOLVED,
