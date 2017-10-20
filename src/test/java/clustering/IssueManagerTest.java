@@ -295,6 +295,8 @@ public class IssueManagerTest {
         // Assert
         Mockito.verify(issue, times(1)).addAssignee(developer);
         Mockito.verify(firebaseAdapter, times(1)).updateIssue(issue);
+        Mockito.verify(developer, times(1)).addIssue(issue);
+        Mockito.verify(firebaseAdapter, times(1)).saveUser(developer);
     }
 
     @Test
@@ -308,6 +310,8 @@ public class IssueManagerTest {
         // Assert
         Mockito.verify(issue, times(1)).removeAssignee(developer);
         Mockito.verify(firebaseAdapter, times(2)).updateIssue(issue);
+        Mockito.verify(developer, times(1)).removeIssue(issue);
+        Mockito.verify(firebaseAdapter, times(2)).saveUser(developer);
     }
 
     @Test(expected = DeveloperNotAssignedException.class)
@@ -326,11 +330,18 @@ public class IssueManagerTest {
         Issue issue = Mockito.mock(Issue.class);
         issueManager.assignIssue(admin, issue, developer);
 
+        Set<Developer> assignees = new HashSet<>();
+        assignees.add(developer);
+
+        Mockito.doReturn(assignees).when(issue).getAssignees();
+
         // Act
         issueManager.resolveIssue(developer, issue);
         // Assert
         Mockito.verify(issue, times(1)).resolve(developer);
         Mockito.verify(firebaseAdapter, times(2)).updateIssue(issue);
+        Mockito.verify(developer, times(1)).removeIssue(issue);
+        Mockito.verify(firebaseAdapter, times(2)).saveUser(developer);
     }
 
     @Test(expected = DeveloperNotAssignedException.class)

@@ -63,6 +63,14 @@ public class FirebaseAdapter {
         }
     }
 
+    public void saveUser(User user) {
+        DatabaseReference userRef = db.getRoot()
+                .child("users")
+                .child("" + user.getEmail().hashCode());
+
+        db.write(userRef, user);
+    }
+
     public Issue getIssue(String issueID) {
         DatabaseReference issuesRef = db.getRoot()
                 .child("issues")
