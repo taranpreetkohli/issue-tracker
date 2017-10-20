@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class FirebaseContext implements IFirebaseContext {
@@ -126,5 +128,40 @@ public class FirebaseContext implements IFirebaseContext {
             logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    @Override
+    public <T> List<T> readChildren(DatabaseReference ref, Class<T> tClass) {
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        final DataSnapshot[] instance = new DataSnapshot[1];
+        logger.info("Reading children from reference with key: " + ref.getPath().toString());
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                instance[0] = snapshot;
+                logger.info("Successfully read children from reference with key: " + ref.getPath().toString());
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                logger.error("Failure reading children from reference with key: " + ref.getPath().toString());
+                throw new RuntimeException(error.getMessage());
+            }
+        });
+
+        try {
+            countDownLatch.await();
+            List<T> children = new ArrayList<>();
+            DataSnapshot snapshot = instance[0];
+            for (DataSnapshot child : snapshot.getChildren()) {
+                children.add(child.getValue(tClass));
+            }
+            return children;
+        } catch (InterruptedException e) {
+            logger.error(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+
     }
 }

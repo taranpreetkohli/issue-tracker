@@ -99,6 +99,8 @@ public class FirebaseAdapter {
     }
 
     public List<Issue> retrieveAllIssues() {
-        return null;
+        DatabaseReference issuesRef = db.getRoot()
+                .child("issues");
+        return db.readChildren(issuesRef, Issue.class);
     }
 }
