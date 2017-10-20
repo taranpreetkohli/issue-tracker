@@ -7,6 +7,7 @@ import issuetracker.cli.CLIManager;
 import issuetracker.cli.view.Command;
 import issuetracker.clustering.ClusterManager;
 import issuetracker.exception.NoInputException;
+import org.apache.commons.lang3.NotImplementedException;
 import org.junit.*;
 import org.mockito.Mockito;
 
@@ -402,6 +403,27 @@ public class CLIManagerTest {
 
         //Assert
         verify(mockedCommand, never()).run(anyObject(), anyObject(), anyObject());
+    }
+
+    @Test
+    public void ViewIssuesCLI_ViewCommandAsUser_RunCalled(){
+        //Arrange
+
+        //Act
+
+        //Assert
+        throw new NotImplementedException("Stub");
+    }
+
+    @Test
+    public void ManageIssuesCLI_ManageCommandAsUser_RunCalled(){
+        //Arrange
+
+        //Act
+
+        //Assert
+        throw new NotImplementedException("Stub");
+
     }
 
 }
