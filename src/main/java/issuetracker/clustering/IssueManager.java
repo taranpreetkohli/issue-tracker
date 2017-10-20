@@ -40,6 +40,7 @@ public class IssueManager {
         checkAdminAndDeveloperExist(admin, dev);
         if (firebaseAdapter.getIssue(issue.getId()) != null) {
             issue.addAssignee(dev);
+            firebaseAdapter.updateIssue(issue);
         } else {
             throw new IssueNotFoundException();
         }
@@ -49,6 +50,7 @@ public class IssueManager {
         checkAdminAndDeveloperExist(admin, dev);
         if (firebaseAdapter.getIssue(issue.getId()) != null) {
             issue.removeAssignee(dev);
+            firebaseAdapter.updateIssue(issue);
         } else {
             throw new IssueNotFoundException();
         }
@@ -62,6 +64,7 @@ public class IssueManager {
 
         if (firebaseAdapter.getIssue(issue.getId()) != null) {
             issue.resolve(dev);
+            firebaseAdapter.updateIssue(issue);
         } else {
             throw new IssueNotFoundException();
         }
@@ -70,12 +73,12 @@ public class IssueManager {
 
     private void checkAdminAndDeveloperExist(Administrator admin, Developer dev) {
         User administrator = firebaseAdapter.getUser(admin.getEmail());
-        if (administrator == null || administrator instanceof Developer) {
+        if (administrator == null) {
             throw new UserException("Admin not found!");
         }
 
         User developer = firebaseAdapter.getUser(dev.getEmail());
-        if (developer == null || developer instanceof Administrator) {
+        if (developer == null) {
             throw new UserException("Developer not found!");
         }
     }

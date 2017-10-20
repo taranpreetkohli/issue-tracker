@@ -39,6 +39,15 @@ public class IssueManagerTest {
     @Mock
     private FirebaseAdapter firebaseAdapter;
 
+    @Mock
+    private Administrator admin;
+
+    @Mock
+    private Developer developer;
+
+    @Mock
+    private Issue issue;
+
     @Before
     public void setup() {
         issueManager = new IssueManager(firebaseAdapter);
@@ -69,6 +78,13 @@ public class IssueManagerTest {
                 .setForumID(2286)
                 .setInformation("I am having trouble when I GET a Profit and Loss report through the api. It gets all rows that have a dollar value greater then zero but does not include any rows with a zero dollar value.")
                 .setUrl("https://community.xero.com/developer/discussion/49157379/");
+
+
+        Mockito.doReturn("admin@gmail.com").when(admin).getEmail();
+        Mockito.doReturn("dev@gmail.com").when(developer).getEmail();
+        Mockito.doReturn(admin).when(firebaseAdapter).getUser("admin@gmail.com");
+        Mockito.doReturn(developer).when(firebaseAdapter).getUser("dev@gmail.com");
+        Mockito.doReturn(issue).when(firebaseAdapter).getIssue(Mockito.anyString());
     }
 
     @Test
@@ -250,8 +266,6 @@ public class IssueManagerTest {
     public void AdminAssignIssue_ExistingDeveloper_UpdatesIssue() {
         // Arrange
         Issue issue = Mockito.mock(Issue.class);
-        Administrator admin = Mockito.mock(Administrator.class);
-        Developer developer = Mockito.mock(Developer.class);
 
         // Act
         issueManager.assignIssue(admin, issue, developer);
@@ -264,23 +278,19 @@ public class IssueManagerTest {
     public void AdminUnassignIssue_DeveloperAssignedToThatIssue_UpdatesIssue() {
         // Arrange
         Issue issue = Mockito.mock(Issue.class);
-        Administrator admin = Mockito.mock(Administrator.class);
-        Developer developer = Mockito.mock(Developer.class);
         issueManager.assignIssue(admin, issue, developer);
 
         // Act
         issueManager.unAssignIssue(admin, issue, developer);
         // Assert
         Mockito.verify(issue, times(1)).removeAssignee(developer);
-        Mockito.verify(firebaseAdapter, times(1)).updateIssue(issue);
+        Mockito.verify(firebaseAdapter, times(2)).updateIssue(issue);
     }
 
     @Test(expected = DeveloperNotAssignedException.class)
     public void AdminUnassignIssue_DeveloperNotAssignedToThatIssue_ExceptionThrown() {
         // Arrange
         Issue issue = Mockito.mock(Issue.class);
-        Administrator admin = Mockito.mock(Administrator.class);
-        Developer developer = Mockito.mock(Developer.class);
 
         // Act
         issueManager.assignIssue(admin, issue, developer);
@@ -291,23 +301,19 @@ public class IssueManagerTest {
     public void DevResolveIssue_DeveloperAssignedToThatIssue_IssueResolved() {
         // Arrange
         Issue issue = Mockito.mock(Issue.class);
-        Developer developer = Mockito.mock(Developer.class);
-        Administrator admin = Mockito.mock(Administrator.class);
         issueManager.assignIssue(admin, issue, developer);
 
         // Act
         issueManager.resolveIssue(developer, issue);
         // Assert
         Mockito.verify(issue, times(1)).resolve(developer);
-        Mockito.verify(firebaseAdapter, times(1)).updateIssue(issue);
+        Mockito.verify(firebaseAdapter, times(2)).updateIssue(issue);
     }
 
     @Test(expected = DeveloperNotAssignedException.class)
     public void DevResolveIssue_DeveloperNotAssignedToThatIssue_ExceptionThrown() {
         // Arrange
         Issue issue = Mockito.mock(Issue.class);
-        Developer developer = Mockito.mock(Developer.class);
-        Administrator admin = Mockito.mock(Administrator.class);
 
         // Act
         issueManager.resolveIssue(developer, issue);
@@ -318,8 +324,6 @@ public class IssueManagerTest {
     public void DevResolveIssue_IssueAlreadyResolved_ExceptionThrown() {
         // Arrange
         Issue issue = Mockito.mock(Issue.class);
-        Developer developer = Mockito.mock(Developer.class);
-        Administrator admin = Mockito.mock(Administrator.class);
         issueManager.assignIssue(admin, issue, developer);
 
         // Act

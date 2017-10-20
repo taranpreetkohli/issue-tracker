@@ -8,6 +8,10 @@ import java.util.HashMap;
 public class Administrator extends User{
     private HashMap<String, ICommand> viewMap;
 
+    public Administrator() {
+        super();
+    }
+
     public Administrator(String email, String password) {
         super(email, password);
         viewMap = new HashMap<String, ICommand>();
