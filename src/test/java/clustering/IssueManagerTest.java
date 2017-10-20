@@ -1,4 +1,4 @@
-package issuetracker;
+package clustering;
 
 import issuetracker.authentication.Administrator;
 import issuetracker.authentication.Developer;
