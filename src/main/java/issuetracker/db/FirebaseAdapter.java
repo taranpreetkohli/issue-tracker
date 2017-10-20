@@ -62,15 +62,37 @@ public class FirebaseAdapter {
     }
 
     public Issue getIssue(String issueID) {
-        // returns the issue associated with the ID
-        return null;
+        DatabaseReference issuesRef = db.getRoot()
+                .child("issues")
+                .child(issueID);
+
+        Issue issue = db.read(issuesRef, Issue.class);
+        if (issue == null) {
+            logger.info("No issue found with id: " + issueID);
+        }
+
+        return issue;
+    }
+
+    public void saveNewIssue(Issue issue) {
+        DatabaseReference issuesRef = db.getRoot()
+                .child("issues")
+                .push();
+        issue.setId(issuesRef.getKey());
+        db.write(issuesRef, issue);
     }
 
     public void updateIssue(Issue issue) {
-        // saves the issue in the database
+        DatabaseReference issuesRef = db.getRoot()
+                .child("issues")
+                .child(issue.getId());
+        db.write(issuesRef, issue);
     }
 
     public void deleteIssue(Issue issue) {
-        // deletes the issue from the database
+        DatabaseReference issuesRef = db.getRoot()
+                .child("issues")
+                .child(issue.getId());
+        db.write(issuesRef, null);
     }
 }
