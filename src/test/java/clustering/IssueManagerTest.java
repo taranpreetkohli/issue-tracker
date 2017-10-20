@@ -195,7 +195,6 @@ public class IssueManagerTest {
         }
 
         Mockito.doReturn(issues).when(firebaseAdapter).retrieveAllIssues();
-
         // Act
         List<Issue> returnedIssues = issueManager.retrieveIssuesOrderedByPriority();
 
@@ -203,7 +202,7 @@ public class IssueManagerTest {
         Mockito.verify(firebaseAdapter, times(1)).retrieveAllIssues();
         assertNotNull(returnedIssues);
         for (int i = 1; i < returnedIssues.size(); i++) {
-            assertTrue(returnedIssues.get(i - 1).getPriority() > returnedIssues.get(i).getPriority());
+            assertTrue(returnedIssues.get(i - 1).getPriority() >= returnedIssues.get(i).getPriority());
         }
     }
 
