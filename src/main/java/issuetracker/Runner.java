@@ -1,8 +1,6 @@
 package issuetracker;
 
-import issuetracker.authentication.Administrator;
 import issuetracker.authentication.AuthenticationManager;
-import issuetracker.authentication.Developer;
 import issuetracker.cli.CLIManager;
 import issuetracker.clustering.ClusterManager;
 import issuetracker.db.FirebaseAdapter;

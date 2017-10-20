@@ -33,6 +33,7 @@ public class CLIManager {
             String[] parts = userInput.split(" ");
             try {
                 authenticationManager.login(parts[0], parts[1]);
+                showMenu();
             } catch (InvalidPropertiesFormatException e) {
                 System.out.println(e.getMessage() + ". Please try again");
                 loginCLI();
@@ -52,7 +53,6 @@ public class CLIManager {
         System.out.println("Please enter the details in the format [email password]: ");
 
         String userInput = retrieveUserInput();
-        System.out.println("Retrieved user input for register is: " + userInput);
         boolean isCorrectFormat = false;
 
         try {
@@ -83,7 +83,7 @@ public class CLIManager {
         for (Map.Entry<String, Command> entry : userView.entrySet()) {
             switch (entry.getKey()) {
                 case "R":
-                    System.out.println("(R)egister");
+                    System.out.println("(R)egister a developer");
                     break;
                 case "V":
                     System.out.println("(V)iew issues");
@@ -103,9 +103,7 @@ public class CLIManager {
 
         String userInput = retrieveUserInput().toUpperCase();
 
-        System.out.println("Passed retrieve user input, user input is: " + userInput);
         if (isValidCommand(userInput)) {
-            System.out.println("User input is: " + userInput);
             switch (userInput) {
                     case "R":
                         System.out.println("In R case");
@@ -120,7 +118,8 @@ public class CLIManager {
 
             }
         } else {
-            System.out.println("Valid command false, user command is: " + userInput);
+            System.out.println("Sorry, that is not a valid command");
+            showMenu();
         }
     }
 
@@ -135,7 +134,6 @@ public class CLIManager {
         }
 
         if (authenticationManager.getCurrentUser().getViewMap().keySet().contains(command.toUpperCase())){
-            System.out.println("I'm true!");
             return true;
         } else {
             return false;
