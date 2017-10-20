@@ -200,6 +200,7 @@ public class IssueManagerTest {
         List<Issue> returnedIssues = issueManager.retrieveIssuesOrderedByPriority();
 
         // Assert
+        Mockito.verify(firebaseAdapter, times(1)).retrieveAllIssues();
         assertNotNull(returnedIssues);
         for (int i = 1; i < returnedIssues.size(); i++) {
             assertTrue(returnedIssues.get(i - 1).getPriority() > returnedIssues.get(i).getPriority());

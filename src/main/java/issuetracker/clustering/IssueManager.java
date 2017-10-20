@@ -72,6 +72,7 @@ public class IssueManager {
     }
 
     public List<Issue> retrieveIssuesOrderedByPriority() {
+
         return null;
     }
 
