@@ -2,6 +2,7 @@ package issuetracker.clustering;
 
 import issuetracker.authentication.Developer;
 import issuetracker.exception.DeveloperNotAssignedException;
+import issuetracker.exception.IssueAlreadyResolvedException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -76,10 +77,18 @@ public class Issue {
     }
 
     public void removeAssignee(Developer developer) {
-        assignees.remove(developer);
+        if (assignees.contains(developer)) {
+            assignees.remove(developer);
+        } else {
+            throw new DeveloperNotAssignedException("Cannot unassign developer from this issue!");
+        }
     }
 
     public void resolve(Developer developer) {
+        if (status == IssueStatus.RESOLVED) {
+            throw new IssueAlreadyResolvedException("This issue cannot be resolved again!");
+        }
+
         if (assignees.contains(developer)) {
             status = IssueStatus.RESOLVED;
         } else {

@@ -195,18 +195,17 @@ public class IssueManagerTest {
     @Test
     public void AddForumPost_ExistingIssue_IssueHasNewForumPost() {
         // Arrange
-        Issue issue = Mockito.mock(Issue.class);
         Question existingQuestion = Mockito.mock(Question.class);
         Set<Question> questions = new HashSet<>();
         questions.add(existingQuestion);
-        Mockito.doReturn(questions).when(issue.getPosts());
+        Mockito.doReturn(questions).when(issue).getPosts();
 
         // Act
         issueManager.addQuestion(issue, questionOne);
 
         // Assert
         Mockito.verify(firebaseAdapter, times(1)).updateIssue(issue);
-        assertThat(issue.getQuestions(), hasSize(2));
+        Mockito.verify(issue, times(1)).addQuestion(questionOne);
     }
 
     @Test
@@ -290,10 +289,10 @@ public class IssueManagerTest {
     @Test(expected = DeveloperNotAssignedException.class)
     public void AdminUnassignIssue_DeveloperNotAssignedToThatIssue_ExceptionThrown() {
         // Arrange
-        Issue issue = Mockito.mock(Issue.class);
+        Issue issue = new Issue();
 
         // Act
-        issueManager.assignIssue(admin, issue, developer);
+        issueManager.unAssignIssue(admin, issue, developer);
         // should throw an exception
     }
 
@@ -313,7 +312,7 @@ public class IssueManagerTest {
     @Test(expected = DeveloperNotAssignedException.class)
     public void DevResolveIssue_DeveloperNotAssignedToThatIssue_ExceptionThrown() {
         // Arrange
-        Issue issue = Mockito.mock(Issue.class);
+        Issue issue = new Issue();
 
         // Act
         issueManager.resolveIssue(developer, issue);
@@ -323,7 +322,7 @@ public class IssueManagerTest {
     @Test(expected = IssueAlreadyResolvedException.class)
     public void DevResolveIssue_IssueAlreadyResolved_ExceptionThrown() {
         // Arrange
-        Issue issue = Mockito.mock(Issue.class);
+        Issue issue = new Issue();
         issueManager.assignIssue(admin, issue, developer);
 
         // Act

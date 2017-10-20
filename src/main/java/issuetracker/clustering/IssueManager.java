@@ -29,7 +29,11 @@ public class IssueManager {
 
     public void removeQuestion(Issue issue, Question question) {
         issue.removeQuestion(question);
-        firebaseAdapter.updateIssue(issue);
+        if (issue.getQuestions().size() == 0) {
+            firebaseAdapter.deleteIssue(issue);
+        } else {
+            firebaseAdapter.updateIssue(issue);
+        }
     }
 
     public void deleteIssue(Issue issue) {
