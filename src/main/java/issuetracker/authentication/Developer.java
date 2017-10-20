@@ -11,11 +11,11 @@ public class Developer extends User {
 
     private HashMap<String, ICommand> viewMap;
 
-    private Map<String, Issue> issueSet;
+    private Map<String, Issue> issueMap;
 
     public Developer() {
         super();
-        issueSet = new HashMap<>();
+        issueMap = new HashMap<>();
     }
 
     public Developer(String email, String password) {
@@ -26,7 +26,7 @@ public class Developer extends User {
         viewMap.put("M", new Command());
         viewMap.put("L", new Command());
 
-        issueSet = new HashMap<>();
+        issueMap = new HashMap<>();
     }
 
     @Override
@@ -35,18 +35,18 @@ public class Developer extends User {
     }
 
     public void addIssue(Issue issue) {
-        issueSet.put(issue.getId(), issue);
+        issueMap.put(issue.getId(), issue);
     }
 
     public void removeIssue(Issue issue) {
-        issueSet.remove(issue.getId(), issue);
+        issueMap.remove(issue.getId(), issue);
     }
 
-    public Map<String, Issue> getIssueSet() {
-        return issueSet;
+    public Map<String, Issue> getIssueMap() {
+        return issueMap;
     }
 
-    public void setIssueSet(Map<String, Issue> issueSet) {
-        this.issueSet = issueSet;
+    public void setIssueMap(Map<String, Issue> issueMap) {
+        this.issueMap = issueMap;
     }
 }
