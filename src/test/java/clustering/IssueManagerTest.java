@@ -1,4 +1,4 @@
-package issuetracker;
+package clustering;
 
 import issuetracker.authentication.Administrator;
 import issuetracker.authentication.Developer;
@@ -7,7 +7,7 @@ import issuetracker.clustering.IssueManager;
 import issuetracker.clustering.Question;
 import issuetracker.db.FirebaseAdapter;
 import issuetracker.exception.DeveloperNotAssignedException;
-import issuetracker.exception.IssueAlreadyResolved;
+import issuetracker.exception.IssueAlreadyResolvedException;
 import org.apache.commons.lang3.NotImplementedException;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -314,7 +314,7 @@ public class IssueManagerTest {
         // show throw exception
     }
 
-    @Test(expected = IssueAlreadyResolved.class)
+    @Test(expected = IssueAlreadyResolvedException.class)
     public void DevResolveIssue_IssueAlreadyResolved_ExceptionThrown() {
         // Arrange
         Issue issue = Mockito.mock(Issue.class);
