@@ -94,7 +94,7 @@ public class IssueManagerTest {
         List<Issue> issues = issueManager.generateCluster(input);
 
         //assert
-        assertFalse(issues.getTitle().isEmpty());
+        assertFalse(issues.get(0).getTitle().isEmpty());
     }
 
     @Ignore
@@ -107,7 +107,7 @@ public class IssueManagerTest {
         List<Issue> issues = issueManager.generateCluster(input);
 
         //assert
-        assertFalse(issues.getTitle().isEmpty());
+        assertFalse(issues.get(0).getTitle().isEmpty());
     }
 
     @Test
@@ -120,8 +120,8 @@ public class IssueManagerTest {
         List<Issue> issues = issueManager.generateCluster(questionOne.toARFF());
 
         //assert
-        assertThat(issue.getQuestions(), hasSize(1));
-        assertEquals(issue.getQuestions().toArray(new Question[1])[0].getQuestion(), questionOne.getQuestion());
+        assertThat(issues.get(0).getQuestions(), hasSize(1));
+        assertEquals(issues.get(0).getQuestions().toArray(new Question[1])[0].getQuestion(), questionOne.getQuestion());
     }
 
     @Test
@@ -140,7 +140,9 @@ public class IssueManagerTest {
         List<Issue> issues = issueManager.generateCluster(Question.toARFF(questions));
 
         //assert
-        assertThat(issues.getQuestions(), hasSize(3));
+        assertThat(issues, hasSize(2));
+        assertThat(issues.get(0).getQuestions(), hasSize(2));
+        assertThat(issues.get(1).getQuestions(), hasSize(1));
     }
 
     @Ignore
@@ -153,7 +155,7 @@ public class IssueManagerTest {
         List<Issue> issues = issueManager.generateCluster(input);
 
         //assert
-        assertEquals(1, issues.getUsers().size());
+        assertEquals(1, issues.get(0).getUsers().size());
     }
 
     @Ignore
@@ -166,7 +168,7 @@ public class IssueManagerTest {
         List<Issue> issues = issueManager.generateCluster(input);
 
         //assert
-        assertEquals(3, issues.getUsers().size());
+        assertEquals(3, issues.get(0).getUsers().size());
     }
 
     @Ignore
@@ -197,7 +199,7 @@ public class IssueManagerTest {
         List<Issue> issues = issueManager.generateCluster(input);
 
         //assert
-        assertFalse(issues.getSummary().isEmpty());
+        assertFalse(issues.get(0).getSummary().isEmpty());
     }
 
     @Test
