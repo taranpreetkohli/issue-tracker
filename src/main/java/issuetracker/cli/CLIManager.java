@@ -48,9 +48,8 @@ public class CLIManager {
     }
 
     public void registerCLI() {
-        System.out.println("Register a developer using a valid email and password");
-        System.out.println("Password must be 8 or more characters containing no spaces");
-        System.out.println("Please enter the details in the format [email password]: ");
+        System.out.println("Register a developer using a valid email and password. Password must be 8 or more characters containing no spaces");
+        System.out.print("Please enter the details in the format [email password]: ");
 
         String userInput = retrieveUserInput();
         boolean isCorrectFormat = false;
@@ -113,7 +112,7 @@ public class CLIManager {
     }
 
     private void promptMenu(String commandSet) {
-        System.out.println("Please enter your command (" + commandSet + "): ");
+        System.out.print("Please enter your command (" + commandSet + "): ");
 
         String userInput = retrieveUserInput().toUpperCase();
 
