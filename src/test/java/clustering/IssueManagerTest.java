@@ -109,6 +109,7 @@ public class IssueManagerTest {
         assertFalse(issue.getTitle().isEmpty());
     }
 
+    @Ignore
     @Test
     public void GroupForumPosts_SinglePost_OneForumPostCorrectlyGrouped() {
         //arrange
@@ -123,6 +124,7 @@ public class IssueManagerTest {
         assertEquals(issue.getQuestions().toArray(new Question[1])[0].getQuestion(), questionOne.getQuestion());
     }
 
+    @Ignore
     @Test
     public void GroupForumPosts_MultiplePosts_RelatedForumPostsCorrectlyGrouped() {
         //arrange
