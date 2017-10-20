@@ -20,6 +20,7 @@ import java.util.*;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -108,27 +109,34 @@ public class IssueManagerTest {
         assertFalse(issue.getTitle().isEmpty());
     }
 
-    @Ignore
     @Test
     public void GroupForumPosts_SinglePost_OneForumPostCorrectlyGrouped() {
         //arrange
-        String input = buildInput(questionOne);
-
+        Issue expectedIssue = new Issue();
+        expectedIssue.setId("fakeId")
+                .addQuestion(questionOne);
         //act
-        Issue issue = issueManager.generateCluster(input);
+        Issue issue = issueManager.generateCluster(questionOne.toARFF());
 
         //assert
         assertThat(issue.getQuestions(), hasSize(1));
+        assertEquals(issue.getQuestions().toArray(new Question[1])[0].getQuestion(), questionOne.getQuestion());
     }
 
-    @Ignore
     @Test
     public void GroupForumPosts_MultiplePosts_RelatedForumPostsCorrectlyGrouped() {
         //arrange
-        String input = buildInput(questionOne, questionTwo, questionThree);
+        Issue expectedIssue = new Issue().setId("fakeId")
+                .addQuestion(questionOne)
+                .addQuestion(questionTwo)
+                .addQuestion(questionThree);
+        List<Question> questions = new LinkedList<>();
+        questions.add(questionOne);
+        questions.add(questionTwo);
+        questions.add(questionThree);
 
         //act
-        Issue issue = issueManager.generateCluster(input);
+        Issue issue = issueManager.generateCluster(Question.toARFF(questions));
 
         //assert
         assertThat(issue.getQuestions(), hasSize(3));
