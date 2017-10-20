@@ -5,18 +5,17 @@ import issuetracker.cli.view.ICommand;
 import issuetracker.clustering.Issue;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
 
 public class Developer extends User {
 
     private HashMap<String, ICommand> viewMap;
 
-    private Set<Issue> issueSet;
+    private Map<String, Issue> issueSet;
 
     public Developer() {
         super();
-        issueSet = new HashSet<>();
+        issueSet = new HashMap<>();
     }
 
     public Developer(String email, String password) {
@@ -27,7 +26,7 @@ public class Developer extends User {
         viewMap.put("M", new Command());
         viewMap.put("L", new Command());
 
-        issueSet = new HashSet<>();
+        issueSet = new HashMap<>();
     }
 
     @Override
@@ -36,18 +35,18 @@ public class Developer extends User {
     }
 
     public void addIssue(Issue issue) {
-        issueSet.add(issue);
+        issueSet.put(issue.getId(), issue);
     }
 
     public void removeIssue(Issue issue) {
-        issueSet.remove(issue);
+        issueSet.remove(issue.getId(), issue);
     }
 
-    public Set<Issue> getIssueSet() {
+    public Map<String, Issue> getIssueSet() {
         return issueSet;
     }
 
-    public void setIssueSet(Set<Issue> issueSet) {
+    public void setIssueSet(Map<String, Issue> issueSet) {
         this.issueSet = issueSet;
     }
 }
