@@ -4,7 +4,6 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
-import issuetracker.util.Callback;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,6 +93,27 @@ public class FirebaseContext implements IFirebaseContext {
             countDownLatch.countDown();
             if (error == null) {
                 logger.info("Successfully written value to reference with key: " + ref.getKey());
+            } else {
+                logger.error(error.getMessage());
+            }
+        });
+
+        try {
+            countDownLatch.await();
+            return instance;
+        } catch (InterruptedException e) {
+            logger.error(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public IFirebaseContext deleteValue(DatabaseReference ref) {
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        logger.info("Removing value from reference with key: " + ref.getPath().toString());
+        ref.removeValue((error, reference) -> {
+            if (error == null) {
+                logger.info("Successfully removed value from reference with key: " + ref.getPath().toString());
             } else {
                 logger.error(error.getMessage());
             }

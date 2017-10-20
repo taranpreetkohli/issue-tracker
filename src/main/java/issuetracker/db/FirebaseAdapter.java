@@ -93,6 +93,6 @@ public class FirebaseAdapter {
         DatabaseReference issuesRef = db.getRoot()
                 .child("issues")
                 .child(issue.getId());
-        db.write(issuesRef, null);
+        db.deleteValue(issuesRef);
     }
 }
