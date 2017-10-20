@@ -19,6 +19,8 @@ public class Command {
         }
     }
 
+    public void run(AuthenticationManager authenticationManager, CLIManager cliManager) {}
+
     public String getValue() {
         return value;
     }

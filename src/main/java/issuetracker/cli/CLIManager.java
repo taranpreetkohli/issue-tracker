@@ -69,7 +69,10 @@ public class CLIManager {
         }
     }
 
-    public void viewIssuesCLI() {}
+    public void viewIssuesCLI() {
+        System.out.println("Invoking view issues logic");
+        authenticationManager.getCurrentUser().getViewMap().get("V").run(authenticationManager, this);
+    }
 
     public void manageIssuesCLI() {}
 
