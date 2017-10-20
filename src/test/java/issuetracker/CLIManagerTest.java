@@ -423,7 +423,7 @@ public class CLIManagerTest {
         cliManager.viewIssuesCLI();
 
         //Assert
-        verify(mockedCommand, times(1)).run(anyObject(), anyObject(), anyObject());
+        verify(mockedCommand, times(1)).run(anyObject(), anyObject());
     }
 
     @Test
@@ -444,7 +444,7 @@ public class CLIManagerTest {
         cliManager.manageIssuesCLI();
 
         //Assert
-        verify(mockedCommand, times(1)).run(anyObject(), anyObject(), anyObject());
+        verify(mockedCommand, times(1)).run(anyObject(), anyObject());
 
     }
 
