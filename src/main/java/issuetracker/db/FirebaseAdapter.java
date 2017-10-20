@@ -61,6 +61,11 @@ public class FirebaseAdapter {
         }
     }
 
+    public Issue getIssue(String issueID) {
+        // returns the issue associated with the ID
+        return null;
+    }
+
     public void updateIssue(Issue issue) {
         // saves the issue in the database
     }

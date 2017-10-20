@@ -1,20 +1,27 @@
 package issuetracker.clustering;
 
 import issuetracker.authentication.Developer;
+import issuetracker.exception.DeveloperNotAssignedException;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class Issue {
 
+    private String id;
     private String title;
     private Set<Question> posts;
     private Set<String> users;
     private String summary;
+    private Set<Developer> assignees;
+    private IssueStatus status;
 
-    public Issue(){
+    public Issue() {
         posts = new HashSet<>();
         users = new HashSet<>();
+        assignees = new HashSet<>();
     }
 
     public String getTitle() {
@@ -62,14 +69,61 @@ public class Issue {
     }
 
     public void addAssignee(Developer developer) {
-        // assigns a developer to this issue
+        assignees.add(developer);
+        if (status == IssueStatus.UNRESOLVED) {
+            status = IssueStatus.IN_PROGRESS;
+        }
     }
 
     public void removeAssignee(Developer developer) {
-        // unassigns a developer from this issue
+        assignees.remove(developer);
     }
 
     public void resolve(Developer developer) {
-        // sets the status of this issue to resolved
+        if (assignees.contains(developer)) {
+            status = IssueStatus.RESOLVED;
+        } else {
+            throw new DeveloperNotAssignedException("Developer not assigned to this issue!");
+        }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Issue issue = (Issue) o;
+
+        return new EqualsBuilder()
+                .append(title, issue.title)
+                .append(posts, issue.posts)
+                .append(users, issue.users)
+                .append(summary, issue.summary)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(title)
+                .append(posts)
+                .append(users)
+                .append(summary)
+                .toHashCode();
+    }
+
+    private enum IssueStatus {
+        UNRESOLVED,
+        RESOLVED,
+        IN_PROGRESS
     }
 }
