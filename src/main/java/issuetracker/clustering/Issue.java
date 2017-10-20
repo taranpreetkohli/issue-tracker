@@ -41,50 +41,59 @@ public class Issue {
         return summary;
     }
 
-    public void addQuestion(Question question) {
+    public Issue addQuestion(Question question) {
         posts.add(question);
+        return this;
     }
 
-    public void removeQuestion(Question question) {
+    public Issue removeQuestion(Question question) {
         posts.remove(question);
+        return this;
     }
 
-    public void setTitle(String title) {
+    public Issue setTitle(String title) {
         this.title = title;
+        return this;
     }
 
     public Set<Question> getPosts() {
         return posts;
     }
 
-    public void setPosts(Set<Question> posts) {
+    public Issue setPosts(Set<Question> posts) {
         this.posts = posts;
+        return this;
+
     }
 
-    public void setUsers(Set<String> users) {
+    public Issue setUsers(Set<String> users) {
         this.users = users;
+        return this;
     }
 
-    public void setSummary(String summary) {
+    public Issue setSummary(String summary) {
         this.summary = summary;
+        return this;
     }
 
-    public void addAssignee(Developer developer) {
+    public Issue addAssignee(Developer developer) {
         assignees.add(developer);
         if (status == IssueStatus.UNRESOLVED) {
             status = IssueStatus.IN_PROGRESS;
         }
+        return this;
     }
 
-    public void removeAssignee(Developer developer) {
+    public Issue removeAssignee(Developer developer) {
         if (assignees.contains(developer)) {
             assignees.remove(developer);
         } else {
             throw new DeveloperNotAssignedException("Cannot unassign developer from this issue!");
         }
+        return this;
     }
 
-    public void resolve(Developer developer) {
+    public Issue resolve(Developer developer) {
         if (status == IssueStatus.RESOLVED) {
             throw new IssueAlreadyResolvedException("This issue cannot be resolved again!");
         }
@@ -94,14 +103,16 @@ public class Issue {
         } else {
             throw new DeveloperNotAssignedException("Developer not assigned to this issue!");
         }
+        return this;
     }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public Issue setId(String id) {
         this.id = id;
+        return this;
     }
 
     @Override
