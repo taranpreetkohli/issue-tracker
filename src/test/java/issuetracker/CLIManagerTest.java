@@ -408,21 +408,43 @@ public class CLIManagerTest {
     @Test
     public void ViewIssuesCLI_ViewCommandAsUser_RunCalled(){
         //Arrange
+        CLIManager cliManagerSpy = Mockito.spy(cliManager);
+
+        Developer mockedDev = Mockito.mock(Developer.class);
+        Map<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
+        Command mockedCommand = Mockito.mock(Command.class);
+
+        //Return mocked command object when retrieving "V" key from user views
+        Mockito.doReturn(mockedDev).when(authenticationManager).getCurrentUser();
+        Mockito.doReturn(mockedHm).when(mockedDev).getViewMap();
+        Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
+        cliManager.viewIssuesCLI();
 
         //Assert
-        throw new NotImplementedException("Stub");
+        verify(mockedCommand, times(1)).run(anyObject(), anyObject(), anyObject());
     }
 
     @Test
     public void ManageIssuesCLI_ManageCommandAsUser_RunCalled(){
         //Arrange
+        CLIManager cliManagerSpy = Mockito.spy(cliManager);
+
+        Developer mockedDev = Mockito.mock(Developer.class);
+        Map<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
+        Command mockedCommand = Mockito.mock(Command.class);
+
+        //Return mocked command object when retrieving "M" key from user views
+        Mockito.doReturn(mockedDev).when(authenticationManager).getCurrentUser();
+        Mockito.doReturn(mockedHm).when(mockedDev).getViewMap();
+        Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
+        cliManager.manageIssuesCLI();
 
         //Assert
-        throw new NotImplementedException("Stub");
+        verify(mockedCommand, times(1)).run(anyObject(), anyObject(), anyObject());
 
     }
 
