@@ -74,7 +74,10 @@ public class CLIManager {
         authenticationManager.getCurrentUser().getViewMap().get("V").run(authenticationManager, this);
     }
 
-    public void manageIssuesCLI() {}
+    public void manageIssuesCLI() {
+        System.out.println("Invoking view issues logic");
+        authenticationManager.getCurrentUser().getViewMap().get("V").run(authenticationManager, this);
+    }
 
     public void showMenu() {
         User currentUser = authenticationManager.getCurrentUser();
