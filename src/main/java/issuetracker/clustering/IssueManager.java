@@ -9,7 +9,9 @@ import issuetracker.exception.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class IssueManager {
 
@@ -67,7 +69,7 @@ public class IssueManager {
 
     }
 
-    public List<Issue> generateCluster(String input) {
+    public Issue generateCluster(String input) {
         return null;
     }
 

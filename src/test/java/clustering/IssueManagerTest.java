@@ -8,7 +8,6 @@ import issuetracker.clustering.Question;
 import issuetracker.db.FirebaseAdapter;
 import issuetracker.exception.DeveloperNotAssignedException;
 import issuetracker.exception.IssueAlreadyResolvedException;
-import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -91,10 +90,10 @@ public class IssueManagerTest {
         String input = buildInput(questionOne);
 
         //act
-        List<Issue> issues = issueManager.generateCluster(input);
+        Issue issue = issueManager.generateCluster(input);
 
         //assert
-        assertFalse(issues.getTitle().isEmpty());
+        assertFalse(issue.getTitle().isEmpty());
     }
 
     @Ignore
@@ -104,10 +103,10 @@ public class IssueManagerTest {
         String input = buildInput(questionOne, questionTwo, questionThree);
 
         //act
-        List<Issue> issues = issueManager.generateCluster(input);
+        Issue issue = issueManager.generateCluster(input);
 
         //assert
-        assertFalse(issues.getTitle().isEmpty());
+        assertFalse(issue.getTitle().isEmpty());
     }
 
     @Test
@@ -117,7 +116,7 @@ public class IssueManagerTest {
         expectedIssue.setId("fakeId")
                 .addQuestion(questionOne);
         //act
-        List<Issue> issues = issueManager.generateCluster(questionOne.toARFF());
+        Issue issue = issueManager.generateCluster(questionOne.toARFF());
 
         //assert
         assertThat(issue.getQuestions(), hasSize(1));
@@ -137,10 +136,10 @@ public class IssueManagerTest {
         questions.add(questionThree);
 
         //act
-        List<Issue> issues = issueManager.generateCluster(Question.toARFF(questions));
+        Issue issue = issueManager.generateCluster(Question.toARFF(questions));
 
         //assert
-        assertThat(issues.getQuestions(), hasSize(3));
+        assertThat(issue.getQuestions(), hasSize(3));
     }
 
     @Ignore
@@ -150,10 +149,10 @@ public class IssueManagerTest {
         String input = buildInput(questionOne);
 
         //act
-        List<Issue> issues = issueManager.generateCluster(input);
+        Issue issue = issueManager.generateCluster(input);
 
         //assert
-        assertEquals(1, issues.getUsers().size());
+        assertEquals(1, issue.getUsers().size());
     }
 
     @Ignore
@@ -163,10 +162,10 @@ public class IssueManagerTest {
         String input = buildInput(questionOne, questionTwo, questionThree);
 
         //act
-        List<Issue> issues = issueManager.generateCluster(input);
+        Issue issue = issueManager.generateCluster(input);
 
         //assert
-        assertEquals(3, issues.getUsers().size());
+        assertEquals(3, issue.getUsers().size());
     }
 
     @Ignore
@@ -194,10 +193,10 @@ public class IssueManagerTest {
         String input = buildInput(questionOne, questionTwo, questionThree);
 
         //act
-        List<Issue> issues = issueManager.generateCluster(input);
+        Issue issue = issueManager.generateCluster(input);
 
         //assert
-        assertFalse(issues.getSummary().isEmpty());
+        assertFalse(issue.getSummary().isEmpty());
     }
 
     @Test
