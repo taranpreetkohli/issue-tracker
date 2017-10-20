@@ -145,6 +145,22 @@ public class Issue {
         return users.size();
     }
 
+    public Set<Developer> getAssignees() {
+        return assignees;
+    }
+
+    public void setAssignees(Set<Developer> assignees) {
+        this.assignees = assignees;
+    }
+
+    public IssueStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(IssueStatus status) {
+        this.status = status;
+    }
+
     private enum IssueStatus {
         UNRESOLVED,
         RESOLVED,

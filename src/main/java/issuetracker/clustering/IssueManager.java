@@ -89,6 +89,7 @@ public class IssueManager {
         issue.removeQuestion(question);
         if (issue.getQuestions().size() == 0) {
             firebaseAdapter.deleteIssue(issue);
+            removeIssueFromAssignedDevelopers(issue);
         } else {
             firebaseAdapter.updateIssue(issue);
         }
@@ -96,6 +97,7 @@ public class IssueManager {
 
     public void deleteIssue(Issue issue) {
         firebaseAdapter.deleteIssue(issue);
+        removeIssueFromAssignedDevelopers(issue);
     }
 
     public void assignIssue(Administrator admin, Issue issue, Developer dev) {
@@ -103,6 +105,8 @@ public class IssueManager {
         if (firebaseAdapter.getIssue(issue.getId()) != null) {
             issue.addAssignee(dev);
             firebaseAdapter.updateIssue(issue);
+            dev.addIssue(issue);
+            firebaseAdapter.saveUser(dev);
         } else {
             throw new IssueNotFoundException();
         }
@@ -113,6 +117,8 @@ public class IssueManager {
         if (firebaseAdapter.getIssue(issue.getId()) != null) {
             issue.removeAssignee(dev);
             firebaseAdapter.updateIssue(issue);
+            dev.removeIssue(issue);
+            firebaseAdapter.saveUser(dev);
         } else {
             throw new IssueNotFoundException();
         }
@@ -127,6 +133,7 @@ public class IssueManager {
         if (firebaseAdapter.getIssue(issue.getId()) != null) {
             issue.resolve(dev);
             firebaseAdapter.updateIssue(issue);
+            removeIssueFromAssignedDevelopers(issue);
         } else {
             throw new IssueNotFoundException();
         }
@@ -142,6 +149,15 @@ public class IssueManager {
         User developer = firebaseAdapter.getUser(dev.getEmail());
         if (developer == null) {
             throw new UserException("Developer not found!");
+        }
+    }
+
+    private void removeIssueFromAssignedDevelopers(Issue issue) {
+        if (issue.getAssignees().size() > 0) {
+            for (Developer developer : issue.getAssignees()) {
+                developer.removeIssue(issue);
+                firebaseAdapter.saveUser(developer);
+            }
         }
     }
 }
