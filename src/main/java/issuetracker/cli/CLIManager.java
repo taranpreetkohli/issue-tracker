@@ -69,6 +69,10 @@ public class CLIManager {
         }
     }
 
+    public void viewIssuesCLI() {}
+
+    public void manageIssuesCLI() {}
+
     public void showMenu() {
         User currentUser = authenticationManager.getCurrentUser();
         Map<String, Command> userView = currentUser.getViewMap();
