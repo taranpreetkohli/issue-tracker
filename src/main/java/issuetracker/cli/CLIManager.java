@@ -109,27 +109,31 @@ public class CLIManager {
             }
         }
 
+        promptMenu(commandSet);
+    }
+
+    private void promptMenu(String commandSet) {
         System.out.println("Please enter your command (" + commandSet + "): ");
 
         String userInput = retrieveUserInput().toUpperCase();
 
         if (isValidCommand(userInput)) {
             switch (userInput) {
-                    case "R":
-                        System.out.println("In R case");
-                        registerCLI();
-                        break;
-                    case "V":
-                        break;
-                    case "M":
-                        break;
-                    case "L":
+                case "R":
+                    registerCLI();
                     break;
-
+                case "V":
+                    viewIssuesCLI();
+                    break;
+                case "M":
+                    manageIssuesCLI();
+                    break;
+                case "L":
+                    break;
             }
         } else {
             System.out.println("Sorry, that is not a valid command");
-            showMenu();
+            promptMenu(commandSet);
         }
     }
 
