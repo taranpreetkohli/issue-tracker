@@ -297,7 +297,9 @@ public class CLIManagerTest {
         Mockito.doReturn(true).when(cliManagerSpy).checkUserDetailFormat(validInput);
 
         //Act
-        cliManager.loginCLI();
+        try {
+            cliManager.loginCLI();
+        } catch (NullPointerException e) {}
 
         //Assert
         verify(authenticationManager, times(1)).login(anyString(),anyString());
