@@ -230,7 +230,7 @@ public class IssueManagerTest {
     public void AddForumPost_ExistingIssue_IssueHasNewForumPost() {
         // Arrange
         Question existingQuestion = Mockito.mock(Question.class);
-        Set<Question> questions = new HashSet<>();
+        List<Question> questions = new ArrayList<>();
         questions.add(existingQuestion);
         Mockito.doReturn(questions).when(issue).getPosts();
 
@@ -340,7 +340,7 @@ public class IssueManagerTest {
         Issue issue = Mockito.mock(Issue.class);
         issueManager.assignIssue(admin, issue, developer);
 
-        Set<Developer> assignees = new HashSet<>();
+        List<Developer> assignees = new ArrayList<>();
         assignees.add(developer);
 
         Mockito.doReturn(assignees).when(issue).getAssignees();

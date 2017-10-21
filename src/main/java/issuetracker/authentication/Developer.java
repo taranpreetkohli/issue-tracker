@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class Developer extends User {
 
+    public final String value = "Dev";
     private Map<String, Issue> issueMap;
 
     public Developer() {

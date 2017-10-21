@@ -20,9 +20,7 @@ public abstract class User {
 
     }
 
-    public Map<String, Command> getViewMap() {
-        return viewMap;
-    }
+    public Map<String, Command> getViewMap() { return viewMap; }
 
     public void setViewMap(Map<String, Command> viewMap) {
         this.viewMap = viewMap;

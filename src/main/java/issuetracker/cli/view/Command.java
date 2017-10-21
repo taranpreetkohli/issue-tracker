@@ -3,30 +3,22 @@ package issuetracker.cli.view;
 import issuetracker.authentication.AuthenticationManager;
 import issuetracker.cli.CLIManager;
 
-import java.util.InvalidPropertiesFormatException;
-
 public class Command {
 
-    private String value = "Register";
+    public final String value = "Command";
+    protected String userInput;
 
-    public void run(AuthenticationManager authenticationManager, String userInput, CLIManager cliManager) {
-        String[] parts = userInput.split(" ");
-        try {
-            authenticationManager.addUser(parts[0], parts[1]);
-        } catch (InvalidPropertiesFormatException e) {
-            System.out.println(e.getMessage() + ". Please try again");
-            cliManager.registerCLI();
-        }
+    public Command() { }
+
+    public void run(AuthenticationManager authenticationManager, CLIManager cliManager) {
     }
 
-    public void run(AuthenticationManager authenticationManager, CLIManager cliManager) {}
-
-    public String getValue() {
-        return value;
+    public String getUserInput() {
+        return userInput;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setUserInput(String userInput) {
+        this.userInput = userInput;
     }
 
 }
