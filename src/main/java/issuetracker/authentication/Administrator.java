@@ -1,12 +1,16 @@
 package issuetracker.authentication;
 
-import issuetracker.view.Command;
-import issuetracker.view.ICommand;
+import issuetracker.cli.view.Command;
+import issuetracker.cli.view.ICommand;
 
 import java.util.HashMap;
 
 public class Administrator extends User{
     private HashMap<String, ICommand> viewMap;
+
+    public Administrator() {
+        super();
+    }
 
     public Administrator(String email, String password) {
         super(email, password);

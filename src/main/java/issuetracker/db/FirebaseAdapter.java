@@ -4,8 +4,11 @@ import com.google.firebase.database.DatabaseReference;
 import issuetracker.authentication.Administrator;
 import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
+import issuetracker.clustering.Issue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class FirebaseAdapter {
 
@@ -58,5 +61,54 @@ public class FirebaseAdapter {
             logger.info("Retrieved administrator with email: " + administrator.getEmail());
             return administrator;
         }
+    }
+
+    public void saveUser(User user) {
+        DatabaseReference userRef = db.getRoot()
+                .child("users")
+                .child("" + user.getEmail().hashCode());
+
+        db.write(userRef, user);
+    }
+
+    public Issue getIssue(String issueID) {
+        DatabaseReference issuesRef = db.getRoot()
+                .child("issues")
+                .child(issueID);
+
+        Issue issue = db.read(issuesRef, Issue.class);
+        if (issue == null) {
+            logger.info("No issue found with id: " + issueID);
+        }
+
+        return issue;
+    }
+
+    public void saveNewIssue(Issue issue) {
+        DatabaseReference issuesRef = db.getRoot()
+                .child("issues")
+                .push();
+        issue.setId(issuesRef.getKey());
+        db.write(issuesRef, issue);
+    }
+
+    public void updateIssue(Issue issue) {
+        DatabaseReference issuesRef = db.getRoot()
+                .child("issues")
+                .child(issue.getId());
+        db.write(issuesRef, issue);
+    }
+
+    public void deleteIssue(Issue issue) {
+        DatabaseReference issuesRef = db.getRoot()
+                .child("issues")
+                .child(issue.getId());
+        db.deleteValue(issuesRef);
+    }
+
+    public List<Issue> retrieveAllIssues() {
+        DatabaseReference issuesRef = db.getRoot()
+                .child("issues");
+        return db.readChildren(issuesRef, Issue.class);
     }
 }

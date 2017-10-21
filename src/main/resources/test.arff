@@ -1,0 +1,8 @@
+@relation test
+
+@attribute text string
+
+@data
+"test"
+"test"
+"different

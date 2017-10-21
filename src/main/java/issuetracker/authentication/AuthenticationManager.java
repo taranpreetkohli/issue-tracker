@@ -90,6 +90,9 @@ public class AuthenticationManager implements IAuthenticationManager {
         }
     }
 
+    public User getCurrentUser(){
+        return this.currentUser;
+    }
     @Override
     public FirebaseAdapter getDb() {
         return firebaseAdapter;
