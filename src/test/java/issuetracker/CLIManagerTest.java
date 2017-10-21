@@ -5,9 +5,8 @@ import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.Developer;
 import issuetracker.cli.CLIManager;
 import issuetracker.cli.view.Command;
-import issuetracker.clustering.ClusterManager;
+import issuetracker.clustering.IssueManager;
 import issuetracker.exception.NoInputException;
-import org.apache.commons.lang3.NotImplementedException;
 import org.junit.*;
 import org.mockito.Mockito;
 
@@ -25,7 +24,7 @@ import static org.mockito.Mockito.verify;
 public class CLIManagerTest {
     private CLIManager cliManager;
     private AuthenticationManager authenticationManager;
-    private ClusterManager clusterManager;
+    private IssueManager issueManager;
     @BeforeClass
     public static void beforeRun() {
     }
@@ -37,8 +36,8 @@ public class CLIManagerTest {
     @Before
     public void setUp() {
         authenticationManager = Mockito.mock(AuthenticationManager.class);
-        clusterManager = Mockito.mock(ClusterManager.class);
-        cliManager = new CLIManager(authenticationManager, clusterManager);
+        issueManager = Mockito.mock(IssueManager.class);
+        cliManager = new CLIManager(authenticationManager, issueManager);
     }
 
     @After

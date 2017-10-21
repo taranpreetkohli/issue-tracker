@@ -1,10 +1,18 @@
 package issuetracker.clustering;
 
 import issuetracker.exception.InvalidQuestionFormatException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import weka.core.converters.CSVLoader;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Question {
+public class Question implements Comparable<Question>{
 
     private long questionID;
     private String question;
@@ -28,6 +36,27 @@ public class Question {
 
     public Question() {
         // required empty constructor
+    }
+
+    public Question(String forumPost){
+        List<String> propertyArray = new ArrayList<>();
+        Reader in = new StringReader(forumPost);
+        try {
+            for(CSVRecord line: CSVFormat.DEFAULT.parse(in)){
+                for (String item: line){
+                    propertyArray.add(item);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        setQuestionID(Long.parseLong(propertyArray.get(0)));
+        setQuestion(propertyArray.get(1));
+        setDate(propertyArray.get(2));
+        setAuthor(propertyArray.get(3));
+        setForumID(Long.parseLong(propertyArray.get(4)));
+        setInformation(propertyArray.get(5));
+        setUrl(propertyArray.get(6));
     }
 
     public long getQuestionID() {
@@ -146,5 +175,10 @@ public class Question {
         sb.append(getQuestionID() + "," + getQuestion() + "," + getDate() + "," + getAuthor()
                 + "," + getForumID() + "," + getInformation() + "," + getUrl() + "\n");
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(Question o) {
+        return (int) (this.getQuestionID() - o.getQuestionID());
     }
 }

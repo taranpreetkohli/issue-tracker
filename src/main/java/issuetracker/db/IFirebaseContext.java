@@ -1,7 +1,8 @@
 package issuetracker.db;
 
 import com.google.firebase.database.DatabaseReference;
-import issuetracker.util.Callback;
+
+import java.util.List;
 
 public interface IFirebaseContext {
 
@@ -11,4 +12,7 @@ public interface IFirebaseContext {
 
     DatabaseReference getRoot();
 
+    IFirebaseContext deleteValue(DatabaseReference ref);
+
+    <T> List<T> readChildren(DatabaseReference issuesRef, Class<T> tClass);
 }

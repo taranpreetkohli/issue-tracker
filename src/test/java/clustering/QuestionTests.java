@@ -123,4 +123,26 @@ public class QuestionTests {
     public void toARFF_QuestionListEmpty_ThrowsException() {
         Question.toARFF(new ArrayList<>());
     }
+
+    @Test
+    public void Constructor_ForumPostOverload_CreatesValidObject() {
+        // Arrange
+        String questionString = "44330,\"xero-php API, how to structure query\",1/06/2017,Rajiv Pardiwala,2286,\"I'm try to request bank transactions from a specific account from a certain date using the xero-php API.$xero = new PrivateApplication($config);print_r(  $xero->load('Accounting\\BankTransaction')->setParameter('AccountID','XXXXXXX-4097-4028-9b99-XXXXXXXXX')->fromDate(new DateTime('2016-06-01 00:00:00'))->execute());which becomes this:\"\"https://api.xero.com/api.xro/2.0/BankTransactions?AccountID=XXXXXXX-4097-4028-9b99-XXXXXXXXX&fromDate=2016-06-01\"\"however, it is not filtering by AccountID and instead returns transactions for both of my accounts.  The fromDate is ignored as well.  What is the correct url to do what I want?\",https://community.xero.com/developer/discussion/50795838/";
+        long expectedID = 44330, expectedForumID = 2286;
+        String expectedQuestion = "xero-php API, how to structure query",
+                expectedDate = "1/06/2017",
+                expectedAuthor = "Rajiv Pardiwala",
+                expectedInformation = "I'm try to request bank transactions from a specific account from a certain date using the xero-php API.$xero = new PrivateApplication($config);print_r(  $xero->load('Accounting\\BankTransaction')->setParameter('AccountID','XXXXXXX-4097-4028-9b99-XXXXXXXXX')->fromDate(new DateTime('2016-06-01 00:00:00'))->execute());which becomes this:\"https://api.xero.com/api.xro/2.0/BankTransactions?AccountID=XXXXXXX-4097-4028-9b99-XXXXXXXXX&fromDate=2016-06-01\"however, it is not filtering by AccountID and instead returns transactions for both of my accounts.  The fromDate is ignored as well.  What is the correct url to do what I want?",
+                expectedURL = "https://community.xero.com/developer/discussion/50795838/";
+        // Act
+        Question question = new Question(questionString);
+        // Assert
+        Assert.assertEquals(expectedID, question.getQuestionID());
+        Assert.assertEquals(expectedForumID, question.getForumID());
+        Assert.assertEquals(expectedQuestion, question.getQuestion());
+        Assert.assertEquals(expectedDate, question.getDate());
+        Assert.assertEquals(expectedAuthor, question.getAuthor());
+        Assert.assertEquals(expectedInformation, question.getInformation());
+        Assert.assertEquals(expectedURL, question.getUrl());
+    }
 }
