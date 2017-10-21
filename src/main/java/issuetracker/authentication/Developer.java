@@ -4,6 +4,7 @@ import issuetracker.cli.view.Command;
 
 import java.util.LinkedHashMap;
 
+import issuetracker.cli.view.LogoutCommand;
 import issuetracker.clustering.Issue;
 
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class Developer extends User {
         viewMap = new LinkedHashMap<String, Command>();
         viewMap.put("V", new Command());
         viewMap.put("M", new Command());
-        viewMap.put("L", new Command());
+        viewMap.put("L", new LogoutCommand());
 
         issueMap = new HashMap<>();
     }

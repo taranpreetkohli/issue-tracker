@@ -1,5 +1,6 @@
 package issuetracker;
 
+
 import issuetracker.authentication.AuthenticationManager;
 import issuetracker.cli.CLIManager;
 import issuetracker.clustering.IssueManager;

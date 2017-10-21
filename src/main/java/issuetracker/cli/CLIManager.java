@@ -5,10 +5,9 @@ import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.User;
 import issuetracker.cli.view.Command;
 import issuetracker.exception.NoInputException;
-
-import java.util.*;
 import issuetracker.clustering.IssueManager;
 
+import java.util.*;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Scanner;
 
@@ -64,7 +63,8 @@ public class CLIManager {
         }
 
         if (isCorrectFormat) {
-            authenticationManager.getCurrentUser().getViewMap().get("R").run(authenticationManager, userInput, this);
+            authenticationManager.getCurrentUser().getViewMap().get("R").setUserInput(userInput);
+            authenticationManager.getCurrentUser().getViewMap().get("R").run(authenticationManager, this);
         } else {
             System.out.println("Email and password not entered in correct format");
             registerCLI();
@@ -78,7 +78,7 @@ public class CLIManager {
 
     public void manageIssuesCLI() {
         System.out.println("Invoking view issues logic");
-        authenticationManager.getCurrentUser().getViewMap().get("V").run(authenticationManager, this);
+        authenticationManager.getCurrentUser().getViewMap().get("M").run(authenticationManager, this);
     }
 
     public void showMenu() {
@@ -131,6 +131,7 @@ public class CLIManager {
                     manageIssuesCLI();
                     break;
                 case "L":
+                    logoutCLI();
                     break;
             }
         } else {
@@ -198,13 +199,13 @@ public class CLIManager {
 
         if (isCorrectFormat) {
             if(checkUserConfirmation(userInput)){
-                authenticationManager.getCurrentUser().getViewMap().get("L").run(authenticationManager, userInput, this);
+                authenticationManager.getCurrentUser().getViewMap().get("L").run(authenticationManager, this);
             } else {
                 showMenu();
             }
         } else {
             System.out.println("You must confirm by entering [Y/y], or cancel by entering [N/n])");
-            registerCLI();
+            showMenu();
         }
     }
 

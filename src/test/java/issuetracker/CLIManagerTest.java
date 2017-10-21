@@ -194,7 +194,7 @@ public class CLIManagerTest {
         } catch (NoSuchElementException e) {}
 
         //Assert
-        verify(mockedCommand, times(1)).run(anyObject(), anyObject(), anyObject());
+        verify(mockedCommand, times(1)).run(anyObject(), anyObject());
     }
 
     @Test
@@ -222,7 +222,7 @@ public class CLIManagerTest {
         } catch (NoSuchElementException e) {}
 
         //Assert
-        verify(mockedCommand, never()).run(anyObject(), anyObject(), anyObject());
+        verify(mockedCommand, never()).run(anyObject(), anyObject());
     }
 
     @Test
@@ -347,7 +347,7 @@ public class CLIManagerTest {
         } catch (NoSuchElementException e) {}
 
         //Assert
-        verify(mockedCommand, times(1)).run(anyObject(), anyObject(), anyObject());
+        verify(mockedCommand, times(1)).run(anyObject(), anyObject());
     }
 
     @Test
@@ -374,7 +374,7 @@ public class CLIManagerTest {
         } catch (NoSuchElementException e) {}
 
         //Assert
-        verify(mockedCommand, never()).run(anyObject(), anyObject(), anyObject());
+        verify(mockedCommand, never()).run(anyObject(), anyObject());
     }
 
     @Test
@@ -401,14 +401,12 @@ public class CLIManagerTest {
         } catch (NoSuchElementException e) {}
 
         //Assert
-        verify(mockedCommand, never()).run(anyObject(), anyObject(), anyObject());
+        verify(mockedCommand, never()).run(anyObject(), anyObject());
     }
 
     @Test
     public void ViewIssuesCLI_ViewCommandAsUser_RunCalled(){
         //Arrange
-        CLIManager cliManagerSpy = Mockito.spy(cliManager);
-
         Developer mockedDev = Mockito.mock(Developer.class);
         Map<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
         Command mockedCommand = Mockito.mock(Command.class);
@@ -428,8 +426,6 @@ public class CLIManagerTest {
     @Test
     public void ManageIssuesCLI_ManageCommandAsUser_RunCalled(){
         //Arrange
-        CLIManager cliManagerSpy = Mockito.spy(cliManager);
-
         Developer mockedDev = Mockito.mock(Developer.class);
         Map<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
         Command mockedCommand = Mockito.mock(Command.class);
