@@ -177,7 +177,7 @@ public class IssueManagerTest {
         //arrange
         //act
         //should throw exception
-        issueManager.generateCluster(null);
+        issueManager.generateCluster("");
     }
 
     @Ignore

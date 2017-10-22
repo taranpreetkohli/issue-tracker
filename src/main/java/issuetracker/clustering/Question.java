@@ -125,11 +125,11 @@ public class Question implements Comparable<Question>{
     private static StringBuilder initARFF() {
         StringBuilder sb = new StringBuilder();
         sb.append("@relation questions\n\n" +
-                "@attribute questionID LONG\n" +
+                "@attribute questionID NUMERIC\n" +
                 "@attribute question STRING\n" +
-                "@attribute date STRING\n" +
+                "@attribute date DATE \"dd/MM/yyyy\"\n" +     //"yyyy-MM-dd HH:mm:ss"
                 "@attribute author STRING\n" +
-                "@attribute forumID LONG\n" +
+                "@attribute forumID NUMERIC\n" +
                 "@attribute information STRING\n" +
                 "@attribute url STRING\n\n" +
                 "@data\n");
@@ -172,8 +172,8 @@ public class Question implements Comparable<Question>{
         } else {
             sb = new StringBuilder();
         }
-        sb.append(getQuestionID() + "," + getQuestion() + "," + getDate() + "," + getAuthor()
-                + "," + getForumID() + "," + getInformation() + "," + getUrl() + "\n");
+        sb.append(getQuestionID() + ",\"" + getQuestion() + "\"," + getDate() + ",\"" + getAuthor()
+                + "\"," + getForumID() + ",\"" + getInformation() + "\"," + getUrl() + "\n");
         return sb.toString();
     }
 

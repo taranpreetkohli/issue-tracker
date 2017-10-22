@@ -8,7 +8,14 @@ import issuetracker.exception.IssueNotFoundException;
 import issuetracker.exception.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import weka.clusterers.DBSCAN;
+import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.StringToWordVector;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.*;
 
 public class IssueManager {
@@ -67,8 +74,37 @@ public class IssueManager {
 
     }
 
-    public List<Issue> generateCluster(String input) {
+    public List<Issue> generateCluster(String s){
         return null;
+    }
+
+    public List<Issue> generateCluster(List<Question> questions) {
+        System.out.println(Question.toARFF(questions));
+
+        Instances instances = null;
+        try {
+            instances = new Instances(new StringReader(Question.toARFF(questions)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            StringToWordVector s = new StringToWordVector();
+            s.setInputFormat(instances);
+            instances = Filter.useFilter(instances, s);
+
+
+            DBSCAN dbscan = new DBSCAN();
+            dbscan.setEpsilon(1);
+            dbscan.setMinPoints(1);
+            dbscan.buildClusterer(instances);
+            System.out.println(dbscan.toString());
+        }catch (Exception e){
+            logger.error(e.getMessage());
+        }
+
+        return null;
+
     }
 
     public List<Issue> retrieveIssuesOrderedByPriority() {
