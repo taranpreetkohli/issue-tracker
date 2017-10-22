@@ -180,12 +180,11 @@ public class CLIManagerTest {
         Mockito.doReturn(true).when(cliManagerSpy).checkUserConfirmationFormat(anyString());
         Mockito.doReturn(true).when(cliManagerSpy).checkUserConfirmation(anyString());
 
-        Administrator mockedAdmin = Mockito.mock(Administrator.class);
-        HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
         Command mockedCommand = Mockito.mock(Command.class);
 
-        Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
+        Map<String, Command> viewMap= new LinkedHashMap<>();
+        viewMap.put("L", mockedCommand);
+        cliManager.setViewMap(viewMap);
 
         //Act
         try {
@@ -207,12 +206,11 @@ public class CLIManagerTest {
         Mockito.doReturn(true).when(cliManagerSpy).checkUserConfirmationFormat(anyString());
         Mockito.doReturn(false).when(cliManagerSpy).checkUserConfirmation(anyString());
 
-        Administrator mockedAdmin = Mockito.mock(Administrator.class);
-        HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
         Command mockedCommand = Mockito.mock(Command.class);
 
-        Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
+        Map<String, Command> viewMap= new LinkedHashMap<>();
+        viewMap.put("L", mockedCommand);
+        cliManager.setViewMap(viewMap);
 
         //Act
         try {
@@ -345,12 +343,11 @@ public class CLIManagerTest {
 
         Mockito.doReturn(true).when(cliManagerSpy).checkUserDetailFormat(anyString());
 
-        Administrator mockedAdmin = Mockito.mock(Administrator.class);
-        HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
         Command mockedCommand = Mockito.mock(Command.class);
 
-        Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
+        Map<String, Command> viewMap= new LinkedHashMap<>();
+        viewMap.put("R", mockedCommand);
+        cliManager.setViewMap(viewMap);
 
         //Act
         try {
@@ -416,16 +413,17 @@ public class CLIManagerTest {
     @Test
     public void ViewIssuesCLI_ViewCommandAsUser_RunCalled(){
         //Arrange
-        Developer mockedDev = Mockito.mock(Developer.class);
-        Map<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
         Command mockedCommand = Mockito.mock(Command.class);
 
-        //Return mocked command object when retrieving "V" key from user views
-        Mockito.doReturn(mockedDev).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
+        Map<String, Command> viewMap= new LinkedHashMap<>();
+        viewMap.put("V", mockedCommand);
+        cliManager.setViewMap(viewMap);
 
         //Act
-        cliManager.viewIssuesCLI();
+        try {
+            cliManager.viewIssuesCLI();
+        } catch (NoSuchElementException e) {}
+
 
         //Assert
         verify(mockedCommand, times(1)).run(anyObject(), anyObject());
@@ -434,16 +432,16 @@ public class CLIManagerTest {
     @Test
     public void ManageIssuesCLI_ManageCommandAsUser_RunCalled(){
         //Arrange
-        Developer mockedDev = Mockito.mock(Developer.class);
-        Map<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
         Command mockedCommand = Mockito.mock(Command.class);
 
-        //Return mocked command object when retrieving "M" key from user views
-        Mockito.doReturn(mockedDev).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
+        Map<String, Command> viewMap= new LinkedHashMap<>();
+        viewMap.put("M", mockedCommand);
+        cliManager.setViewMap(viewMap);
 
         //Act
-        cliManager.manageIssuesCLI();
+        try {
+            cliManager.manageIssuesCLI();
+        } catch (NoSuchElementException e) {}
 
         //Assert
         verify(mockedCommand, times(1)).run(anyObject(), anyObject());
