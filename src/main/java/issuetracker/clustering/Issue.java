@@ -85,8 +85,8 @@ public class Issue {
     }
 
     public Issue removeAssignee(Developer developer) {
-        if (assignees.contains(developer)) {
-            assignees.remove(developer);
+        if (assignees.contains(developer.getEmail())) {
+            assignees.remove(developer.getEmail());
         } else {
             throw new DeveloperNotAssignedException("Cannot unassign developer from this issue!");
         }
