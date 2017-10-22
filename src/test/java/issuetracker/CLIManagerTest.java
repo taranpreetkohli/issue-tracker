@@ -80,6 +80,31 @@ public class CLIManagerTest {
         assertFalse(isValid) ;
     }
 
+    @Test
+    public void CheckSingleInputFormat_SingleInput_ReturnsTrue() {
+        //Arrange
+        String validInput = "213";
+
+        //Act
+        boolean isValid = cliManager.checkSingleInputFormat(validInput);
+
+        //Assert
+        assertTrue(isValid) ;
+    }
+
+    @Test
+    public void CheckSingleInputFormat_MultiInput_ReturnsTrue() {
+        //Arrange
+        String validInput = "5234 346356 sdfgsg";
+
+        //Act
+        boolean isValid = cliManager.checkSingleInputFormat(validInput);
+
+        //Assert
+        assertFalse(isValid); 
+    }
+
+
     @Test(expected = NoInputException.class)
     public void CheckUserDetailFormat_NoInput_NoInputExceptionThrown() {
         //Arrange
