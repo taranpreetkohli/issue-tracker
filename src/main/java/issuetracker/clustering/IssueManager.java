@@ -9,9 +9,7 @@ import issuetracker.exception.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class IssueManager {
 
@@ -112,8 +110,8 @@ public class IssueManager {
         }
     }
 
-    public void assignIssue(Issue issue, Developer developer) {
-        Developer dev = (Developer) firebaseAdapter.getUser(developer.getEmail());
+    public void assignIssue(Issue issue, Developer dev) {
+        Developer developer = (Developer) firebaseAdapter.getUser(dev.getEmail());
         if (dev == null) {
             throw new UserException("Developer not found!");
         }
@@ -134,6 +132,18 @@ public class IssueManager {
         } else {
             throw new IssueNotFoundException();
         }
+    }
+
+    public void unAssignIssue(Issue issue, Developer dev) {
+        Developer developer = (Developer) firebaseAdapter.getUser(dev.getEmail());
+        if (dev == null) {
+            throw new UserException("Developer not found!");
+        }
+
+        issue.removeAssignee(dev);
+        firebaseAdapter.updateIssue(issue);
+        dev.removeIssue(issue);
+        firebaseAdapter.saveUser(dev);
     }
 
     public void resolveIssue(Developer dev, Issue issue) {

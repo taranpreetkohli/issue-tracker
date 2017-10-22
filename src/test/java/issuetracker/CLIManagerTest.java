@@ -51,7 +51,7 @@ public class CLIManagerTest {
         String validInput = "developer@gmail.com password";
 
         //Act
-        boolean isValid = cliManager.checkUserDetailFormat(validInput);
+        boolean isValid = cliManager.checkTwoInputFormat(validInput);
 
         //Assert
         assertTrue(isValid) ;
@@ -62,7 +62,7 @@ public class CLIManagerTest {
         //Arrange
         String invalidInput = "developer@gmail.compassword";
         //Act
-        boolean isValid = cliManager.checkUserDetailFormat(invalidInput);
+        boolean isValid = cliManager.checkTwoInputFormat(invalidInput);
 
         //Assert
         assertFalse(isValid) ;
@@ -74,7 +74,7 @@ public class CLIManagerTest {
         String invalidInput = "developer@gmail.com password another input";
 
         //Act
-        boolean isValid = cliManager.checkUserDetailFormat(invalidInput);
+        boolean isValid = cliManager.checkTwoInputFormat(invalidInput);
 
         //Assert
         assertFalse(isValid) ;
@@ -86,7 +86,7 @@ public class CLIManagerTest {
         String noInput = "";
 
         //Act Assert
-        boolean isValid = cliManager.checkUserDetailFormat(noInput);
+        boolean isValid = cliManager.checkTwoInputFormat(noInput);
     }
 
     @Test
@@ -304,7 +304,7 @@ public class CLIManagerTest {
         ByteArrayInputStream in = new ByteArrayInputStream(validInput.getBytes());
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
-        Mockito.doReturn(true).when(cliManagerSpy).checkUserDetailFormat(validInput);
+        Mockito.doReturn(true).when(cliManagerSpy).checkTwoInputFormat(validInput);
 
         //Act
         try {
@@ -322,7 +322,7 @@ public class CLIManagerTest {
         ByteArrayInputStream in = new ByteArrayInputStream(invalidInput.getBytes());
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
-        Mockito.doReturn(false).when(cliManagerSpy).checkUserDetailFormat(invalidInput);
+        Mockito.doReturn(false).when(cliManagerSpy).checkTwoInputFormat(invalidInput);
 
         //Act
         try {
@@ -341,7 +341,7 @@ public class CLIManagerTest {
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
 
-        Mockito.doReturn(true).when(cliManagerSpy).checkUserDetailFormat(anyString());
+        Mockito.doReturn(true).when(cliManagerSpy).checkTwoInputFormat(anyString());
 
         Command mockedCommand = Mockito.mock(Command.class);
 
@@ -366,7 +366,7 @@ public class CLIManagerTest {
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
 
-        Mockito.doReturn(false).when(cliManagerSpy).checkUserDetailFormat(anyString());
+        Mockito.doReturn(false).when(cliManagerSpy).checkTwoInputFormat(anyString());
 
         Administrator mockedAdmin = Mockito.mock(Administrator.class);
         HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
@@ -392,7 +392,7 @@ public class CLIManagerTest {
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
 
-        Mockito.doReturn(false).when(cliManagerSpy).checkUserDetailFormat(anyString());
+        Mockito.doReturn(false).when(cliManagerSpy).checkTwoInputFormat(anyString());
 
         Administrator mockedAdmin = Mockito.mock(Administrator.class);
         HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
@@ -413,7 +413,12 @@ public class CLIManagerTest {
     @Test
     public void ViewIssuesCLI_ViewCommandAsUser_RunCalled(){
         //Arrange
+        String validInput = "command question issue";
+        ByteArrayInputStream in = new ByteArrayInputStream(validInput.getBytes());
+        System.setIn(in);
+
         Command mockedCommand = Mockito.mock(Command.class);
+        Mockito.doReturn(Mockito.mock(Developer.class)).when(authenticationManager).getCurrentUser();
 
         Map<String, Command> viewMap= new LinkedHashMap<>();
         viewMap.put("V", mockedCommand);
@@ -432,7 +437,12 @@ public class CLIManagerTest {
     @Test
     public void ManageIssuesCLI_ManageCommandAsUser_RunCalled(){
         //Arrange
+        String validInput = "command id";
+        ByteArrayInputStream in = new ByteArrayInputStream(validInput.getBytes());
+        System.setIn(in);
+
         Command mockedCommand = Mockito.mock(Command.class);
+        Mockito.doReturn(Mockito.mock(Developer.class)).when(authenticationManager).getCurrentUser();
 
         Map<String, Command> viewMap= new LinkedHashMap<>();
         viewMap.put("M", mockedCommand);

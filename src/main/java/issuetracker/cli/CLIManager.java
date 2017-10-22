@@ -6,7 +6,9 @@ import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
 import issuetracker.cli.view.ARegisterCommand;
 import issuetracker.cli.view.Command;
+import issuetracker.cli.view.DManageCommand;
 import issuetracker.cli.view.LogoutCommand;
+import issuetracker.clustering.Issue;
 import issuetracker.exception.NoInputException;
 import issuetracker.clustering.IssueManager;
 
@@ -30,7 +32,7 @@ public class CLIManager {
         boolean isCorrectFormat = false;
 
         try {
-            isCorrectFormat = checkUserDetailFormat(userInput);
+            isCorrectFormat = checkTwoInputFormat(userInput);
         } catch (NoInputException e) {
             loginCLI();
         }
@@ -49,7 +51,7 @@ public class CLIManager {
                 } else if (authenticationManager.getCurrentUser() instanceof Developer) {
                     this.viewMap = new LinkedHashMap<>();
                     viewMap.put("V", new LogoutCommand());
-                    viewMap.put("M", new LogoutCommand());
+                    viewMap.put("M", new DManageCommand());
                     viewMap.put("L", new LogoutCommand());
                 }
 
@@ -75,7 +77,7 @@ public class CLIManager {
         boolean isCorrectFormat = false;
 
         try {
-            isCorrectFormat = checkUserDetailFormat(userInput);
+            isCorrectFormat = checkTwoInputFormat(userInput);
         } catch (NoInputException e) {
             registerCLI();
         }
@@ -95,8 +97,50 @@ public class CLIManager {
     }
 
     public void manageIssuesCLI() {
-        System.out.println("Invoking view issues logic");
-        this.viewMap.get("M").run(authenticationManager, this);
+        System.out.println("Invoking manage issues logic");
+        //Show issues assigned to dev (ID TITLE)
+        User currentUser = authenticationManager.getCurrentUser();
+        List<String> devIssues = null;
+        List<Issue> allIssues = null;
+        if (currentUser instanceof Developer) {
+            System.out.println("is dev");
+            devIssues = ((Developer) currentUser).getIssues();
+            allIssues = issueManager.retrieveIssuesOrderedByPriority();
+        }
+
+        if (!devIssues.isEmpty()) {
+            for (Issue issue : allIssues) {
+                if (devIssues.contains(issue.getId())) {
+                    if (issue.getStatus() != Issue.IssueStatus.RESOLVED) {
+                        String id = issue.getId();
+                        String title = issue.getTitle();
+                        System.out.println(id + ": " + title);
+                    }
+                }
+            }
+        }
+
+        handleManageInput();
+    }
+
+    public void handleManageInput() {
+        System.out.println("Enter [close/unassign id] to manage an issue: ");
+        String userInput = retrieveUserInput();
+        boolean isCorrectFormat = false;
+
+        try {
+            isCorrectFormat = checkTwoInputFormat(userInput);
+        } catch (NoInputException e) {
+            handleManageInput();
+        }
+
+        if (isCorrectFormat) {
+            this.viewMap.get("M").setUserInput(userInput);
+            this.viewMap.get("M").run(authenticationManager, this);
+        } else {
+            System.out.println("Did not recognise command");
+            handleManageInput();
+        }
     }
 
     public void showMenu() {
@@ -174,10 +218,10 @@ public class CLIManager {
         }
     }
 
-    public boolean checkUserDetailFormat(String input) {
+    public boolean checkTwoInputFormat(String input) {
 
         if (input.isEmpty()){
-            throw new NoInputException("No Email or Password Provided");
+            throw new NoInputException("Nothing was entered");
         }
 
         String[] parts = input.split(" ");
@@ -236,5 +280,9 @@ public class CLIManager {
 
     public void setViewMap(Map<String, Command> viewMap) {
         this.viewMap = viewMap;
+    }
+
+    public IssueManager getIssueManager() {
+        return issueManager;
     }
 }
