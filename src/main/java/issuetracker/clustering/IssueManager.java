@@ -112,6 +112,18 @@ public class IssueManager {
         }
     }
 
+    public void assignIssue(Issue issue, Developer developer) {
+        Developer dev = (Developer) firebaseAdapter.getUser(developer.getEmail());
+        if (dev == null) {
+            throw new UserException("Developer not found!");
+        }
+
+        issue.addAssignee(developer);
+        developer.addIssue(issue);
+        firebaseAdapter.saveUser(developer);
+        firebaseAdapter.updateIssue(issue);
+    }
+
     public void unAssignIssue(Administrator admin, Issue issue, Developer dev) {
         checkAdminAndDeveloperExist(admin, dev);
         if (firebaseAdapter.getIssue(issue.getId()) != null) {
