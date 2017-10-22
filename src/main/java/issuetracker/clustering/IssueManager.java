@@ -73,8 +73,10 @@ public class IssueManager {
 
     public List<Issue> retrieveIssuesOrderedByPriority() {
         List<Issue> issues = firebaseAdapter.retrieveAllIssues();
-        issues.sort(Comparator.comparingInt(Issue::getPriority));
-        Collections.reverse(issues);
+        if (issues != null) {
+            issues.sort(Comparator.comparingInt(Issue::getPriority));
+            Collections.reverse(issues);
+        }
         return issues;
     }
 
