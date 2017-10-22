@@ -438,7 +438,7 @@ public class CLIManagerTest {
     @Test
     public void ViewIssuesCLI_ViewCommandAsUser_RunCalled(){
         //Arrange
-        String validInput = "command question issue";
+        String validInput = "1";
         ByteArrayInputStream in = new ByteArrayInputStream(validInput.getBytes());
         System.setIn(in);
 
