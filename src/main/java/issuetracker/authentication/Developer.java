@@ -1,45 +1,38 @@
 package issuetracker.authentication;
 
-import issuetracker.cli.view.Command;
-
-import java.util.LinkedHashMap;
-
-import issuetracker.cli.view.LogoutCommand;
 import issuetracker.clustering.Issue;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Developer extends User {
 
     public final String value = "Dev";
-    private Map<String, Issue> issueMap;
+    private List<String> issues;
 
     public Developer() {
         super();
-        issueMap = new HashMap<>();
+        issues = new ArrayList<>();
     }
 
     public Developer(String email, String password) {
         super(email, password);
-
-        issueMap = new HashMap<>();
+        issues = new ArrayList<>();
     }
 
-
     public void addIssue(Issue issue) {
-        issueMap.put(issue.getId(), issue);
+        issues.add(issue.getId());
     }
 
     public void removeIssue(Issue issue) {
-        issueMap.remove(issue.getId(), issue);
+        issues.remove(issue.getId());
     }
 
-    public Map<String, Issue> getIssueMap() {
-        return issueMap;
+    public List<String> getIssues() {
+        return issues;
     }
 
-    public void setIssueMap(Map<String, Issue> issueMap) {
-        this.issueMap = issueMap;
+    public void setIssues(List<String> issues) {
+        this.issues = issues;
     }
 }

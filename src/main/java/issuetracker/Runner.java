@@ -2,10 +2,7 @@ package issuetracker;
 
 
 import issuetracker.authentication.Administrator;
-import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.Developer;
-import issuetracker.authentication.User;
-import issuetracker.cli.CLIManager;
 import issuetracker.clustering.Issue;
 import issuetracker.clustering.IssueManager;
 import issuetracker.db.FirebaseAdapter;
@@ -13,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Runner {
 
@@ -55,12 +50,15 @@ public class Runner {
 
         IssueManager issueManager = new IssueManager(firebaseAdapter);
 
-        Issue issue1 = firebaseAdapter.getIssue("-Kx1Na_UcDWgeo72hOA6");
-        Issue issue2 = firebaseAdapter.getIssue("-Kx1Nbl_QRvWVEmY9p0b");
-        Issue issue3 = firebaseAdapter.getIssue("-Kx1Nbpg6Wt42W8AOMZO");
+        Issue issue1 = firebaseAdapter.getIssue("1");
+        Issue issue2 = firebaseAdapter.getIssue("2");
+        Issue issue3 = firebaseAdapter.getIssue("3");
 
+        logger.error("assigning 1");
         issueManager.assignIssue(administrator, issue1, developer);
+        logger.error("assigning 2");
         issueManager.assignIssue(administrator, issue2, developer);
+        logger.error("assigning 3");
         issueManager.assignIssue(administrator, issue3, developer);
 
 
