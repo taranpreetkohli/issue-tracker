@@ -67,6 +67,7 @@ public class AuthenticationManager implements IAuthenticationManager {
             String email = currentUser.getEmail();
             firebaseAdapter.updateLoginStatus(firebaseAdapter.getUser(email), false);
             currentUser.setLoggedIn(false);
+            currentUser = null;
 
             return true;
         } else {
