@@ -7,6 +7,8 @@ import issuetracker.cli.CLIManager;
 import issuetracker.clustering.Issue;
 import issuetracker.db.FirebaseAdapter;
 
+import java.util.List;
+
 public class DViewCommand extends Command{
 
     @Override
@@ -16,6 +18,16 @@ public class DViewCommand extends Command{
         Issue issue = firebaseAdapter.getIssue(userInput);
         System.out.println(issue.getStatus() + " " + issue.getId() + ": " + issue.getTitle());
         System.out.println(issue.getSummary());
+
+        List<String> assignedUsers = issue.getAssignees();
+
+        if (!assignedUsers.isEmpty()) {
+            System.out.println("Current Assignees: ");
+            for (String user : assignedUsers) {
+                System.out.println(user);
+            }
+        }
+
         assignPrompt(authenticationManager, cliManager, issue);
     }
 
