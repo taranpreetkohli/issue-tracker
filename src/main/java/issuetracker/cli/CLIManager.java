@@ -91,20 +91,41 @@ public class CLIManager {
     public void viewIssuesCLI() {
         System.out.println("Invoking view issues logic");
         List<Issue> allIssues = issueManager.retrieveIssuesOrderedByPriority();
+        List<String> allIssuesId = new ArrayList<>();
 
         if (allIssues != null) {
             for (Issue issue : allIssues) {
                 String id = issue.getId();
+                allIssuesId.add(id);
                 String status = issue.getStatus().toString();
                 String title = issue.getTitle();
                 System.out.println(status + " " + id + ": " + title);
             }
         }
+        handleViewIdInput(allIssuesId);
+    }
 
+    public void handleViewIdInput(List<String> allIssuesId) {
         System.out.print("Enter [id] to view more details: ");
         String userInput = retrieveUserInput();
 
-        this.viewMap.get("V").run(authenticationManager, this);
+        boolean isCorrectFormat = false;
+
+        try {
+            isCorrectFormat = checkSingleInputFormat(userInput);
+        } catch (NoInputException e) {
+            handleViewIdInput(allIssuesId);
+        }
+
+        if (isCorrectFormat) {
+            this.viewMap.get("V").setUserInput(userInput);
+            this.viewMap.get("V").setAllIssuesId(allIssuesId);
+            this.viewMap.get("V").run(authenticationManager, this);
+        } else {
+            System.out.println("Did not recognise command");
+
+            handleViewIdInput(allIssuesId);
+        }
     }
 
     public void manageIssuesCLI() {

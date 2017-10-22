@@ -4,6 +4,7 @@ import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
 import issuetracker.cli.CLIManager;
+import issuetracker.clustering.Issue;
 import issuetracker.db.FirebaseAdapter;
 
 import java.util.ArrayList;
@@ -25,7 +26,14 @@ public class DManageCommand extends Command{
                 if (((Developer) currentUser).getIssues().contains(parts[1])) {
                     switch (parts[0].toUpperCase()) {
                         case "UNASSIGN":
-                            cliManager.getIssueManager().unAssignIssue(firebaseAdapter.getIssue(parts[1]), (Developer)currentUser);
+                            Issue issue = firebaseAdapter.getIssue(parts[1]);
+
+                            if (issue.getAssignees().size() == 1) {
+                                issue.setStatus(Issue.IssueStatus.UNASSIGNED);
+                            }
+
+                            cliManager.getIssueManager().unAssignIssue(issue, (Developer)currentUser);
+
                             break;
                         case "CLOSE":
                             cliManager.getIssueManager().resolveIssue((Developer)currentUser, firebaseAdapter.getIssue(parts[1]));
