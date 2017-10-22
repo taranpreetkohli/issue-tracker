@@ -42,7 +42,7 @@ public class CLIManager {
                 if (authenticationManager.getCurrentUser() instanceof Administrator) {
                     this.viewMap = new LinkedHashMap<>();
                     viewMap.put("R", new ARegisterCommand());
-                    viewMap.put("V", new LogoutCommand());
+                    viewMap.put("V", new AViewCommand());
                     viewMap.put("M", new LogoutCommand());
                     viewMap.put("L", new LogoutCommand());
                 } else if (authenticationManager.getCurrentUser() instanceof Developer) {
