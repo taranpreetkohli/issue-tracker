@@ -136,7 +136,7 @@ public class IssueManager {
 
     public void unAssignIssue(Issue issue, Developer dev) {
         Developer developer = (Developer) firebaseAdapter.getUser(dev.getEmail());
-        if (dev == null) {
+        if (developer == null) {
             throw new UserException("Developer not found!");
         }
 

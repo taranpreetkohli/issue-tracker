@@ -23,6 +23,7 @@ public class Issue {
         posts = new ArrayList<>();
         users = new ArrayList<>();
         assignees = new ArrayList<>();
+        status = IssueStatus.UNRESOLVED;
     }
 
     public String getTitle() {
