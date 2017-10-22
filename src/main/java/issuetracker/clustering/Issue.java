@@ -23,7 +23,7 @@ public class Issue {
         posts = new ArrayList<>();
         users = new ArrayList<>();
         assignees = new ArrayList<>();
-        status = IssueStatus.UNRESOLVED;
+        status = IssueStatus.UNASSIGNED;
     }
 
     public String getTitle() {
@@ -79,7 +79,7 @@ public class Issue {
 
     public Issue addAssignee(Developer developer) {
         assignees.add(developer.getEmail());
-        if (status == IssueStatus.UNRESOLVED) {
+        if (status == IssueStatus.UNASSIGNED) {
             status = IssueStatus.IN_PROGRESS;
         }
         return this;
@@ -163,7 +163,7 @@ public class Issue {
     }
 
     public enum IssueStatus {
-        UNRESOLVED,
+        UNASSIGNED,
         RESOLVED,
         IN_PROGRESS
     }

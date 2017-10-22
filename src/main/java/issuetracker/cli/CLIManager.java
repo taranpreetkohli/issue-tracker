@@ -4,10 +4,7 @@ import issuetracker.authentication.Administrator;
 import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
-import issuetracker.cli.view.ARegisterCommand;
-import issuetracker.cli.view.Command;
-import issuetracker.cli.view.DManageCommand;
-import issuetracker.cli.view.LogoutCommand;
+import issuetracker.cli.view.*;
 import issuetracker.clustering.Issue;
 import issuetracker.exception.NoInputException;
 import issuetracker.clustering.IssueManager;
@@ -50,7 +47,7 @@ public class CLIManager {
                     viewMap.put("L", new LogoutCommand());
                 } else if (authenticationManager.getCurrentUser() instanceof Developer) {
                     this.viewMap = new LinkedHashMap<>();
-                    viewMap.put("V", new LogoutCommand());
+                    viewMap.put("V", new DViewCommand());
                     viewMap.put("M", new DManageCommand());
                     viewMap.put("L", new LogoutCommand());
                 }
@@ -93,11 +90,24 @@ public class CLIManager {
 
     public void viewIssuesCLI() {
         System.out.println("Invoking view issues logic");
+        List<Issue> allIssues = issueManager.retrieveIssuesOrderedByPriority();
+
+        if (allIssues != null) {
+            for (Issue issue : allIssues) {
+                String id = issue.getId();
+                String status = issue.getStatus().toString();
+                String title = issue.getTitle();
+                System.out.println(status + " " + id + ": " + title);
+            }
+        }
+
+        System.out.print("Enter [id] to view more details: ");
+        String userInput = retrieveUserInput();
+
         this.viewMap.get("V").run(authenticationManager, this);
     }
 
     public void manageIssuesCLI() {
-        System.out.println("Invoking manage issues logic");
         //Show issues assigned to dev (ID TITLE)
         User currentUser = authenticationManager.getCurrentUser();
         List<String> devIssues = null;
