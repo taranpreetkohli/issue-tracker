@@ -6,7 +6,9 @@ import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
 import issuetracker.cli.view.ARegisterCommand;
 import issuetracker.cli.view.Command;
+import issuetracker.cli.view.DManageCommand;
 import issuetracker.cli.view.LogoutCommand;
+import issuetracker.clustering.Issue;
 import issuetracker.exception.NoInputException;
 import issuetracker.clustering.IssueManager;
 
@@ -49,7 +51,7 @@ public class CLIManager {
                 } else if (authenticationManager.getCurrentUser() instanceof Developer) {
                     this.viewMap = new LinkedHashMap<>();
                     viewMap.put("V", new LogoutCommand());
-                    viewMap.put("M", new LogoutCommand());
+                    viewMap.put("M", new DManageCommand());
                     viewMap.put("L", new LogoutCommand());
                 }
 
@@ -96,6 +98,24 @@ public class CLIManager {
 
     public void manageIssuesCLI() {
         System.out.println("Invoking view issues logic");
+        //Show issues assigned to dev (ID TITLE)
+        User currentUser = authenticationManager.getCurrentUser();
+        Map<String, Issue> orderedIssues = null;
+        if (currentUser instanceof Developer) {
+            //orderedIssues = issueManager.retrieveIssuesOrderedByPriority(((Developer) currentUser).getIssueMap());
+        }
+
+        if (!orderedIssues.isEmpty()) {
+            for (String key : orderedIssues.keySet())
+            {
+                String id = key;
+                String title = orderedIssues.get(key).getTitle();
+                System.out.println(key + ": " + title);
+            }
+        }
+
+        //Unassign/resolve issue
+        //Check if command valid, if valid, check if valid issue
         this.viewMap.get("M").run(authenticationManager, this);
     }
 

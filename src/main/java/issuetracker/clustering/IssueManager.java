@@ -9,9 +9,7 @@ import issuetracker.exception.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class IssueManager {
 
