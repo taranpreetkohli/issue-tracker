@@ -15,7 +15,17 @@ public class AViewCommand extends Command{
 
     @Override
     public void run(AuthenticationManager authenticationManager, CLIManager cliManager) {
+        if (userInput.toUpperCase().equals("BACK")) {
+            cliManager.showMenu();
+        }
+
         Issue issue = firebaseAdapter.getIssue(userInput);
+
+        if (issue == null) {
+            System.out.println("Issue with ID: " + userInput + " does not exist");
+            cliManager.handleViewIdInput();
+        }
+
         System.out.println(issue.getStatus() + " " + issue.getId() + ": " + issue.getTitle());
         System.out.println(issue.getSummary());
 

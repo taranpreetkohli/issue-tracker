@@ -9,7 +9,6 @@ public abstract class Command {
 
     public final String value = "Command";
     protected String userInput;
-    protected List<String> allIssuesId;
 
 
     public Command() { }
@@ -22,12 +21,6 @@ public abstract class Command {
 
     public void setUserInput(String userInput) {
         this.userInput = userInput;
-    }
-
-    public List<String> getAllIssuesId() { return allIssuesId; }
-
-    public void setAllIssuesId(List<String> allIssuesId) {
-        this.allIssuesId = allIssuesId;
     }
 
 }

@@ -91,22 +91,20 @@ public class CLIManager {
     public void viewIssuesCLI() {
         System.out.println("Invoking view issues logic");
         List<Issue> allIssues = issueManager.retrieveIssuesOrderedByPriority();
-        List<String> allIssuesId = new ArrayList<>();
 
         if (allIssues != null) {
             for (Issue issue : allIssues) {
                 String id = issue.getId();
-                allIssuesId.add(id);
                 String status = issue.getStatus().toString();
                 String title = issue.getTitle();
                 System.out.println(status + " " + id + ": " + title);
             }
         }
-        handleViewIdInput(allIssuesId);
+        handleViewIdInput();
     }
 
-    public void handleViewIdInput(List<String> allIssuesId) {
-        System.out.print("Enter [id] to view more details: ");
+    public void handleViewIdInput() {
+        System.out.print("Enter [id] to view more details or [BACK] to go back to main menu: ");
         String userInput = retrieveUserInput();
 
         boolean isCorrectFormat = false;
@@ -114,17 +112,16 @@ public class CLIManager {
         try {
             isCorrectFormat = checkSingleInputFormat(userInput);
         } catch (NoInputException e) {
-            handleViewIdInput(allIssuesId);
+            handleViewIdInput();
         }
 
         if (isCorrectFormat) {
             this.viewMap.get("V").setUserInput(userInput);
-            this.viewMap.get("V").setAllIssuesId(allIssuesId);
             this.viewMap.get("V").run(authenticationManager, this);
         } else {
             System.out.println("Did not recognise command");
 
-            handleViewIdInput(allIssuesId);
+            handleViewIdInput();
         }
     }
 
