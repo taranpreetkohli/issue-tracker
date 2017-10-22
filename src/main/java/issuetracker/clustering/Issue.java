@@ -98,7 +98,7 @@ public class Issue {
             throw new IssueAlreadyResolvedException("This issue cannot be resolved again!");
         }
 
-        if (assignees.contains(developer)) {
+        if (assignees.contains(developer.getEmail())) {
             status = IssueStatus.RESOLVED;
         } else {
             throw new DeveloperNotAssignedException("Developer not assigned to this issue!");

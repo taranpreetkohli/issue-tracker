@@ -16,11 +16,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -340,8 +342,8 @@ public class IssueManagerTest {
         Issue issue = Mockito.mock(Issue.class);
         issueManager.assignIssue(admin, issue, developer);
 
-        List<Developer> assignees = new ArrayList<>();
-        assignees.add(developer);
+        List<String> assignees = new ArrayList<>();
+        assignees.add("dev@gmail.com");
 
         Mockito.doReturn(assignees).when(issue).getAssignees();
 
