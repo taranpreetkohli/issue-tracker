@@ -32,7 +32,7 @@ public class CLIManager {
         boolean isCorrectFormat = false;
 
         try {
-            isCorrectFormat = checkUserDetailFormat(userInput);
+            isCorrectFormat = checkTwoInputFormat(userInput);
         } catch (NoInputException e) {
             loginCLI();
         }
@@ -77,7 +77,7 @@ public class CLIManager {
         boolean isCorrectFormat = false;
 
         try {
-            isCorrectFormat = checkUserDetailFormat(userInput);
+            isCorrectFormat = checkTwoInputFormat(userInput);
         } catch (NoInputException e) {
             registerCLI();
         }
@@ -97,26 +97,50 @@ public class CLIManager {
     }
 
     public void manageIssuesCLI() {
-        System.out.println("Invoking view issues logic");
+        System.out.println("Invoking manage issues logic");
         //Show issues assigned to dev (ID TITLE)
         User currentUser = authenticationManager.getCurrentUser();
-        Map<String, Issue> orderedIssues = null;
+        List<String> devIssues = null;
+        List<Issue> allIssues = null;
         if (currentUser instanceof Developer) {
-            //orderedIssues = issueManager.retrieveIssuesOrderedByPriority(((Developer) currentUser).getIssueMap());
+            System.out.println("is dev");
+            devIssues = ((Developer) currentUser).getIssues();
+            allIssues = issueManager.retrieveIssuesOrderedByPriority();
         }
 
-        if (!orderedIssues.isEmpty()) {
-            for (String key : orderedIssues.keySet())
-            {
-                String id = key;
-                String title = orderedIssues.get(key).getTitle();
-                System.out.println(key + ": " + title);
+        if (!devIssues.isEmpty()) {
+            for (Issue issue : allIssues) {
+                if (devIssues.contains(issue.getId())) {
+                    if (issue.getStatus() != Issue.IssueStatus.RESOLVED) {
+                        String id = issue.getId();
+                        String title = issue.getTitle();
+                        System.out.println(id + ": " + title);
+                    }
+                }
             }
         }
 
-        //Unassign/resolve issue
-        //Check if command valid, if valid, check if valid issue
-        this.viewMap.get("M").run(authenticationManager, this);
+        handleManageInput();
+    }
+
+    public void handleManageInput() {
+        System.out.println("Enter [close/unassign id] to manage an issue: ");
+        String userInput = retrieveUserInput();
+        boolean isCorrectFormat = false;
+
+        try {
+            isCorrectFormat = checkTwoInputFormat(userInput);
+        } catch (NoInputException e) {
+            handleManageInput();
+        }
+
+        if (isCorrectFormat) {
+            this.viewMap.get("M").setUserInput(userInput);
+            this.viewMap.get("M").run(authenticationManager, this);
+        } else {
+            System.out.println("Did not recognise command");
+            handleManageInput();
+        }
     }
 
     public void showMenu() {
@@ -194,10 +218,10 @@ public class CLIManager {
         }
     }
 
-    public boolean checkUserDetailFormat(String input) {
+    public boolean checkTwoInputFormat(String input) {
 
         if (input.isEmpty()){
-            throw new NoInputException("No Email or Password Provided");
+            throw new NoInputException("Nothing was entered");
         }
 
         String[] parts = input.split(" ");
@@ -256,5 +280,9 @@ public class CLIManager {
 
     public void setViewMap(Map<String, Command> viewMap) {
         this.viewMap = viewMap;
+    }
+
+    public IssueManager getIssueManager() {
+        return issueManager;
     }
 }

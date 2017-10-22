@@ -110,8 +110,8 @@ public class IssueManager {
         }
     }
 
-    public void assignIssue(Issue issue, Developer developer) {
-        Developer dev = (Developer) firebaseAdapter.getUser(developer.getEmail());
+    public void assignIssue(Issue issue, Developer dev) {
+        Developer developer = (Developer) firebaseAdapter.getUser(dev.getEmail());
         if (dev == null) {
             throw new UserException("Developer not found!");
         }
@@ -132,6 +132,18 @@ public class IssueManager {
         } else {
             throw new IssueNotFoundException();
         }
+    }
+
+    public void unAssignIssue(Issue issue, Developer dev) {
+        Developer developer = (Developer) firebaseAdapter.getUser(dev.getEmail());
+        if (dev == null) {
+            throw new UserException("Developer not found!");
+        }
+
+        issue.removeAssignee(dev);
+        firebaseAdapter.updateIssue(issue);
+        dev.removeIssue(issue);
+        firebaseAdapter.saveUser(dev);
     }
 
     public void resolveIssue(Developer dev, Issue issue) {
