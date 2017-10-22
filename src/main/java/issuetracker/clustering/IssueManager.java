@@ -166,9 +166,12 @@ public class IssueManager {
 
     private void removeIssueFromAssignedDevelopers(Issue issue) {
         if (issue.getAssignees().size() > 0) {
-            for (Developer developer : issue.getAssignees()) {
-                developer.removeIssue(issue);
-                firebaseAdapter.saveUser(developer);
+            for (String email : issue.getAssignees()) {
+                User developer = firebaseAdapter.getUser(email);
+                if (developer != null) {
+                    ((Developer) developer).removeIssue(issue);
+                    firebaseAdapter.saveUser(developer);
+                }
             }
         }
     }

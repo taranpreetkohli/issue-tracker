@@ -7,9 +7,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Issue {
 
@@ -18,7 +16,7 @@ public class Issue {
     private List<Question> posts;
     private List<String> users;
     private String summary;
-    private List<Developer> assignees;
+    private List<String> assignees;
     private IssueStatus status;
 
     public Issue() {
@@ -79,7 +77,7 @@ public class Issue {
     }
 
     public Issue addAssignee(Developer developer) {
-        assignees.add(developer);
+        assignees.add(developer.getEmail());
         if (status == IssueStatus.UNRESOLVED) {
             status = IssueStatus.IN_PROGRESS;
         }
@@ -147,11 +145,11 @@ public class Issue {
         return users.size();
     }
 
-    public List<Developer> getAssignees() {
+    public List<String> getAssignees() {
         return assignees;
     }
 
-    public void setAssignees(List<Developer> assignees) {
+    public void setAssignees(List<String> assignees) {
         this.assignees = assignees;
     }
 
