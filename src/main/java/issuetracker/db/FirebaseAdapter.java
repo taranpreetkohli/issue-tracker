@@ -85,10 +85,17 @@ public class FirebaseAdapter {
     }
 
     public void saveNewIssue(Issue issue) {
-        DatabaseReference issuesRef = db.getRoot()
-                .child("issues")
-                .push();
-        issue.setId(issuesRef.getKey());
+        DatabaseReference issuesRef;
+        if (issue.getId() == null) {
+            issuesRef = db.getRoot()
+                    .child("issues")
+                    .push();
+            issue.setId(issuesRef.getKey());
+        } else {
+            issuesRef = db.getRoot()
+                    .child("issues")
+                    .child(issue.getId());
+        }
         db.write(issuesRef, issue);
     }
 
