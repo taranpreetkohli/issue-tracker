@@ -242,6 +242,20 @@ public class CLIManager {
         }
     }
 
+    public boolean checkSingleInputFormat(String input) {
+
+        if (input.isEmpty()){
+            throw new NoInputException("Nothing was entered");
+        }
+
+        String[] parts = input.split(" ");
+        if (parts.length == 1){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean checkUserConfirmationFormat(String input) {
         if (input.isEmpty()){
             throw new NoInputException("No Confirmation Provided");
