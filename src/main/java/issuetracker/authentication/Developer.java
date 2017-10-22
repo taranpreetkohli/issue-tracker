@@ -23,11 +23,6 @@ public class Developer extends User {
     public Developer(String email, String password) {
         super(email, password);
 
-        viewMap = new LinkedHashMap<String, Command>();
-        viewMap.put("V", new Command());
-        viewMap.put("M", new Command());
-        viewMap.put("L", new LogoutCommand());
-
         issueMap = new HashMap<>();
     }
 

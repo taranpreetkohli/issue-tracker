@@ -2,8 +2,11 @@ package issuetracker.cli;
 
 import issuetracker.authentication.Administrator;
 import issuetracker.authentication.AuthenticationManager;
+import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
+import issuetracker.cli.view.ARegisterCommand;
 import issuetracker.cli.view.Command;
+import issuetracker.cli.view.LogoutCommand;
 import issuetracker.exception.NoInputException;
 import issuetracker.clustering.IssueManager;
 
@@ -14,6 +17,7 @@ import java.util.Scanner;
 public class CLIManager {
     private AuthenticationManager authenticationManager;
     private IssueManager issueManager;
+    private Map<String, Command> viewMap;
 
     public CLIManager(AuthenticationManager authenticationManager, IssueManager issueManager) {
         this.authenticationManager = authenticationManager;
@@ -35,6 +39,20 @@ public class CLIManager {
             String[] parts = userInput.split(" ");
             try {
                 authenticationManager.login(parts[0], parts[1]);
+
+                if (authenticationManager.getCurrentUser() instanceof Administrator) {
+                    this.viewMap = new LinkedHashMap<>();
+                    viewMap.put("R", new ARegisterCommand());
+                    viewMap.put("V", new LogoutCommand());
+                    viewMap.put("M", new LogoutCommand());
+                    viewMap.put("L", new LogoutCommand());
+                } else if (authenticationManager.getCurrentUser() instanceof Developer) {
+                    this.viewMap = new LinkedHashMap<>();
+                    viewMap.put("V", new LogoutCommand());
+                    viewMap.put("M", new LogoutCommand());
+                    viewMap.put("L", new LogoutCommand());
+                }
+
                 showMenu();
             } catch (InvalidPropertiesFormatException e) {
                 System.out.println(e.getMessage() + ". Please try again");
@@ -63,8 +81,8 @@ public class CLIManager {
         }
 
         if (isCorrectFormat) {
-            authenticationManager.getCurrentUser().getViewMap().get("R").setUserInput(userInput);
-            authenticationManager.getCurrentUser().getViewMap().get("R").run(authenticationManager, this);
+            this.viewMap.get("R").setUserInput(userInput);
+            this.viewMap.get("R").run(authenticationManager, this);
         } else {
             System.out.println("Email and password not entered in correct format");
             registerCLI();
@@ -73,17 +91,16 @@ public class CLIManager {
 
     public void viewIssuesCLI() {
         System.out.println("Invoking view issues logic");
-        authenticationManager.getCurrentUser().getViewMap().get("V").run(authenticationManager, this);
+        this.viewMap.get("V").run(authenticationManager, this);
     }
 
     public void manageIssuesCLI() {
         System.out.println("Invoking view issues logic");
-        authenticationManager.getCurrentUser().getViewMap().get("M").run(authenticationManager, this);
+        this.viewMap.get("M").run(authenticationManager, this);
     }
 
     public void showMenu() {
         User currentUser = authenticationManager.getCurrentUser();
-        Map<String, Command> userView = currentUser.getViewMap();
         String commandSet;
 
         if (currentUser instanceof Administrator) {
@@ -92,7 +109,7 @@ public class CLIManager {
             commandSet = "V/M/L";
         }
 
-        for (Map.Entry<String, Command> entry : userView.entrySet()) {
+        for (Map.Entry<String, Command> entry : this.viewMap.entrySet()) {
             switch (entry.getKey()) {
                 case "R":
                     System.out.println("(R)egister a developer");
@@ -150,7 +167,7 @@ public class CLIManager {
             throw new NoInputException("No command given");
         }
 
-        if (authenticationManager.getCurrentUser().getViewMap().keySet().contains(command.toUpperCase())){
+        if (this.viewMap.keySet().contains(command.toUpperCase())){
             return true;
         } else {
             return false;
@@ -199,7 +216,7 @@ public class CLIManager {
 
         if (isCorrectFormat) {
             if(checkUserConfirmation(userInput)){
-                authenticationManager.getCurrentUser().getViewMap().get("L").run(authenticationManager, this);
+                this.viewMap.get("L").run(authenticationManager, this);
             } else {
                 showMenu();
             }
@@ -215,5 +232,9 @@ public class CLIManager {
         } else {
             return false;
         }
+    }
+
+    public void setViewMap(Map<String, Command> viewMap) {
+        this.viewMap = viewMap;
     }
 }

@@ -9,7 +9,6 @@ public abstract class User {
     protected boolean loggedIn;
     protected String email;
     protected String password;
-    protected Map<String, Command> viewMap;
 
     public User(String email, String password) {
         this.email = email;
@@ -18,12 +17,6 @@ public abstract class User {
 
     public User() {
 
-    }
-
-    public Map<String, Command> getViewMap() { return viewMap; }
-
-    public void setViewMap(Map<String, Command> viewMap) {
-        this.viewMap = viewMap;
     }
 
     public String getEmail() {

@@ -10,20 +10,10 @@ public class Administrator extends User{
 
     public Administrator() {
         super();
-        viewMap = new LinkedHashMap<String, Command>();
-        viewMap.put("R", new  ARegisterCommand());
-        viewMap.put("V", new Command());
-        viewMap.put("M", new Command());
-        viewMap.put("L", new LogoutCommand());
     }
 
     public Administrator(String email, String password) {
         super(email, password);
-        viewMap = new LinkedHashMap<String, Command>();
-        viewMap.put("R", new ARegisterCommand());
-        viewMap.put("V", new Command());
-        viewMap.put("M", new Command());
-        viewMap.put("L", new LogoutCommand());
     }
 
 
