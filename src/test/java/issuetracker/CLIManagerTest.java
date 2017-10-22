@@ -185,7 +185,6 @@ public class CLIManagerTest {
         Command mockedCommand = Mockito.mock(Command.class);
 
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedHm).when(mockedAdmin).getViewMap();
         Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
@@ -213,7 +212,6 @@ public class CLIManagerTest {
         Command mockedCommand = Mockito.mock(Command.class);
 
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedHm).when(mockedAdmin).getViewMap();
         Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
@@ -229,6 +227,9 @@ public class CLIManagerTest {
     public void IsValidCommand_ValidCommand_ReturnsTrue() {
         //Arrange
         String validCommand = "L";
+        Map<String, Command> viewMap= new LinkedHashMap<>();
+        viewMap.put("L", Mockito.mock(Command.class));
+        cliManager.setViewMap(viewMap);
         Mockito.doReturn(new Developer("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
 
         //Act
@@ -242,6 +243,9 @@ public class CLIManagerTest {
     public void IsValidCommand_InvalidCommand_ReturnsFalse() {
         //Arrange
         String invalidCommand = "[zxc]";
+        Map<String, Command> viewMap= new LinkedHashMap<>();
+        viewMap.put("L", Mockito.mock(Command.class));
+        cliManager.setViewMap(viewMap);
         Mockito.doReturn(new Developer("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
 
         //Act
@@ -265,6 +269,11 @@ public class CLIManagerTest {
     public void IsValidCommand_RegisterUserUsingDeveloperAccount_ReturnsFalse() {
         //Arrange
         String registerCommand = "R";
+        Map<String, Command> viewMap= new LinkedHashMap<>();
+        viewMap.put("V", Mockito.mock(Command.class));
+        viewMap.put("M", Mockito.mock(Command.class));
+        viewMap.put("L", Mockito.mock(Command.class));
+        cliManager.setViewMap(viewMap);
         Mockito.doReturn(new Developer("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
 
         //Act
@@ -278,6 +287,9 @@ public class CLIManagerTest {
     public void IsValidCommand_LowerCaseValidCommand_ReturnsTrue() {
         //Arrange
         String lowerCaseCommand = "l";
+        Map<String, Command> viewMap= new LinkedHashMap<>();
+        viewMap.put("L", Mockito.mock(Command.class));
+        cliManager.setViewMap(viewMap);
         Mockito.doReturn(new Developer("email@gmail.com", "p4ssword")).when(authenticationManager).getCurrentUser();
 
         //Act
@@ -338,7 +350,6 @@ public class CLIManagerTest {
         Command mockedCommand = Mockito.mock(Command.class);
 
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedHm).when(mockedAdmin).getViewMap();
         Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
@@ -365,7 +376,6 @@ public class CLIManagerTest {
         Command mockedCommand = Mockito.mock(Command.class);
 
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedHm).when(mockedAdmin).getViewMap();
         Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
@@ -392,7 +402,6 @@ public class CLIManagerTest {
         Command mockedCommand = Mockito.mock(Command.class);
 
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedHm).when(mockedAdmin).getViewMap();
         Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
@@ -413,7 +422,6 @@ public class CLIManagerTest {
 
         //Return mocked command object when retrieving "V" key from user views
         Mockito.doReturn(mockedDev).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedHm).when(mockedDev).getViewMap();
         Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
@@ -432,7 +440,6 @@ public class CLIManagerTest {
 
         //Return mocked command object when retrieving "M" key from user views
         Mockito.doReturn(mockedDev).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedHm).when(mockedDev).getViewMap();
         Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act

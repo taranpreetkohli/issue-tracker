@@ -166,39 +166,6 @@ public class AuthenticationManagerTest {
     }
 
     @Test
-    public void LogIn_AdminAccount_UserIsShownAdminView() {
-        //Arrange Act
-        Map<String, Command> commands = me.getViewMap();
-
-        //Assert
-        Assert.assertTrue(commands.containsKey("R"));
-        Assert.assertTrue(commands.containsKey("V"));
-        Assert.assertTrue(commands.containsKey("M"));
-        Assert.assertTrue(commands.containsKey("L"));
-    }
-
-    @Test
-    public void LogIn_DeveloperAccount_UserIsShownDeveloperView() {
-        //Arrange
-        User currentUser = null;
-        Mockito.doReturn(new Developer(existingEmail, existingPassword)).when(db).getUser(existingEmail);
-
-        try {
-            currentUser = new AuthenticationManager(db).login(existingEmail, existingPassword);
-        } catch (Exception e) {}
-
-        //Act
-        Map<String, Command> commands = currentUser.getViewMap();
-
-        //Assert
-        Assert.assertFalse(commands.containsKey("R"));
-        Assert.assertTrue(commands.containsKey("V"));
-        Assert.assertTrue(commands.containsKey("M"));
-        Assert.assertTrue(commands.containsKey("L"));
-    }
-
-
-    @Test
     public void LogOut_UserLoggedIn_UserLogsOut() {
         //Arrange Act
         boolean loggedOut = authManager.logout();
