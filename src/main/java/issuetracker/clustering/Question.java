@@ -173,11 +173,11 @@ public class Question implements Comparable<Question> {
             sb = new StringBuilder();
         }
 
-        sb.append(getQuestionID() + ',');
+        sb.append(getQuestionID() + ",");
         sb.append("\"" + getQuestion() + "\",");
-        sb.append("\"" + getDate() + "\",");
+        sb.append(getDate() + ",");
         sb.append("\"" + getAuthor() + "\",");
-        sb.append(getForumID() + ',');
+        sb.append(getForumID() + ",");
         sb.append("\"" + getInformation() + "\",");
         sb.append("\"" + getUrl() + "\"");
         return sb.toString();
