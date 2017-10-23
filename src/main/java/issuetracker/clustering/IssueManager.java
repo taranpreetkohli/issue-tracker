@@ -80,7 +80,6 @@ public class IssueManager {
     }
 
     public List<Issue> generateCluster(List<Question> questions) {
-//        System.out.println(Question.toARFF(questions));
 
         Instances instances = null;
         try {
@@ -95,13 +94,16 @@ public class IssueManager {
             s.setIDFTransform(true);
             instances = Filter.useFilter(instances, s);
 
+            // DBSCAN to cluster the forum posts together
             DBSCAN dbscan = new DBSCAN();
             dbscan.setEpsilon(1);
             dbscan.setMinPoints(1);
             dbscan.buildClusterer(instances);
+
             ClusterEvaluation eval = new ClusterEvaluation();
             eval.setClusterer(dbscan);
             eval.evaluateClusterer(instances);
+
             System.out.println(eval.clusterResultsToString());
         }catch (Exception e){
             logger.error(e.getMessage());
