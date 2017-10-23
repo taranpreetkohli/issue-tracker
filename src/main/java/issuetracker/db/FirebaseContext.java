@@ -16,12 +16,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * All firebase operations are encapsulated in this class for ease of use, firebase context is expected to be loaded
+ * into a general purpose Context class that will use it to make the calls required by the system.
+ *
+ * This class uses countdown latches to ensure sequential execution of asynchronous firebase calls.
+ */
 public class FirebaseContext implements IFirebaseContext {
 
     private static Logger logger = LoggerFactory.getLogger(FirebaseContext.class);
 
     private static FirebaseContext instance;
 
+    /**
+     * Instansiate a new firebasecontext object.
+     */
     private FirebaseContext() {
         try {
             URL firebaseResourceURL = getClass().getClassLoader().getResource("firebase.json");
@@ -45,6 +54,10 @@ public class FirebaseContext implements IFirebaseContext {
         }
     }
 
+    /**
+     * Get singleton instance of FirebaseContext.
+     * @return Firebase instance
+     */
     public static IFirebaseContext getInstance() {
         if (instance == null) {
             instance = new FirebaseContext();
