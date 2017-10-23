@@ -1,6 +1,6 @@
 package issuetracker.authentication;
 
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 
 import java.util.InvalidPropertiesFormatException;
 
@@ -9,6 +9,6 @@ public interface IAuthenticationManager {
     User login(String email, String password) throws InvalidPropertiesFormatException, InstantiationException;
     User addUser(String email, String password) throws InvalidPropertiesFormatException;
     boolean logout();
-    void setDb(FirebaseAdapter db);
-    FirebaseAdapter getDb();
+    void setDb(DBContext db);
+    DBContext getDb();
 }

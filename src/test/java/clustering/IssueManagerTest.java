@@ -5,7 +5,7 @@ import issuetracker.authentication.Developer;
 import issuetracker.clustering.Issue;
 import issuetracker.clustering.IssueManager;
 import issuetracker.clustering.Question;
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 import issuetracker.exception.DeveloperNotAssignedException;
 import issuetracker.exception.IssueAlreadyResolvedException;
 import org.junit.Before;
@@ -35,7 +35,7 @@ public class IssueManagerTest {
     private IssueManager issueManager;
 
     @Mock
-    private FirebaseAdapter firebaseAdapter;
+    private DBContext dBContext;
 
     @Mock
     private Administrator admin;
@@ -48,7 +48,7 @@ public class IssueManagerTest {
 
     @Before
     public void setup() {
-        issueManager = new IssueManager(firebaseAdapter);
+        issueManager = new IssueManager(dBContext);
 
         questionOne = new Question()
                 .setQuestionID(44330)
@@ -80,9 +80,9 @@ public class IssueManagerTest {
 
         Mockito.doReturn("admin@gmail.com").when(admin).getEmail();
         Mockito.doReturn("dev@gmail.com").when(developer).getEmail();
-        Mockito.doReturn(admin).when(firebaseAdapter).getUser("admin@gmail.com");
-        Mockito.doReturn(developer).when(firebaseAdapter).getUser("dev@gmail.com");
-        Mockito.doReturn(issue).when(firebaseAdapter).getIssue(Mockito.anyString());
+        Mockito.doReturn(admin).when(dBContext).getUser("admin@gmail.com");
+        Mockito.doReturn(developer).when(dBContext).getUser("dev@gmail.com");
+        Mockito.doReturn(issue).when(dBContext).getIssue(Mockito.anyString());
     }
 
     @Ignore
@@ -216,12 +216,12 @@ public class IssueManagerTest {
             issues.add(mock);
         }
 
-        Mockito.doReturn(issues).when(firebaseAdapter).retrieveAllIssues();
+        Mockito.doReturn(issues).when(dBContext).retrieveAllIssues();
         // Act
         List<Issue> returnedIssues = issueManager.retrieveIssuesOrderedByPriority();
 
         // Assert
-        Mockito.verify(firebaseAdapter, times(1)).retrieveAllIssues();
+        Mockito.verify(dBContext, times(1)).retrieveAllIssues();
         assertNotNull(returnedIssues);
         for (int i = 1; i < returnedIssues.size(); i++) {
             assertTrue(returnedIssues.get(i - 1).getPriority() >= returnedIssues.get(i).getPriority());
@@ -238,12 +238,12 @@ public class IssueManagerTest {
             questions.add(mock);
         }
 
-        Mockito.doReturn(questions).when(firebaseAdapter).retrieveUnassignedQuestions();
+        Mockito.doReturn(questions).when(dBContext).retrieveUnassignedQuestions();
         // Act
         List<Question> returnedQuestions = issueManager.retrieveUnassignedQuestions();
 
         // Assert
-        Mockito.verify(firebaseAdapter, times(1)).retrieveUnassignedQuestions();
+        Mockito.verify(dBContext, times(1)).retrieveUnassignedQuestions();
         assertNotNull(returnedQuestions);
         for (int i = 1; i < returnedQuestions.size(); i++) {
             assertFalse(returnedQuestions.get(i - 1).isAssignedToIssue());
@@ -262,7 +262,7 @@ public class IssueManagerTest {
         issueManager.addQuestion(issue, questionOne);
 
         // Assert
-        Mockito.verify(firebaseAdapter, times(1)).updateIssue(issue);
+        Mockito.verify(dBContext, times(1)).updateIssue(issue);
         Mockito.verify(issue, times(1)).addQuestion(questionOne);
     }
 
@@ -278,7 +278,7 @@ public class IssueManagerTest {
         issueManager.removeQuestion(issue, questionTwo);
 
         // Assert
-        Mockito.verify(firebaseAdapter, times(1)).updateIssue(issue);
+        Mockito.verify(dBContext, times(1)).updateIssue(issue);
         assertThat(issue.getQuestions(), hasSize(2));
     }
 
@@ -292,7 +292,7 @@ public class IssueManagerTest {
         issueManager.removeQuestion(issue, questionOne);
 
         // Assert
-        Mockito.verify(firebaseAdapter, times(1)).deleteIssue(issue);
+        Mockito.verify(dBContext, times(1)).deleteIssue(issue);
         assertThat(issue.getQuestions(), hasSize(0));
     }
 
@@ -303,7 +303,7 @@ public class IssueManagerTest {
         // Act
         issueManager.deleteIssue(issue);
         // Assert
-        Mockito.verify(firebaseAdapter, times(1)).deleteIssue(issue);
+        Mockito.verify(dBContext, times(1)).deleteIssue(issue);
     }
 
     private String buildInput(Question... questions) {
@@ -328,9 +328,9 @@ public class IssueManagerTest {
         issueManager.assignIssue(admin, issue, developer);
         // Assert
         Mockito.verify(issue, times(1)).addAssignee(developer);
-        Mockito.verify(firebaseAdapter, times(1)).updateIssue(issue);
+        Mockito.verify(dBContext, times(1)).updateIssue(issue);
         Mockito.verify(developer, times(1)).addIssue(issue);
-        Mockito.verify(firebaseAdapter, times(1)).saveUser(developer);
+        Mockito.verify(dBContext, times(1)).saveUser(developer);
     }
 
     @Test
@@ -343,9 +343,9 @@ public class IssueManagerTest {
         issueManager.unAssignIssue(admin, issue, developer);
         // Assert
         Mockito.verify(issue, times(1)).removeAssignee(developer);
-        Mockito.verify(firebaseAdapter, times(2)).updateIssue(issue);
+        Mockito.verify(dBContext, times(2)).updateIssue(issue);
         Mockito.verify(developer, times(1)).removeIssue(issue);
-        Mockito.verify(firebaseAdapter, times(2)).saveUser(developer);
+        Mockito.verify(dBContext, times(2)).saveUser(developer);
     }
 
     @Test(expected = DeveloperNotAssignedException.class)
@@ -373,9 +373,9 @@ public class IssueManagerTest {
         issueManager.resolveIssue(developer, issue);
         // Assert
         Mockito.verify(issue, times(1)).resolve(developer);
-        Mockito.verify(firebaseAdapter, times(2)).updateIssue(issue);
+        Mockito.verify(dBContext, times(2)).updateIssue(issue);
         Mockito.verify(developer, times(1)).removeIssue(issue);
-        Mockito.verify(firebaseAdapter, times(2)).saveUser(developer);
+        Mockito.verify(dBContext, times(2)).saveUser(developer);
     }
 
     @Test(expected = DeveloperNotAssignedException.class)

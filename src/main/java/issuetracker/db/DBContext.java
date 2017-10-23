@@ -11,13 +11,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class FirebaseAdapter {
+public class DBContext {
 
-    private static Logger logger = LoggerFactory.getLogger(FirebaseAdapter.class);
+    private static Logger logger = LoggerFactory.getLogger(DBContext.class);
 
     protected IFirebaseContext db = FirebaseContext.getInstance();
 
-    public FirebaseAdapter registerUser(User newUser){
+    public DBContext registerUser(User newUser){
         // Map user to if they're admin or developer.
 
         db.write(db.getRoot().child("mappings")
@@ -31,7 +31,7 @@ public class FirebaseAdapter {
         return this;
     }
 
-    public FirebaseAdapter updateLoginStatus(User user, boolean isLoggedin) {
+    public DBContext updateLoginStatus(User user, boolean isLoggedin) {
         db.write(db.getRoot().child("users").child(user.getEmail().hashCode() + "").child("loggedIn"), isLoggedin);
         return this;
     }

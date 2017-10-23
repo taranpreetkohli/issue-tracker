@@ -5,7 +5,7 @@ import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
 import issuetracker.cli.CLIManager;
 import issuetracker.clustering.Issue;
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class DManageCommand extends Command{
     private final List<String> validDevCommand = new ArrayList<>(Arrays.asList("unassign", "close"));
-    private FirebaseAdapter firebaseAdapter = new FirebaseAdapter();
+    private DBContext dBContext = new DBContext();
 
 
     @Override
@@ -35,7 +35,7 @@ public class DManageCommand extends Command{
                 if (((Developer) currentUser).getIssues().contains(parts[1])) {
                     switch (parts[0].toUpperCase()) {
                         case "UNASSIGN":
-                            Issue issue = firebaseAdapter.getIssue(parts[1]);
+                            Issue issue = dBContext.getIssue(parts[1]);
 
                             if (issue.getAssignees().size() == 1) {
                                 issue.setStatus(Issue.IssueStatus.UNASSIGNED);
@@ -45,7 +45,7 @@ public class DManageCommand extends Command{
 
                             break;
                         case "CLOSE":
-                            cliManager.getIssueManager().resolveIssue((Developer)currentUser, firebaseAdapter.getIssue(parts[1]));
+                            cliManager.getIssueManager().resolveIssue((Developer)currentUser, dBContext.getIssue(parts[1]));
                             break;
                     }
 

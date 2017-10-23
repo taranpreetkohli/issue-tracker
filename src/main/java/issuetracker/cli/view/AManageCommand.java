@@ -4,12 +4,12 @@ import issuetracker.authentication.AuthenticationManager;
 import issuetracker.cli.CLIManager;
 import issuetracker.clustering.Issue;
 import issuetracker.clustering.Question;
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 
 import java.util.List;
 
 public class AManageCommand extends Command {
-    private FirebaseAdapter firebaseAdapter = new FirebaseAdapter();
+    private DBContext dBContext = new DBContext();
     private CLIManager cliManager;
 
     @Override
@@ -59,7 +59,7 @@ public class AManageCommand extends Command {
     }
 
     private void displayIssue(String issueID) {
-        Issue issue = firebaseAdapter.getIssue(issueID);
+        Issue issue = dBContext.getIssue(issueID);
 
         if (issue == null) {
             System.out.println("Issue with ID: " + issueID + " does not exist");
@@ -86,7 +86,7 @@ public class AManageCommand extends Command {
     }
 
     private void displayQuestion(String questionID) {
-        Question question = firebaseAdapter.getQuestion(questionID);
+        Question question = dBContext.getQuestion(questionID);
 
         if (question == null) {
             System.out.println("Question with ID: " + questionID + " does not exist");
@@ -101,8 +101,8 @@ public class AManageCommand extends Command {
     }
 
     private void assignQuestionToIssue(String[] parts) {
-        Issue issue = firebaseAdapter.getIssue(parts[1]);
-        Question question = firebaseAdapter.getQuestion(parts[2]);
+        Issue issue = dBContext.getIssue(parts[1]);
+        Question question = dBContext.getQuestion(parts[2]);
 
         if (issue == null) {
             System.out.println("Issue with ID: " + parts[1] + " does not exist");
@@ -153,7 +153,7 @@ public class AManageCommand extends Command {
         if (userCommandParts.length == 2) {
 
             if (userCommandParts[0].toUpperCase().equals("UNASSIGN")) {
-                Question question = firebaseAdapter.getQuestion(userCommandParts[1]);
+                Question question = dBContext.getQuestion(userCommandParts[1]);
 
                 if (question == null) {
                     System.out.println("Question with ID: " + userCommandParts[1] + " does not exist");

@@ -5,13 +5,13 @@ import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.Developer;
 import issuetracker.cli.CLIManager;
 import issuetracker.clustering.Issue;
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 import issuetracker.exception.UserException;
 
 import java.util.List;
 
 public class AViewCommand extends Command{
-    private FirebaseAdapter firebaseAdapter = new FirebaseAdapter();
+    private DBContext dBContext = new DBContext();
 
     @Override
     public void run(AuthenticationManager authenticationManager, CLIManager cliManager) {
@@ -19,7 +19,7 @@ public class AViewCommand extends Command{
             cliManager.showMenu();
         }
 
-        Issue issue = firebaseAdapter.getIssue(userInput);
+        Issue issue = dBContext.getIssue(userInput);
 
         if (issue == null) {
             System.out.println("Issue with ID: " + userInput + " does not exist");
@@ -58,7 +58,7 @@ public class AViewCommand extends Command{
                 //check length is 2
                 if (parts.length == 2) {
                     try {
-                        cliManager.getIssueManager().assignIssue(admin, issue, (Developer)firebaseAdapter.getUser(parts[1]));
+                        cliManager.getIssueManager().assignIssue(admin, issue, (Developer) dBContext.getUser(parts[1]));
                         cliManager.viewIssuesCLI();
                     } catch (UserException e) {
                         System.out.print(e.getMessage() + "! Please enter an existing developer email");

@@ -3,7 +3,7 @@ package issuetracker.clustering;
 import issuetracker.authentication.Administrator;
 import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 import issuetracker.exception.IssueNotFoundException;
 import issuetracker.exception.UserException;
 import org.slf4j.Logger;
@@ -14,10 +14,10 @@ import java.util.*;
 public class IssueManager {
 
     private static Logger logger = LoggerFactory.getLogger(IssueManager.class);
-    private FirebaseAdapter firebaseAdapter;
+    private DBContext dBContext;
 
-    public IssueManager(FirebaseAdapter firebaseAdapter) {
-        this.firebaseAdapter = firebaseAdapter;
+    public IssueManager(DBContext dBContext) {
+        this.dBContext = dBContext;
 //        try {
 //            URL testResourceURL = getClass().getClassLoader().getResource("test.arff");
 //            File testFile = new File(testResourceURL.getFile());
@@ -72,7 +72,7 @@ public class IssueManager {
     }
 
     public List<Issue> retrieveIssuesOrderedByPriority() {
-        List<Issue> issues = firebaseAdapter.retrieveAllIssues();
+        List<Issue> issues = dBContext.retrieveAllIssues();
         if (issues != null) {
             issues.sort(Comparator.comparingInt(Issue::getPriority));
             Collections.reverse(issues);
@@ -81,13 +81,13 @@ public class IssueManager {
     }
 
     public List<Question> retrieveUnassignedQuestions() {
-        return  firebaseAdapter.retrieveUnassignedQuestions();
+        return  dBContext.retrieveUnassignedQuestions();
     }
 
     public void addQuestion(Issue issue, Question question) {
         issue.addQuestion(question);
-        firebaseAdapter.updateIssue(issue);
-        firebaseAdapter.assignQuestion(Long.toString(question.getQuestionID()));
+        dBContext.updateIssue(issue);
+        dBContext.assignQuestion(Long.toString(question.getQuestionID()));
     }
 
     public void removeQuestion(Issue issue, Question question) {
@@ -102,76 +102,76 @@ public class IssueManager {
 
         question.setAssignedToIssue(false);
         if (issue.getQuestions().size() == 0) {
-            firebaseAdapter.deleteIssue(issue);
+            dBContext.deleteIssue(issue);
             removeIssueFromAssignedDevelopers(issue);
         } else {
-            firebaseAdapter.updateIssue(issue);
-            firebaseAdapter.unAssignQuestion(Long.toString(question.getQuestionID()));
+            dBContext.updateIssue(issue);
+            dBContext.unAssignQuestion(Long.toString(question.getQuestionID()));
         }
     }
 
     public void deleteIssue(Issue issue) {
-        firebaseAdapter.deleteIssue(issue);
+        dBContext.deleteIssue(issue);
         removeIssueFromAssignedDevelopers(issue);
     }
 
     public void assignIssue(Administrator admin, Issue issue, Developer dev) {
         checkAdminAndDeveloperExist(admin, dev);
-        if (firebaseAdapter.getIssue(issue.getId()) != null) {
+        if (dBContext.getIssue(issue.getId()) != null) {
             issue.addAssignee(dev);
-            firebaseAdapter.updateIssue(issue);
+            dBContext.updateIssue(issue);
             dev.addIssue(issue);
-            firebaseAdapter.saveUser(dev);
+            dBContext.saveUser(dev);
         } else {
             throw new IssueNotFoundException();
         }
     }
 
     public void assignIssue(Issue issue, Developer dev) {
-        Developer developer = (Developer) firebaseAdapter.getUser(dev.getEmail());
+        Developer developer = (Developer) dBContext.getUser(dev.getEmail());
         if (dev == null) {
             throw new UserException("Developer not found!");
         }
 
         issue.addAssignee(developer);
         developer.addIssue(issue);
-        firebaseAdapter.saveUser(developer);
-        firebaseAdapter.updateIssue(issue);
+        dBContext.saveUser(developer);
+        dBContext.updateIssue(issue);
     }
 
     public void unAssignIssue(Administrator admin, Issue issue, Developer dev) {
         checkAdminAndDeveloperExist(admin, dev);
-        if (firebaseAdapter.getIssue(issue.getId()) != null) {
+        if (dBContext.getIssue(issue.getId()) != null) {
             issue.removeAssignee(dev);
-            firebaseAdapter.updateIssue(issue);
+            dBContext.updateIssue(issue);
             dev.removeIssue(issue);
-            firebaseAdapter.saveUser(dev);
+            dBContext.saveUser(dev);
         } else {
             throw new IssueNotFoundException();
         }
     }
 
     public void unAssignIssue(Issue issue, Developer dev) {
-        Developer developer = (Developer) firebaseAdapter.getUser(dev.getEmail());
+        Developer developer = (Developer) dBContext.getUser(dev.getEmail());
         if (developer == null) {
             throw new UserException("Developer not found!");
         }
 
         issue.removeAssignee(dev);
-        firebaseAdapter.updateIssue(issue);
+        dBContext.updateIssue(issue);
         dev.removeIssue(issue);
-        firebaseAdapter.saveUser(dev);
+        dBContext.saveUser(dev);
     }
 
     public void resolveIssue(Developer dev, Issue issue) {
-        User developer = firebaseAdapter.getUser(dev.getEmail());
+        User developer = dBContext.getUser(dev.getEmail());
         if (developer == null || developer instanceof Administrator) {
             throw new UserException("Developer not found!");
         }
 
-        if (firebaseAdapter.getIssue(issue.getId()) != null) {
+        if (dBContext.getIssue(issue.getId()) != null) {
             issue.resolve(dev);
-            firebaseAdapter.updateIssue(issue);
+            dBContext.updateIssue(issue);
             removeIssueFromAssignedDevelopers(issue);
         } else {
             throw new IssueNotFoundException();
@@ -180,12 +180,12 @@ public class IssueManager {
     }
 
     private void checkAdminAndDeveloperExist(Administrator admin, Developer dev) {
-        User administrator = firebaseAdapter.getUser(admin.getEmail());
+        User administrator = dBContext.getUser(admin.getEmail());
         if (administrator == null) {
             throw new UserException("Admin not found!");
         }
 
-        User developer = firebaseAdapter.getUser(dev.getEmail());
+        User developer = dBContext.getUser(dev.getEmail());
         if (developer == null) {
             throw new UserException("Developer not found!");
         }
@@ -194,10 +194,10 @@ public class IssueManager {
     private void removeIssueFromAssignedDevelopers(Issue issue) {
         if (issue.getAssignees().size() > 0) {
             for (String email : issue.getAssignees()) {
-                User developer = firebaseAdapter.getUser(email);
+                User developer = dBContext.getUser(email);
                 if (developer != null) {
                     ((Developer) developer).removeIssue(issue);
-                    firebaseAdapter.saveUser(developer);
+                    dBContext.saveUser(developer);
                 }
             }
         }

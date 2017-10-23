@@ -5,12 +5,12 @@ import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
 import issuetracker.cli.CLIManager;
 import issuetracker.clustering.Issue;
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 
 import java.util.List;
 
 public class DViewCommand extends Command{
-    private FirebaseAdapter firebaseAdapter = new FirebaseAdapter();
+    private DBContext dBContext = new DBContext();
 
     @Override
     public void run(AuthenticationManager authenticationManager, CLIManager cliManager) {
@@ -18,7 +18,7 @@ public class DViewCommand extends Command{
             cliManager.showMenu();
         }
 
-        Issue issue = firebaseAdapter.getIssue(userInput);
+        Issue issue = dBContext.getIssue(userInput);
 
         if (issue == null) {
             System.out.println("Issue with ID: " + userInput + " does not exist");

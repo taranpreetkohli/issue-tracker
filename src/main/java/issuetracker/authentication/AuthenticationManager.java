@@ -2,7 +2,7 @@ package issuetracker.authentication;
 
 import issuetracker.exception.IncorrectPasswordException;
 import issuetracker.exception.UserException;
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 
 import java.util.InvalidPropertiesFormatException;
 import java.util.regex.Matcher;
@@ -14,17 +14,17 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     private User currentUser;
 
-    private FirebaseAdapter firebaseAdapter;
+    private DBContext dBContext;
 
-    public AuthenticationManager(FirebaseAdapter firebaseAdapter) {
-        this.firebaseAdapter = firebaseAdapter;
+    public AuthenticationManager(DBContext dBContext) {
+        this.dBContext = dBContext;
     }
 
     @Override
     public User login(String email, String password) throws InvalidPropertiesFormatException, InstantiationException {
         isEmailValid(email);
 
-        User retrievedUser = firebaseAdapter.getUser(email);
+        User retrievedUser = dBContext.getUser(email);
 
         if (retrievedUser == null) {
             throw new InstantiationException("User does not exist");
@@ -35,7 +35,7 @@ public class AuthenticationManager implements IAuthenticationManager {
         }
 
         currentUser = retrievedUser;
-        firebaseAdapter.updateLoginStatus(currentUser, true);
+        dBContext.updateLoginStatus(currentUser, true);
         currentUser.setLoggedIn(true);
 
         return currentUser;
@@ -48,12 +48,12 @@ public class AuthenticationManager implements IAuthenticationManager {
             isPasswordValid(password);
             isEmailValid(email);
 
-            if (firebaseAdapter.getUser(email) != null) {
+            if (dBContext.getUser(email) != null) {
                 throw new UserException("User already exists");
             }
 
             User newUser = new Developer(email, password);
-            firebaseAdapter.registerUser(newUser);
+            dBContext.registerUser(newUser);
 
             return newUser;
         } else {
@@ -65,7 +65,7 @@ public class AuthenticationManager implements IAuthenticationManager {
     public boolean logout() {
         if (currentUser != null) {
             String email = currentUser.getEmail();
-            firebaseAdapter.updateLoginStatus(firebaseAdapter.getUser(email), false);
+            dBContext.updateLoginStatus(dBContext.getUser(email), false);
             currentUser.setLoggedIn(false);
             currentUser = null;
 
@@ -96,12 +96,12 @@ public class AuthenticationManager implements IAuthenticationManager {
         return this.currentUser;
     }
     @Override
-    public FirebaseAdapter getDb() {
-        return firebaseAdapter;
+    public DBContext getDb() {
+        return dBContext;
     }
 
     @Override
-    public void setDb(FirebaseAdapter db) {
-        this.firebaseAdapter = db;
+    public void setDb(DBContext db) {
+        this.dBContext = db;
     }
 }
