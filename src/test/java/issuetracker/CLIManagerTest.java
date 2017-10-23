@@ -336,11 +336,14 @@ public class CLIManagerTest {
 
         Mockito.doReturn(true).when(cliManagerSpy).checkNumInputFormat(anyString(), anyInt());
 
+        Administrator mockedAdmin = Mockito.mock(Administrator.class);
         Command mockedCommand = Mockito.mock(Command.class);
 
         Map<String, Command> viewMap= new LinkedHashMap<>();
         viewMap.put("R", mockedCommand);
         cliManager.setViewMap(viewMap);
+
+        Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
 
         //Act
         try {
@@ -354,7 +357,7 @@ public class CLIManagerTest {
     @Test
     public void registerCLI_RegisterCommandAsAdministratorAndIncorrectFormat_RunNotCalled() throws InvalidPropertiesFormatException {
         //Arrange
-        String registerCommand = "email@gmail.comp4ssword";
+        String registerCommand = "email@gmail.com p4ssword dfhdfhjdgj";
         ByteArrayInputStream in = new ByteArrayInputStream(registerCommand.getBytes());
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
@@ -362,11 +365,13 @@ public class CLIManagerTest {
         Mockito.doReturn(false).when(cliManagerSpy).checkNumInputFormat(anyString(), anyInt());
 
         Administrator mockedAdmin = Mockito.mock(Administrator.class);
-        HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
         Command mockedCommand = Mockito.mock(Command.class);
 
+        Map<String, Command> viewMap= new LinkedHashMap<>();
+        viewMap.put("R", mockedCommand);
+        cliManager.setViewMap(viewMap);
+
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
         try {
@@ -380,7 +385,7 @@ public class CLIManagerTest {
     @Test
     public void registerCLI_RegisterCommandAsDeveloper_RunNotCalled() throws InvalidPropertiesFormatException {
         //Arrange
-        String registerCommand = "email@gmail.comp4ssword";
+        String registerCommand = "email@gmail.com p4ssword fdhgj";
         ByteArrayInputStream in = new ByteArrayInputStream(registerCommand.getBytes());
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
@@ -388,11 +393,13 @@ public class CLIManagerTest {
         Mockito.doReturn(false).when(cliManagerSpy).checkNumInputFormat(anyString(), anyInt());
 
         Administrator mockedAdmin = Mockito.mock(Administrator.class);
-        HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
         Command mockedCommand = Mockito.mock(Command.class);
 
+        Map<String, Command> viewMap= new LinkedHashMap<>();
+        viewMap.put("R", mockedCommand);
+        cliManager.setViewMap(viewMap);
+
         Mockito.doReturn(mockedAdmin).when(authenticationManager).getCurrentUser();
-        Mockito.doReturn(mockedCommand).when(mockedHm).get(anyObject());
 
         //Act
         try {
