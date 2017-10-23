@@ -21,6 +21,7 @@ public class Question implements Comparable<Question>{
     private long forumID;
     private String information;
     private String url;
+    private boolean isAssignedToIssue;
 
     public static String toARFF(List<Question> questions) {
         if (questions == null || questions.size() == 0) {
@@ -180,5 +181,13 @@ public class Question implements Comparable<Question>{
     @Override
     public int compareTo(Question o) {
         return (int) (this.getQuestionID() - o.getQuestionID());
+    }
+
+    public boolean isAssignedToIssue() {
+        return isAssignedToIssue;
+    }
+
+    public void setAssignedToIssue(boolean assignedToIssue) {
+        isAssignedToIssue = assignedToIssue;
     }
 }
