@@ -79,7 +79,7 @@ public class IssueManager {
     }
 
     public List<Issue> generateCluster(List<Question> questions) {
-        System.out.println(Question.toARFF(questions));
+//        System.out.println(Question.toARFF(questions));
 
         Instances instances = null;
         try {

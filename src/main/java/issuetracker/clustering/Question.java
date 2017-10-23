@@ -12,7 +12,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Question implements Comparable<Question>{
+public class Question implements Comparable<Question> {
 
     private long questionID;
     private String question;
@@ -38,12 +38,12 @@ public class Question implements Comparable<Question>{
         // required empty constructor
     }
 
-    public Question(String forumPost){
+    public Question(String forumPost) {
         List<String> propertyArray = new ArrayList<>();
-        Reader in = new StringReader(forumPost);
+        Reader in = new StringReader(forumPost.replaceAll("\"\"", "\\\'"));
         try {
-            for(CSVRecord line: CSVFormat.DEFAULT.parse(in)){
-                for (String item: line){
+            for (CSVRecord line : CSVFormat.DEFAULT.parse(in)) {
+                for (String item : line) {
                     propertyArray.add(item);
                 }
             }
@@ -172,8 +172,14 @@ public class Question implements Comparable<Question>{
         } else {
             sb = new StringBuilder();
         }
-        sb.append(getQuestionID() + ",\"" + getQuestion() + "\"," + getDate() + ",\"" + getAuthor()
-                + "\"," + getForumID() + ",\"" + getInformation() + "\"," + getUrl() + "\n");
+
+        sb.append(getQuestionID() + ',');
+        sb.append("\"" + getQuestion() + "\",");
+        sb.append("\"" + getDate() + "\",");
+        sb.append("\"" + getAuthor() + "\",");
+        sb.append(getForumID() + ',');
+        sb.append("\"" + getInformation() + "\",");
+        sb.append("\"" + getUrl() + "\"");
         return sb.toString();
     }
 
