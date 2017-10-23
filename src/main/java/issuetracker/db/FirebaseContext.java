@@ -114,6 +114,7 @@ public class FirebaseContext implements IFirebaseContext {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         logger.info("Removing value from reference with key: " + ref.getPath().toString());
         ref.removeValue((error, reference) -> {
+            countDownLatch.countDown();
             if (error == null) {
                 logger.info("Successfully removed value from reference with key: " + ref.getPath().toString());
             } else {

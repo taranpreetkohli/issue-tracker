@@ -91,13 +91,21 @@ public class IssueManager {
     }
 
     public void removeQuestion(Issue issue, Question question) {
-        issue.removeQuestion(question);
+        List<Question> questionList = issue.getQuestions();
+
+        for (Question q : questionList) {
+            if (q.getQuestionID() == question.getQuestionID()) {
+                questionList.remove(q);
+                break;
+            }
+        }
+
         question.setAssignedToIssue(false);
         if (issue.getQuestions().size() == 0) {
             firebaseAdapter.deleteIssue(issue);
             removeIssueFromAssignedDevelopers(issue);
         } else {
-            firebaseAdapter.updateIssue(issue);
+            firebaseAdapter.saveNewIssue(issue);
             firebaseAdapter.unAssignQuestion(Long.toString(question.getQuestionID()));
         }
     }
