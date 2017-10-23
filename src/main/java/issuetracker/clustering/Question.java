@@ -126,12 +126,12 @@ public class Question implements Comparable<Question>{
         StringBuilder sb = new StringBuilder();
         sb.append("@relation questions\n\n" +
                 "@attribute questionID NUMERIC\n" +
-                "@attribute question STRING\n" +
-                "@attribute date DATE \"dd/MM/yyyy\"\n" +     //"yyyy-MM-dd HH:mm:ss"
-                "@attribute author STRING\n" +
+                "@attribute questionTitle STRING\n" +
+                "@attribute dateOfPost DATE \"dd/MM/yyyy\"\n" +     //"yyyy-MM-dd HH:mm:ss"
+                "@attribute authorOfPost STRING\n" +
                 "@attribute forumID NUMERIC\n" +
-                "@attribute information STRING\n" +
-                "@attribute url STRING\n\n" +
+                "@attribute informationText STRING\n" +
+                "@attribute urlOfPost STRING\n\n" +
                 "@data\n");
         return sb;
     }
