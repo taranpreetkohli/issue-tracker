@@ -8,6 +8,7 @@ import issuetracker.exception.IssueNotFoundException;
 import issuetracker.exception.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.DBSCAN;
 import weka.core.Instances;
 import weka.filters.Filter;
@@ -98,7 +99,10 @@ public class IssueManager {
             dbscan.setEpsilon(1);
             dbscan.setMinPoints(1);
             dbscan.buildClusterer(instances);
-            System.out.println(dbscan.toString());
+            ClusterEvaluation eval = new ClusterEvaluation();
+            eval.setClusterer(dbscan);
+            eval.evaluateClusterer(instances);
+            System.out.println(eval.clusterResultsToString());
         }catch (Exception e){
             logger.error(e.getMessage());
         }
