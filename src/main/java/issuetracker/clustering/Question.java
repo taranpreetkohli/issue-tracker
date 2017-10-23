@@ -30,6 +30,7 @@ public class Question implements Comparable<Question> {
         StringBuilder sb = Question.initARFF();
         for (Question q : questions) {
             sb.append(q.toARFF(false));
+            sb.append("\n");
         }
         return sb.toString();
     }
