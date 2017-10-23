@@ -152,21 +152,18 @@ public class CLIManager {
     }
 
     public void handleManageInput() {
-        System.out.println("Enter [close/unassign id] to manage an issue: ");
+        System.out.println("Enter [close/unassign id] to manage an issue or [BACK] to go back to main menu: ");
         String userInput = retrieveUserInput();
-        boolean isCorrectFormat = false;
 
         try {
-            isCorrectFormat = checkTwoInputFormat(userInput);
+            if (checkTwoInputFormat(userInput) || checkSingleInputFormat(userInput)) {
+                this.viewMap.get("M").setUserInput(userInput);
+                this.viewMap.get("M").run(authenticationManager, this);
+            } else {
+                System.out.println("Did not recognise command");
+                handleManageInput();
+            }
         } catch (NoInputException e) {
-            handleManageInput();
-        }
-
-        if (isCorrectFormat) {
-            this.viewMap.get("M").setUserInput(userInput);
-            this.viewMap.get("M").run(authenticationManager, this);
-        } else {
-            System.out.println("Did not recognise command");
             handleManageInput();
         }
     }

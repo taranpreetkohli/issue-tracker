@@ -14,6 +14,7 @@ public class LogoutCommand extends Command{
 
         try {
             authenticationManager.logout();
+            cliManager.loginCLI();
         } catch (IllegalStateException e) {
             System.out.println(e.getMessage());
             cliManager.loginCLI();

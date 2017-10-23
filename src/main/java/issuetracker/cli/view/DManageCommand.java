@@ -13,12 +13,21 @@ import java.util.List;
 
 public class DManageCommand extends Command{
     private final List<String> validDevCommand = new ArrayList<>(Arrays.asList("unassign", "close"));
+    private FirebaseAdapter firebaseAdapter = new FirebaseAdapter();
+
 
     @Override
     public void run(AuthenticationManager authenticationManager, CLIManager cliManager) {
         String[] parts = userInput.split(" ");
+
+        if (parts[0].toUpperCase().equals("BACK") && (parts.length == 1)) {
+            cliManager.showMenu();
+        } else {
+            System.out.println("Did not recognise command");
+            cliManager.handleManageInput();
+        }
+
         User currentUser = authenticationManager.getCurrentUser();
-        FirebaseAdapter firebaseAdapter = new FirebaseAdapter();
 
         if (currentUser instanceof Developer) {
             if (validDevCommand.contains(parts[0].toLowerCase())) {
