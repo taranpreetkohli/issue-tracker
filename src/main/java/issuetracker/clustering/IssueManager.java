@@ -93,11 +93,11 @@ public class IssueManager {
             s.setInputFormat(instances);
             instances = Filter.useFilter(instances, s);
 
-
             DBSCAN dbscan = new DBSCAN();
             dbscan.setEpsilon(1);
             dbscan.setMinPoints(1);
             dbscan.buildClusterer(instances);
+
             System.out.println(dbscan.toString());
         }catch (Exception e){
             logger.error(e.getMessage());
