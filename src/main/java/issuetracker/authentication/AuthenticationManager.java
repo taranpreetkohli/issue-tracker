@@ -8,6 +8,9 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Handles Authentication of users.
+ */
 public class AuthenticationManager implements IAuthenticationManager {
 
     public final Pattern VALID_EMAIL_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -16,6 +19,14 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     private DBContext dBContext;
 
+    /**
+     * Authentication manager is responsible for handling the creation of User objects and child classes.
+     *
+     * @param dBContext The Database context currently used by the system
+     * @see User
+     * @see Developer
+     * @see Administrator
+     */
     public AuthenticationManager(DBContext dBContext) {
         this.dBContext = dBContext;
     }
@@ -75,6 +86,13 @@ public class AuthenticationManager implements IAuthenticationManager {
         }
     }
 
+    /**
+     * Ensure that an email address that was entered is actually in an email format.
+     *
+     * @param email email passed to the Authentication Manager
+     * @return true if the email passes, throws an exception otherwise
+     * @throws InvalidPropertiesFormatException
+     */
     private boolean isEmailValid(String email) throws InvalidPropertiesFormatException {
         Matcher matcher = VALID_EMAIL_REGEX.matcher(email);
         if (matcher.find()) {
@@ -84,6 +102,13 @@ public class AuthenticationManager implements IAuthenticationManager {
         }
     }
 
+    /**
+     * Ensure that the password given follows a convention. In this case more than 8 characters.
+     *
+     * @param password the password given in by the local systme
+     * @return true if password is valid
+     * @throws InvalidPropertiesFormatException
+     */
     private boolean isPasswordValid(String password) throws InvalidPropertiesFormatException {
         if (password.length() < 8) {
             throw new InvalidPropertiesFormatException("Password is less than length of eight characters.");
@@ -92,9 +117,16 @@ public class AuthenticationManager implements IAuthenticationManager {
         }
     }
 
-    public User getCurrentUser(){
+    /**
+     * Get the user who is currently <i>Logged in</i> to the AuthenticationManager and is there fore the user accessing
+     * the system.
+     *
+     * @return
+     */
+    public User getCurrentUser() {
         return this.currentUser;
     }
+
     @Override
     public DBContext getDb() {
         return dBContext;
