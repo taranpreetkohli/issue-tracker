@@ -229,6 +229,28 @@ public class IssueManagerTest {
     }
 
     @Test
+    public void RetrieveUnassignedQuestions_QuestionsList_OnlyUnassigned() {
+        //Arrange
+        List<Question> questions = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Question mock = Mockito.mock(Question.class);
+            Mockito.doReturn(false).when(mock).isAssignedToIssue();
+            questions.add(mock);
+        }
+
+        Mockito.doReturn(questions).when(firebaseAdapter).retrieveUnassignedQuestions();
+        // Act
+        List<Question> returnedQuestions = issueManager.retrieveUnassignedQuestions();
+
+        // Assert
+        Mockito.verify(firebaseAdapter, times(1)).retrieveUnassignedQuestions();
+        assertNotNull(returnedQuestions);
+        for (int i = 1; i < returnedQuestions.size(); i++) {
+            assertFalse(returnedQuestions.get(i - 1).isAssignedToIssue());
+        }
+    }
+
+    @Test
     public void AddForumPost_ExistingIssue_IssueHasNewForumPost() {
         // Arrange
         Question existingQuestion = Mockito.mock(Question.class);
