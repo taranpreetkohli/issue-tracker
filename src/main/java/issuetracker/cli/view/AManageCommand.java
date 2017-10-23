@@ -66,6 +66,8 @@ public class AManageCommand extends Command {
             cliManager.handleAManageInput();
         }
 
+        System.out.println("Issue ID: " + issueID + " Title: " + issue.getTitle());
+
         List<Question> issueQuestions = issue.getQuestions();
 
         if (issueQuestions.isEmpty()) {
@@ -80,7 +82,7 @@ public class AManageCommand extends Command {
             System.out.println(id + ": " + qTitle);
         }
 
-        backToIQViewPrompt();
+        unassignQuestionPrompt(issue);
     }
 
     private void displayQuestion(String questionID) {
@@ -126,5 +128,45 @@ public class AManageCommand extends Command {
             System.out.println("Did not recognise command");
             backToIQViewPrompt();
         }
+    }
+
+    private void unassignQuestionPrompt(Issue issue) {
+        System.out.print("[UNASSIGN QUESTIONID] to unassign a question from an issue or [BACK] to return to issues/questions list: ");
+        String userCommand = cliManager.retrieveUserInput();
+
+        String[] userCommandParts = userCommand.split(" ");
+
+        if ((userCommandParts.length != 2) && (userCommandParts.length != 1)) {
+            System.out.println("Did not recognise command");
+            unassignQuestionPrompt(issue);
+        }
+
+        if (userCommandParts.length == 1) {
+            if (userCommandParts[0].toUpperCase().equals("BACK")) {
+                cliManager.manageIssuesCLI();
+            } else {
+                System.out.println("Did not recognise command");
+                unassignQuestionPrompt(issue);
+            }
+        }
+
+        if (userCommandParts.length == 2) {
+
+            if (userCommandParts[0].toUpperCase().equals("UNASSIGN")) {
+                Question question = firebaseAdapter.getQuestion(userCommandParts[1]);
+
+                if (question == null) {
+                    System.out.println("Question with ID: " + userCommandParts[1] + " does not exist");
+                    cliManager.handleAManageInput();
+                }
+
+                cliManager.getIssueManager().removeQuestion(issue, question);
+                cliManager.manageIssuesCLI();
+            } else {
+                System.out.println("Did not recognise command");
+                unassignQuestionPrompt(issue);
+            }
+        }
+
     }
 }

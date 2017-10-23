@@ -137,14 +137,14 @@ public class FirebaseAdapter {
     public void assignQuestion(String questionID) {
         DatabaseReference questionsRef = db.getRoot().child("questions").child("unassigned").child(questionID);
 
-        try {
-            Question question = this.getQuestion(questionID);
+        Question question = this.getQuestion(questionID);
+        if (question == null) {
+            logger.warn("No question found");
+        } else {
             db.deleteValue(questionsRef);
 
             question.setAssignedToIssue(true);
             this.saveNewQuestion(question);
-        } catch (NullPointerException e) {
-            logger.warn("No question found");
         }
     }
 

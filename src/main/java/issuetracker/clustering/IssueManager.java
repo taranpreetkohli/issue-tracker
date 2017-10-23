@@ -86,7 +86,6 @@ public class IssueManager {
 
     public void addQuestion(Issue issue, Question question) {
         issue.addQuestion(question);
-        question.setAssignedToIssue(true);
         firebaseAdapter.updateIssue(issue);
         firebaseAdapter.assignQuestion(Long.toString(question.getQuestionID()));
     }
