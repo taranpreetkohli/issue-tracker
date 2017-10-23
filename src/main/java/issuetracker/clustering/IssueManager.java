@@ -105,7 +105,7 @@ public class IssueManager {
             firebaseAdapter.deleteIssue(issue);
             removeIssueFromAssignedDevelopers(issue);
         } else {
-            firebaseAdapter.saveNewIssue(issue);
+            firebaseAdapter.updateIssue(issue);
             firebaseAdapter.unAssignQuestion(Long.toString(question.getQuestionID()));
         }
     }

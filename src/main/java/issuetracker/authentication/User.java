@@ -1,9 +1,5 @@
 package issuetracker.authentication;
 
-import issuetracker.cli.view.Command;
-
-import java.util.Map;
-
 public abstract class User {
 
     protected boolean loggedIn;
