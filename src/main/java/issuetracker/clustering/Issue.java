@@ -6,34 +6,35 @@ import issuetracker.exception.IssueAlreadyResolvedException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Issue {
 
     private String id;
     private String title;
-    private Set<Question> posts;
-    private Set<String> users;
+    private List<Question> posts;
+    private List<String> users;
     private String summary;
-    private Set<Developer> assignees;
+    private List<String> assignees;
     private IssueStatus status;
 
     public Issue() {
-        posts = new HashSet<>();
-        users = new HashSet<>();
-        assignees = new HashSet<>();
+        posts = new ArrayList<>();
+        users = new ArrayList<>();
+        assignees = new ArrayList<>();
+        status = IssueStatus.UNASSIGNED;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public Set<Question> getQuestions() {
+    public List<Question> getQuestions() {
         return posts;
     }
 
-    public Set<String> getUsers() {
+    public List<String> getUsers() {
         return users;
     }
 
@@ -56,17 +57,17 @@ public class Issue {
         return this;
     }
 
-    public Set<Question> getPosts() {
+    public List<Question> getPosts() {
         return posts;
     }
 
-    public Issue setPosts(Set<Question> posts) {
+    public Issue setPosts(List<Question> posts) {
         this.posts = posts;
         return this;
 
     }
 
-    public Issue setUsers(Set<String> users) {
+    public Issue setUsers(List<String> users) {
         this.users = users;
         return this;
     }
@@ -77,16 +78,16 @@ public class Issue {
     }
 
     public Issue addAssignee(Developer developer) {
-        assignees.add(developer);
-        if (status == IssueStatus.UNRESOLVED) {
+        assignees.add(developer.getEmail());
+        if (status == IssueStatus.UNASSIGNED) {
             status = IssueStatus.IN_PROGRESS;
         }
         return this;
     }
 
     public Issue removeAssignee(Developer developer) {
-        if (assignees.contains(developer)) {
-            assignees.remove(developer);
+        if (assignees.contains(developer.getEmail())) {
+            assignees.remove(developer.getEmail());
         } else {
             throw new DeveloperNotAssignedException("Cannot unassign developer from this issue!");
         }
@@ -98,7 +99,7 @@ public class Issue {
             throw new IssueAlreadyResolvedException("This issue cannot be resolved again!");
         }
 
-        if (assignees.contains(developer)) {
+        if (assignees.contains(developer.getEmail())) {
             status = IssueStatus.RESOLVED;
         } else {
             throw new DeveloperNotAssignedException("Developer not assigned to this issue!");
@@ -145,11 +146,11 @@ public class Issue {
         return users.size();
     }
 
-    public Set<Developer> getAssignees() {
+    public List<String> getAssignees() {
         return assignees;
     }
 
-    public void setAssignees(Set<Developer> assignees) {
+    public void setAssignees(List<String> assignees) {
         this.assignees = assignees;
     }
 
@@ -161,8 +162,8 @@ public class Issue {
         this.status = status;
     }
 
-    private enum IssueStatus {
-        UNRESOLVED,
+    public enum IssueStatus {
+        UNASSIGNED,
         RESOLVED,
         IN_PROGRESS
     }

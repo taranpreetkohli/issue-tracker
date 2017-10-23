@@ -9,9 +9,7 @@ import issuetracker.exception.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class IssueManager {
 
@@ -75,23 +73,40 @@ public class IssueManager {
 
     public List<Issue> retrieveIssuesOrderedByPriority() {
         List<Issue> issues = firebaseAdapter.retrieveAllIssues();
-        issues.sort(Comparator.comparingInt(Issue::getPriority));
-        Collections.reverse(issues);
+        if (issues != null) {
+            issues.sort(Comparator.comparingInt(Issue::getPriority));
+            Collections.reverse(issues);
+        }
         return issues;
+    }
+
+    public List<Question> retrieveUnassignedQuestions() {
+        return  firebaseAdapter.retrieveUnassignedQuestions();
     }
 
     public void addQuestion(Issue issue, Question question) {
         issue.addQuestion(question);
         firebaseAdapter.updateIssue(issue);
+        firebaseAdapter.assignQuestion(Long.toString(question.getQuestionID()));
     }
 
     public void removeQuestion(Issue issue, Question question) {
-        issue.removeQuestion(question);
+        List<Question> questionList = issue.getQuestions();
+
+        for (Question q : questionList) {
+            if (q.getQuestionID() == question.getQuestionID()) {
+                questionList.remove(q);
+                break;
+            }
+        }
+
+        question.setAssignedToIssue(false);
         if (issue.getQuestions().size() == 0) {
             firebaseAdapter.deleteIssue(issue);
             removeIssueFromAssignedDevelopers(issue);
         } else {
             firebaseAdapter.updateIssue(issue);
+            firebaseAdapter.unAssignQuestion(Long.toString(question.getQuestionID()));
         }
     }
 
@@ -112,6 +127,18 @@ public class IssueManager {
         }
     }
 
+    public void assignIssue(Issue issue, Developer dev) {
+        Developer developer = (Developer) firebaseAdapter.getUser(dev.getEmail());
+        if (dev == null) {
+            throw new UserException("Developer not found!");
+        }
+
+        issue.addAssignee(developer);
+        developer.addIssue(issue);
+        firebaseAdapter.saveUser(developer);
+        firebaseAdapter.updateIssue(issue);
+    }
+
     public void unAssignIssue(Administrator admin, Issue issue, Developer dev) {
         checkAdminAndDeveloperExist(admin, dev);
         if (firebaseAdapter.getIssue(issue.getId()) != null) {
@@ -122,6 +149,18 @@ public class IssueManager {
         } else {
             throw new IssueNotFoundException();
         }
+    }
+
+    public void unAssignIssue(Issue issue, Developer dev) {
+        Developer developer = (Developer) firebaseAdapter.getUser(dev.getEmail());
+        if (developer == null) {
+            throw new UserException("Developer not found!");
+        }
+
+        issue.removeAssignee(dev);
+        firebaseAdapter.updateIssue(issue);
+        dev.removeIssue(issue);
+        firebaseAdapter.saveUser(dev);
     }
 
     public void resolveIssue(Developer dev, Issue issue) {
@@ -154,9 +193,12 @@ public class IssueManager {
 
     private void removeIssueFromAssignedDevelopers(Issue issue) {
         if (issue.getAssignees().size() > 0) {
-            for (Developer developer : issue.getAssignees()) {
-                developer.removeIssue(issue);
-                firebaseAdapter.saveUser(developer);
+            for (String email : issue.getAssignees()) {
+                User developer = firebaseAdapter.getUser(email);
+                if (developer != null) {
+                    ((Developer) developer).removeIssue(issue);
+                    firebaseAdapter.saveUser(developer);
+                }
             }
         }
     }

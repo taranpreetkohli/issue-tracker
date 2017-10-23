@@ -1,10 +1,10 @@
 package issuetracker;
 
 import issuetracker.authentication.*;
+import issuetracker.cli.view.Command;
 import issuetracker.db.FirebaseAdapter;
 import issuetracker.exception.IncorrectPasswordException;
 import issuetracker.exception.UserException;
-import issuetracker.cli.view.ICommand;
 import org.junit.*;
 import org.mockito.Mockito;
 
@@ -164,39 +164,6 @@ public class AuthenticationManagerTest {
             new AuthenticationManager(db).login(noEmail, "shouldntworkanyway");
         } catch (InvalidPropertiesFormatException e) {}
     }
-
-    @Test
-    public void LogIn_AdminAccount_UserIsShownAdminView() {
-        //Arrange Act
-        Map<String, ICommand> commands = me.getView();
-
-        //Assert
-        Assert.assertTrue(commands.containsKey("R"));
-        Assert.assertTrue(commands.containsKey("V"));
-        Assert.assertTrue(commands.containsKey("M"));
-        Assert.assertTrue(commands.containsKey("L"));
-    }
-
-    @Test
-    public void LogIn_DeveloperAccount_UserIsShownDeveloperView() {
-        //Arrange
-        User currentUser = null;
-        Mockito.doReturn(new Developer(existingEmail, existingPassword)).when(db).getUser(existingEmail);
-
-        try {
-            currentUser = new AuthenticationManager(db).login(existingEmail, existingPassword);
-        } catch (Exception e) {}
-
-        //Act
-        Map<String, ICommand> commands = currentUser.getView();
-
-        //Assert
-        Assert.assertFalse(commands.containsKey("R"));
-        Assert.assertTrue(commands.containsKey("V"));
-        Assert.assertTrue(commands.containsKey("M"));
-        Assert.assertTrue(commands.containsKey("L"));
-    }
-
 
     @Test
     public void LogOut_UserLoggedIn_UserLogsOut() {

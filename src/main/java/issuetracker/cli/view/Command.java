@@ -1,5 +1,24 @@
 package issuetracker.cli.view;
 
-public class Command implements ICommand {
+import issuetracker.authentication.AuthenticationManager;
+import issuetracker.cli.CLIManager;
+
+public abstract class Command {
+
+    public final String value = "Command";
+    protected String userInput;
+
+
+    public Command() { }
+
+    public abstract void run(AuthenticationManager authenticationManager, CLIManager cliManager);
+
+    public String getUserInput() {
+        return userInput;
+    }
+
+    public void setUserInput(String userInput) {
+        this.userInput = userInput;
+    }
 
 }

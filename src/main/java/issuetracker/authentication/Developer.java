@@ -1,52 +1,38 @@
 package issuetracker.authentication;
 
-import issuetracker.cli.view.Command;
-import issuetracker.cli.view.ICommand;
 import issuetracker.clustering.Issue;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Developer extends User {
 
-    private HashMap<String, ICommand> viewMap;
-
-    private Map<String, Issue> issueMap;
+    public final String value = "Dev";
+    private List<String> issues;
 
     public Developer() {
         super();
-        issueMap = new HashMap<>();
+        issues = new ArrayList<>();
     }
 
     public Developer(String email, String password) {
         super(email, password);
-
-        viewMap = new HashMap<String, ICommand>();
-        viewMap.put("V", new Command());
-        viewMap.put("M", new Command());
-        viewMap.put("L", new Command());
-
-        issueMap = new HashMap<>();
-    }
-
-    @Override
-    public HashMap<String, ICommand> getView() {
-        return this.viewMap;
+        issues = new ArrayList<>();
     }
 
     public void addIssue(Issue issue) {
-        issueMap.put(issue.getId(), issue);
+        issues.add(issue.getId());
     }
 
     public void removeIssue(Issue issue) {
-        issueMap.remove(issue.getId(), issue);
+        issues.remove(issue.getId());
     }
 
-    public Map<String, Issue> getIssueMap() {
-        return issueMap;
+    public List<String> getIssues() {
+        return issues;
     }
 
-    public void setIssueMap(Map<String, Issue> issueMap) {
-        this.issueMap = issueMap;
+    public void setIssues(List<String> issues) {
+        this.issues = issues;
     }
 }

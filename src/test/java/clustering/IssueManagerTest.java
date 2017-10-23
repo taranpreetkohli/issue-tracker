@@ -16,11 +16,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -227,10 +229,32 @@ public class IssueManagerTest {
     }
 
     @Test
+    public void RetrieveUnassignedQuestions_QuestionsList_OnlyUnassigned() {
+        //Arrange
+        List<Question> questions = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Question mock = Mockito.mock(Question.class);
+            Mockito.doReturn(false).when(mock).isAssignedToIssue();
+            questions.add(mock);
+        }
+
+        Mockito.doReturn(questions).when(firebaseAdapter).retrieveUnassignedQuestions();
+        // Act
+        List<Question> returnedQuestions = issueManager.retrieveUnassignedQuestions();
+
+        // Assert
+        Mockito.verify(firebaseAdapter, times(1)).retrieveUnassignedQuestions();
+        assertNotNull(returnedQuestions);
+        for (int i = 1; i < returnedQuestions.size(); i++) {
+            assertFalse(returnedQuestions.get(i - 1).isAssignedToIssue());
+        }
+    }
+
+    @Test
     public void AddForumPost_ExistingIssue_IssueHasNewForumPost() {
         // Arrange
         Question existingQuestion = Mockito.mock(Question.class);
-        Set<Question> questions = new HashSet<>();
+        List<Question> questions = new ArrayList<>();
         questions.add(existingQuestion);
         Mockito.doReturn(questions).when(issue).getPosts();
 
@@ -340,8 +364,8 @@ public class IssueManagerTest {
         Issue issue = Mockito.mock(Issue.class);
         issueManager.assignIssue(admin, issue, developer);
 
-        Set<Developer> assignees = new HashSet<>();
-        assignees.add(developer);
+        List<String> assignees = new ArrayList<>();
+        assignees.add("dev@gmail.com");
 
         Mockito.doReturn(assignees).when(issue).getAssignees();
 
