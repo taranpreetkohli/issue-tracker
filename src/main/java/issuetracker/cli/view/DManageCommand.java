@@ -24,7 +24,7 @@ public class DManageCommand extends Command{
             cliManager.showMenu();
         } else {
             System.out.println("Did not recognise command");
-            cliManager.handleManageInput();
+            cliManager.handleDManageInput();
         }
 
         User currentUser = authenticationManager.getCurrentUser();
@@ -52,11 +52,11 @@ public class DManageCommand extends Command{
                     cliManager.manageIssuesCLI();
                 } else {
                     System.out.println("You cannot manage issue: \"" + parts[1] + "\"");
-                    cliManager.handleManageInput();
+                    cliManager.handleDManageInput();
                 }
             } else {
                 System.out.println("\"" + parts[0] + "\" is not recognised");
-                cliManager.handleManageInput();
+                cliManager.handleDManageInput();
             }
         }
     }

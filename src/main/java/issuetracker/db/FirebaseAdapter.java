@@ -112,7 +112,7 @@ public class FirebaseAdapter {
         db.write(questionsRef, question);
     }
 
-    public Question getQuestion(String questionID) throws NullPointerException {
+    public Question getQuestion(String questionID) {
         DatabaseReference questionsRef = db.getRoot()
                 .child("questions")
                 .child(questionID);
@@ -128,7 +128,6 @@ public class FirebaseAdapter {
 
             if (question == null) {
                 logger.info("No question found with id: " + questionID);
-                throw new NullPointerException("No question found");
             }
         }
 
@@ -143,6 +142,20 @@ public class FirebaseAdapter {
             db.deleteValue(questionsRef);
 
             question.setAssignedToIssue(true);
+            this.saveNewQuestion(question);
+        } catch (NullPointerException e) {
+            logger.warn("No question found");
+        }
+    }
+
+    public void unAssignQuestion(String questionID) {
+        DatabaseReference questionsRef = db.getRoot().child("questions").child(questionID);
+
+        try {
+            Question question = this.getQuestion(questionID);
+            db.deleteValue(questionsRef);
+
+            question.setAssignedToIssue(false);
             this.saveNewQuestion(question);
         } catch (NullPointerException e) {
             logger.warn("No question found");

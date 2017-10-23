@@ -86,16 +86,20 @@ public class IssueManager {
 
     public void addQuestion(Issue issue, Question question) {
         issue.addQuestion(question);
+        question.setAssignedToIssue(true);
         firebaseAdapter.updateIssue(issue);
+        firebaseAdapter.assignQuestion(Long.toString(question.getQuestionID()));
     }
 
     public void removeQuestion(Issue issue, Question question) {
         issue.removeQuestion(question);
+        question.setAssignedToIssue(false);
         if (issue.getQuestions().size() == 0) {
             firebaseAdapter.deleteIssue(issue);
             removeIssueFromAssignedDevelopers(issue);
         } else {
             firebaseAdapter.updateIssue(issue);
+            firebaseAdapter.unAssignQuestion(Long.toString(question.getQuestionID()));
         }
     }
 
