@@ -80,6 +80,10 @@ public class IssueManager {
         return issues;
     }
 
+    public List<Question> retrieveUnassignedQuestions() {
+        return  firebaseAdapter.retrieveUnassignedQuestions();
+    }
+
     public void addQuestion(Issue issue, Question question) {
         issue.addQuestion(question);
         firebaseAdapter.updateIssue(issue);
