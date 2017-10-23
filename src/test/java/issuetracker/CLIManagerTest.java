@@ -15,6 +15,7 @@ import java.util.*;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
@@ -46,72 +47,39 @@ public class CLIManagerTest {
     }
 
     @Test
-    public void CheckUserDetailFormat_ValidFormat_ReturnsTrue() {
+    public void CheckTwoInputFormat_TwoInputs_ReturnsTrue() {
         //Arrange
         String validInput = "developer@gmail.com password";
+        int num = 2;
 
         //Act
-        boolean isValid = cliManager.checkTwoInputFormat(validInput);
+        boolean isValid = cliManager.checkNumInputFormat(validInput, num);
 
         //Assert
         assertTrue(isValid) ;
     }
 
     @Test
-    public void CheckUserDetailFormat_NotEnoughInputs_ReturnsFalse() {
+    public void CheckTwoInputFormat_FiveInputs_ReturnsFalse() {
         //Arrange
-        String invalidInput = "developer@gmail.compassword";
+        String invalidInput = "developer@gmail.com password fdgf fhdfh vndhdf";
+        int num = 2;
+
         //Act
-        boolean isValid = cliManager.checkTwoInputFormat(invalidInput);
+        boolean isValid = cliManager.checkNumInputFormat(invalidInput, num);
 
         //Assert
         assertFalse(isValid) ;
     }
-
-    @Test
-    public void CheckUserDetailFormat_TooManyInputs_ReturnsFalse() {
-        //Arrange
-        String invalidInput = "developer@gmail.com password another input";
-
-        //Act
-        boolean isValid = cliManager.checkTwoInputFormat(invalidInput);
-
-        //Assert
-        assertFalse(isValid) ;
-    }
-
-    @Test
-    public void CheckSingleInputFormat_SingleInput_ReturnsTrue() {
-        //Arrange
-        String validInput = "213";
-
-        //Act
-        boolean isValid = cliManager.checkSingleInputFormat(validInput);
-
-        //Assert
-        assertTrue(isValid) ;
-    }
-
-    @Test
-    public void CheckSingleInputFormat_MultiInput_ReturnsTrue() {
-        //Arrange
-        String validInput = "5234 346356 sdfgsg";
-
-        //Act
-        boolean isValid = cliManager.checkSingleInputFormat(validInput);
-
-        //Assert
-        assertFalse(isValid); 
-    }
-
 
     @Test(expected = NoInputException.class)
-    public void CheckUserDetailFormat_NoInput_NoInputExceptionThrown() {
+    public void CheckTwoInputFormat_NoInput_NoInputExceptionThrown() {
         //Arrange
         String noInput = "";
+        int num = 2;
 
         //Act Assert
-        boolean isValid = cliManager.checkTwoInputFormat(noInput);
+        boolean isValid = cliManager.checkNumInputFormat(noInput, num);
     }
 
     @Test
@@ -329,7 +297,7 @@ public class CLIManagerTest {
         ByteArrayInputStream in = new ByteArrayInputStream(validInput.getBytes());
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
-        Mockito.doReturn(true).when(cliManagerSpy).checkTwoInputFormat(validInput);
+        Mockito.doReturn(true).when(cliManagerSpy).checkNumInputFormat(validInput, 2);
 
         //Act
         try {
@@ -347,7 +315,7 @@ public class CLIManagerTest {
         ByteArrayInputStream in = new ByteArrayInputStream(invalidInput.getBytes());
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
-        Mockito.doReturn(false).when(cliManagerSpy).checkTwoInputFormat(invalidInput);
+        Mockito.doReturn(false).when(cliManagerSpy).checkNumInputFormat(invalidInput, 2);
 
         //Act
         try {
@@ -366,7 +334,7 @@ public class CLIManagerTest {
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
 
-        Mockito.doReturn(true).when(cliManagerSpy).checkTwoInputFormat(anyString());
+        Mockito.doReturn(true).when(cliManagerSpy).checkNumInputFormat(anyString(), anyInt());
 
         Command mockedCommand = Mockito.mock(Command.class);
 
@@ -391,7 +359,7 @@ public class CLIManagerTest {
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
 
-        Mockito.doReturn(false).when(cliManagerSpy).checkTwoInputFormat(anyString());
+        Mockito.doReturn(false).when(cliManagerSpy).checkNumInputFormat(anyString(), anyInt());
 
         Administrator mockedAdmin = Mockito.mock(Administrator.class);
         HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
@@ -417,7 +385,7 @@ public class CLIManagerTest {
         System.setIn(in);
         CLIManager cliManagerSpy = Mockito.spy(cliManager);
 
-        Mockito.doReturn(false).when(cliManagerSpy).checkTwoInputFormat(anyString());
+        Mockito.doReturn(false).when(cliManagerSpy).checkNumInputFormat(anyString(), anyInt());
 
         Administrator mockedAdmin = Mockito.mock(Administrator.class);
         HashMap<String, Command> mockedHm = Mockito.mock(LinkedHashMap.class);
