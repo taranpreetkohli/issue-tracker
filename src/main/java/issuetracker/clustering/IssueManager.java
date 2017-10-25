@@ -9,7 +9,10 @@ import issuetracker.exception.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class IssueManager {
 
@@ -113,6 +116,20 @@ public class IssueManager {
     public void deleteIssue(Issue issue) {
         dBContext.deleteIssue(issue);
         removeIssueFromAssignedDevelopers(issue);
+        if (issue.getQuestions() == null) {
+            return;
+        }
+
+        List<Question> questionList = issue.getQuestions();
+        for (Question question : questionList) {
+            List<Question> posts = new ArrayList<>();
+            posts.add(question);
+            Issue newIssue = new Issue()
+                    .setPosts(posts)
+                    .setSummary(question.getInformation())
+                    .setTitle(question.getQuestion());
+            firebaseAdapter.saveNewIssue(newIssue);
+        }
     }
 
     public void assignIssue(Administrator admin, Issue issue, Developer dev) {
