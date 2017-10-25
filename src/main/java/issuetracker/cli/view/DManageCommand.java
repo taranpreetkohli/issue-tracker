@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Handles logic for managing issues if logged in as a developer
+ */
 public class DManageCommand extends Command{
     private final List<String> validDevCommand = new ArrayList<>(Arrays.asList("unassign", "close"));
     private DBContext dBContext = new DBContext();
@@ -31,6 +34,7 @@ public class DManageCommand extends Command{
 
         User currentUser = authenticationManager.getCurrentUser();
 
+        //Developers can unassign them selves from an issue, or close it
         if (currentUser instanceof Developer) {
             if (validDevCommand.contains(parts[0].toLowerCase())) {
                 //check if id valid

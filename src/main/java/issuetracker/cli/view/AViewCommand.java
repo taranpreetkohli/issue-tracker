@@ -10,6 +10,9 @@ import issuetracker.exception.UserException;
 
 import java.util.List;
 
+/**
+ * Handles logic for viewing and assigning issues when logged in as an admin
+ */
 public class AViewCommand extends Command{
     private DBContext dBContext = new DBContext();
 
@@ -31,6 +34,7 @@ public class AViewCommand extends Command{
 
         List<String> assignedUsers = issue.getAssignees();
 
+        //Displays issue details as well as who is currently assigned
         if (!assignedUsers.isEmpty()) {
             System.out.println("Current Assignees: ");
             for (String user : assignedUsers) {
@@ -41,6 +45,12 @@ public class AViewCommand extends Command{
         assignPrompt(authenticationManager, cliManager, issue);
     }
 
+    /**
+     * Assigns an issue to a developer based on id and email provided by user
+     * @param authenticationManager
+     * @param cliManager
+     * @param issue
+     */
     private void assignPrompt(AuthenticationManager authenticationManager, CLIManager cliManager, Issue issue) {
         Administrator admin = (Administrator)authenticationManager.getCurrentUser();
 

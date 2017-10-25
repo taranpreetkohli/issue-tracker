@@ -5,6 +5,9 @@ import issuetracker.cli.CLIManager;
 
 import java.util.InvalidPropertiesFormatException;
 
+/**
+ * Handles logic for registering a user if logged in as an admin
+ */
 public class ARegisterCommand extends Command{
 
     public ARegisterCommand() {
@@ -25,6 +28,7 @@ public class ARegisterCommand extends Command{
         }
 
         try {
+            //registers user via authentication manager if valid cridentials are given
             authenticationManager.addUser(parts[0], parts[1]);
             cliManager.registerCLI();
         } catch (InvalidPropertiesFormatException e) {

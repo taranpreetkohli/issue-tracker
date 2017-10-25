@@ -9,6 +9,9 @@ import issuetracker.db.DBContext;
 
 import java.util.List;
 
+/**
+ * Handles logic for viewing and assigning issues when logged in as a developer
+ */
 public class DViewCommand extends Command{
     private DBContext dBContext = new DBContext();
 
@@ -30,6 +33,7 @@ public class DViewCommand extends Command{
 
         List<String> assignedUsers = issue.getAssignees();
 
+        //Displays issue details as well as who is currently assigned
         if (!assignedUsers.isEmpty()) {
             System.out.println("Current Assignees: ");
             for (String user : assignedUsers) {
@@ -52,6 +56,7 @@ public class DViewCommand extends Command{
 
         String userCommand = cliManager.retrieveUserInput();
 
+        //Developer can assign themselves to the issue or go back
         switch (userCommand.toUpperCase()) {
             case "ASSIGN":
                 cliManager.getIssueManager().assignIssue(issue, (Developer) currentUser);

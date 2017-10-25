@@ -8,6 +8,9 @@ import issuetracker.db.DBContext;
 
 import java.util.List;
 
+/**
+ * Handles logic for managing issues if logged in as an admin
+ */
 public class AManageCommand extends Command {
     private DBContext dBContext = new DBContext();
     private CLIManager cliManager;
@@ -21,6 +24,7 @@ public class AManageCommand extends Command {
 
         String[] parts = userInput.split(" ");
 
+        //Checks if user wants to view or assign issues/questions
         switch (parts[0].toUpperCase()) {
             case "VIEW":
                 viewDetails(parts);
@@ -40,6 +44,10 @@ public class AManageCommand extends Command {
 
     }
 
+    /**
+     * Checks if user would like to view an Issue or a Question
+     * @param parts
+     */
     private void viewDetails(String[] parts) {
         switch (parts[1].toUpperCase()) {
             case "I":
@@ -48,7 +56,7 @@ public class AManageCommand extends Command {
 
                 break;
             case "Q":
-                //display question into
+                //display question info
                 displayQuestion(parts[2]);
                 break;
             default:
@@ -58,6 +66,11 @@ public class AManageCommand extends Command {
         }
     }
 
+    /**
+     * Displays information of the given issue id
+     * Shows list of all questions assigned to the issue
+     * @param issueID
+     */
     private void displayIssue(String issueID) {
         Issue issue = dBContext.getIssue(issueID);
 
@@ -85,6 +98,11 @@ public class AManageCommand extends Command {
         unassignQuestionPrompt(issue);
     }
 
+    /**
+     * Displays information of the question with the given id
+     * Shows id, title and description
+     * @param questionID
+     */
     private void displayQuestion(String questionID) {
         Question question = dBContext.getQuestion(questionID);
 
@@ -97,9 +115,12 @@ public class AManageCommand extends Command {
         System.out.println(question.getInformation());
 
         backToIQViewPrompt();
-
     }
 
+    /**
+     * Assigns a question to an issue based on the given ids from the user
+     * @param parts
+     */
     private void assignQuestionToIssue(String[] parts) {
         Issue issue = dBContext.getIssue(parts[1]);
         Question question = dBContext.getQuestion(parts[2]);
@@ -118,6 +139,9 @@ public class AManageCommand extends Command {
         cliManager.manageIssuesCLI();
     }
 
+    /**
+     * Displays original manage view of issues and questions
+     */
     private void backToIQViewPrompt() {
         System.out.print("[BACK] to return to issues/questions list: ");
         String userCommand = cliManager.retrieveUserInput();
@@ -130,6 +154,10 @@ public class AManageCommand extends Command {
         }
     }
 
+    /**
+     * Unassigns a question from an issue based on ids given by user
+     * @param issue
+     */
     private void unassignQuestionPrompt(Issue issue) {
         System.out.print("[UNASSIGN QUESTIONID] to unassign a question from an issue or [BACK] to return to issues/questions list: ");
         String userCommand = cliManager.retrieveUserInput();
