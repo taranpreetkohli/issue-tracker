@@ -14,14 +14,70 @@ import java.util.*;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Scanner;
 
+/**
+ * Displays the command line interface and handles user input to the system
+ */
 public class CLIManager {
     private AuthenticationManager authenticationManager;
     private IssueManager issueManager;
     private Map<String, Command> viewMap;
+    private String commandSet;
 
     public CLIManager(AuthenticationManager authenticationManager, IssueManager issueManager) {
         this.authenticationManager = authenticationManager;
         this.issueManager = issueManager;
+    }
+
+    /**
+     * Prints menu to command line
+     */
+    public void showMenu() {
+        for (Map.Entry<String, Command> entry : this.viewMap.entrySet()) {
+            switch (entry.getKey()) {
+                case "R":
+                    System.out.println("(R)egister a developer");
+                    break;
+                case "V":
+                    System.out.println("(V)iew issues");
+                    break;
+                case "M":
+                    System.out.println("(M)anage issues");
+                    break;
+                case "L":
+                    System.out.println("(L)og out");
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        promptMenu();
+    }
+
+    private void promptMenu() {
+        System.out.print("Please enter your command (" + commandSet + "): ");
+
+        String userInput = retrieveUserInput().toUpperCase();
+
+        if (isValidCommand(userInput)) {
+            switch (userInput) {
+                case "R":
+                    registerCLI();
+                    break;
+                case "V":
+                    viewIssuesCLI();
+                    break;
+                case "M":
+                    manageIssuesCLI();
+                    break;
+                case "L":
+                    logoutCLI();
+                    break;
+            }
+        } else {
+            System.out.println("Sorry, that is not a valid command");
+            promptMenu();
+        }
     }
 
     public void loginCLI() {
@@ -46,11 +102,13 @@ public class CLIManager {
                     viewMap.put("V", new AViewCommand());
                     viewMap.put("M", new AManageCommand());
                     viewMap.put("L", new LogoutCommand());
+                    commandSet = "R/V/M/L";
                 } else if (authenticationManager.getCurrentUser() instanceof Developer) {
                     this.viewMap = new LinkedHashMap<>();
                     viewMap.put("V", new DViewCommand());
                     viewMap.put("M", new DManageCommand());
                     viewMap.put("L", new LogoutCommand());
+                    commandSet = "V/M/L";
                 }
 
                 showMenu();
@@ -171,34 +229,6 @@ public class CLIManager {
         }
     }
 
-    private void printQuestionsList(List<Question> questionList) {
-        if (questionList != null) {
-            System.out.println("UNASSIGNED QUESTIONS");
-            for (Question question : questionList) {
-                long id = question.getQuestionID();
-                String qTitle = question.getQuestion();
-                System.out.println(id + ": " + qTitle);
-            }
-        } else {
-            System.out.println("There are no unassigned issues to display!");
-        }
-    }
-
-    //Helper for printing issues
-    private void printIssueList(List<Issue> issueList) {
-        if (issueList != null) {
-            System.out.println("ISSUES");
-            for (Issue issue : issueList) {
-                String id = issue.getId();
-                String status = issue.getStatus().toString();
-                String title = issue.getTitle();
-                System.out.println(status + " " + id + ": " + title);
-            }
-        } else {
-            System.out.println("There are no issues to display!");
-        }
-    }
-
     public void handleDManageInput() {
         System.out.println("Enter [close/unassign id] to manage an issue or [BACK] to go back to main menu: ");
         String userInput = retrieveUserInput();
@@ -216,61 +246,56 @@ public class CLIManager {
         }
     }
 
-    public void showMenu() {
-        User currentUser = authenticationManager.getCurrentUser();
-        String commandSet;
-
-        if (currentUser instanceof Administrator) {
-            commandSet = "R/V/M/L";
-        } else {
-            commandSet = "V/M/L";
-        }
-
-        for (Map.Entry<String, Command> entry : this.viewMap.entrySet()) {
-            switch (entry.getKey()) {
-                case "R":
-                    System.out.println("(R)egister a developer");
-                    break;
-                case "V":
-                    System.out.println("(V)iew issues");
-                    break;
-                case "M":
-                    System.out.println("(M)anage issues");
-                    break;
-                case "L":
-                    System.out.println("(L)og out");
-                    break;
-                default:
-                    break;
+    //Helper for printing issues
+    private void printQuestionsList(List<Question> questionList) {
+        if (questionList != null) {
+            System.out.println("UNASSIGNED QUESTIONS");
+            for (Question question : questionList) {
+                long id = question.getQuestionID();
+                String qTitle = question.getQuestion();
+                System.out.println(id + ": " + qTitle);
             }
+        } else {
+            System.out.println("There are no unassigned issues to display!");
         }
-
-        promptMenu(commandSet);
     }
 
-    private void promptMenu(String commandSet) {
-        System.out.print("Please enter your command (" + commandSet + "): ");
-
-        String userInput = retrieveUserInput().toUpperCase();
-
-        if (isValidCommand(userInput)) {
-            switch (userInput) {
-                case "R":
-                    registerCLI();
-                    break;
-                case "V":
-                    viewIssuesCLI();
-                    break;
-                case "M":
-                    manageIssuesCLI();
-                    break;
-                case "L":
-                    logoutCLI();
-                    break;
+    private void printIssueList(List<Issue> issueList) {
+        if (issueList != null) {
+            System.out.println("ISSUES");
+            for (Issue issue : issueList) {
+                String id = issue.getId();
+                String status = issue.getStatus().toString();
+                String title = issue.getTitle();
+                System.out.println(status + " " + id + ": " + title);
             }
         } else {
-            System.out.println("Sorry, that is not a valid command");
-            promptMenu(commandSet);
+            System.out.println("There are no issues to display!");
+        }
+    }
+
+    public void logoutCLI() {
+        System.out.println("Are you sure you want to logout?");
+        System.out.println("Please enter [Y/y] to confirm, or [N/n] to cancel");
+
+        String userInput = retrieveUserInput();
+        boolean isCorrectFormat = false;
+
+        try {
+            isCorrectFormat = checkUserConfirmationFormat(userInput);
+        } catch (NoInputException e) {
+            logoutCLI();
+        }
+
+        if (isCorrectFormat) {
+            if(checkUserConfirmation(userInput)){
+                this.viewMap.get("L").run(authenticationManager, this);
+            } else {
+                showMenu();
+            }
+        } else {
+            System.out.println("You must confirm by entering [Y/y], or cancel by entering [N/n])");
+            showMenu();
         }
     }
 
@@ -314,31 +339,6 @@ public class CLIManager {
             return true;
         } else {
             return false;
-        }
-    }
-
-    public void logoutCLI() {
-        System.out.println("Are you sure you want to logout?");
-        System.out.println("Please enter [Y/y] to confirm, or [N/n] to cancel");
-
-        String userInput = retrieveUserInput();
-        boolean isCorrectFormat = false;
-
-        try {
-            isCorrectFormat = checkUserConfirmationFormat(userInput);
-        } catch (NoInputException e) {
-            logoutCLI();
-        }
-
-        if (isCorrectFormat) {
-            if(checkUserConfirmation(userInput)){
-                this.viewMap.get("L").run(authenticationManager, this);
-            } else {
-                showMenu();
-            }
-        } else {
-            System.out.println("You must confirm by entering [Y/y], or cancel by entering [N/n])");
-            showMenu();
         }
     }
 

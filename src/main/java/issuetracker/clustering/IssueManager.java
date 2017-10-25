@@ -128,7 +128,7 @@ public class IssueManager {
                     .setPosts(posts)
                     .setSummary(question.getInformation())
                     .setTitle(question.getQuestion());
-            firebaseAdapter.saveNewIssue(newIssue);
+            dBContext.saveNewIssue(newIssue);
         }
     }
 

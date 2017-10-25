@@ -18,6 +18,7 @@ public class Runner {
     private static Logger logger = LoggerFactory.getLogger(Runner.class);
 
     public static void main(String[] args) throws IOException {
+        //Uncomment to populate database with sample data
 //        setUpIssuesQuestions();
 
         new CLIManager(new AuthenticationManager(new DBContext()), new IssueManager(new DBContext())).loginCLI();
@@ -113,6 +114,7 @@ public class Runner {
 
         DBContext dBContext = new DBContext();
 
+        //Save questions to database
         dBContext.saveNewQuestion(question1);
         dBContext.saveNewQuestion(question2);
         dBContext.saveNewQuestion(question3);
@@ -130,6 +132,7 @@ public class Runner {
         dBContext.saveNewQuestion(question15);
         dBContext.saveNewQuestion(question16);
 
+        //Save issues to database
         dBContext.saveNewIssue(issue1);
         dBContext.saveNewIssue(issue2);
         dBContext.saveNewIssue(issue3);
