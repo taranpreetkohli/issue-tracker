@@ -20,11 +20,13 @@ public class DManageCommand extends Command{
     public void run(AuthenticationManager authenticationManager, CLIManager cliManager) {
         String[] parts = userInput.split(" ");
 
-        if (parts[0].toUpperCase().equals("BACK") && (parts.length == 1)) {
-            cliManager.showMenu();
-        } else {
-            System.out.println("Did not recognise command");
-            cliManager.handleDManageInput();
+        if (parts.length == 1) {
+            if (parts[0].toUpperCase().equals("BACK")) {
+                cliManager.showMenu();
+            } else {
+                System.out.println("Did not recognise command");
+                cliManager.handleDManageInput();
+            }
         }
 
         User currentUser = authenticationManager.getCurrentUser();
