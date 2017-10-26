@@ -5,7 +5,7 @@ import issuetracker.cli.CLIManager;
 import issuetracker.clustering.Issue;
 import issuetracker.clustering.IssueManager;
 import issuetracker.clustering.Question;
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +21,7 @@ public class Runner {
         //Uncomment to populate database with sample data
 //        setUpIssuesQuestions();
 
-        new CLIManager(new AuthenticationManager(new FirebaseAdapter()), new IssueManager(new FirebaseAdapter())).loginCLI();
+        new CLIManager(new AuthenticationManager(new DBContext()), new IssueManager(new DBContext())).loginCLI();
     }
 
     private static void setUpIssuesQuestions() {
@@ -112,7 +112,7 @@ public class Runner {
         Issue issue6 = new Issue().setId("6").setTitle("Issue 6").setSummary("Pellentesque convallis mi eu ex eleifend porta. Donec ut nisl ligula. Nam at leo consequat, feugiat dolor non, laoreet nisi. Vestibulum nec euismod diam, ac cursus tellus. Nunc ut feugiat enim. Vestibulum ultrices faucibus lacinia.").setUsers(users1).setPosts(posts6);
 
 
-        FirebaseAdapter dBContext = new FirebaseAdapter();
+        DBContext dBContext = new DBContext();
 
         //Save questions to database
         dBContext.saveNewQuestion(question1);

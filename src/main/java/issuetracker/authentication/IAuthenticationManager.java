@@ -1,6 +1,6 @@
 package issuetracker.authentication;
 
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 
 import java.util.InvalidPropertiesFormatException;
 
@@ -44,13 +44,13 @@ public interface IAuthenticationManager {
      * Get the database
      * @return the database context used by the authentication manager
      */
-    FirebaseAdapter getDb();
+    DBContext getDb();
 
     /**
      * Set the database interface for the authentication manager through dependency injection.
      *
-     * @param db The FirebaseAdapter class that will be used by the system.
-     * @see FirebaseAdapter
+     * @param db The DBContext class that will be used by the system.
+     * @see DBContext
      */
-    void setDb(FirebaseAdapter db);
+    void setDb(DBContext db);
 }

@@ -1,6 +1,6 @@
 package issuetracker.authentication;
 
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 import issuetracker.exception.IncorrectPasswordException;
 import issuetracker.exception.UserException;
 
@@ -17,7 +17,7 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     private User currentUser;
 
-    private FirebaseAdapter dBContext;
+    private DBContext dBContext;
 
     /**
      * Authentication manager is responsible for handling the creation of User objects and child classes.
@@ -27,7 +27,7 @@ public class AuthenticationManager implements IAuthenticationManager {
      * @see Developer
      * @see Administrator
      */
-    public AuthenticationManager(FirebaseAdapter dBContext) {
+    public AuthenticationManager(DBContext dBContext) {
         this.dBContext = dBContext;
     }
 
@@ -148,12 +148,12 @@ public class AuthenticationManager implements IAuthenticationManager {
     }
 
     @Override
-    public FirebaseAdapter getDb() {
+    public DBContext getDb() {
         return dBContext;
     }
 
     @Override
-    public void setDb(FirebaseAdapter db) {
+    public void setDb(DBContext db) {
         this.dBContext = db;
     }
 }

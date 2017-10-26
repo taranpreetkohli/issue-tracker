@@ -4,7 +4,7 @@ import issuetracker.authentication.AuthenticationManager;
 import issuetracker.cli.CLIManager;
 import issuetracker.clustering.Issue;
 import issuetracker.clustering.Question;
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * Handles logic for managing issues if logged in as an admin
  */
 public class AManageCommand extends Command {
-    private FirebaseAdapter dBContext = new FirebaseAdapter();
+    private DBContext dBContext = new DBContext();
     private CLIManager cliManager;
 
     @Override
