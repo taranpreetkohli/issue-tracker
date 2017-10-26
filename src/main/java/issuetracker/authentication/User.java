@@ -1,9 +1,23 @@
 package issuetracker.authentication;
 
+/**
+ * Abstract representation of the User model
+ */
 public abstract class User {
 
+    /**
+     * True if the user is logged in to the system, false otherwise
+     */
     protected boolean loggedIn;
+
+    /**
+     * Email associated with this User
+     */
     protected String email;
+
+    /**
+     * Password associated with this User
+     */
     protected String password;
 
     public User(String email, String password) {

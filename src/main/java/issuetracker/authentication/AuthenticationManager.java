@@ -31,6 +31,15 @@ public class AuthenticationManager implements IAuthenticationManager {
         this.dBContext = dBContext;
     }
 
+    /**
+     * Allows a user to login
+     *
+     * @param email    assigned to the user account
+     * @param password assigned to the user account
+     * @return User model representing the logged-in user
+     * @throws InvalidPropertiesFormatException
+     * @throws InstantiationException
+     */
     @Override
     public User login(String email, String password) throws InvalidPropertiesFormatException, InstantiationException {
         isEmailValid(email);
@@ -52,6 +61,13 @@ public class AuthenticationManager implements IAuthenticationManager {
         return currentUser;
     }
 
+    /**
+     * Allows an administrator to add a new developer to the database
+     * @param email The email assigned to this user
+     * @param password The password assigned to this user
+     * @return User model representing the newly created Developer
+     * @throws InvalidPropertiesFormatException
+     */
     @Override
     public User addUser(String email, String password) throws InvalidPropertiesFormatException {
 
@@ -72,6 +88,10 @@ public class AuthenticationManager implements IAuthenticationManager {
         }
     }
 
+    /**
+     * Allows a user to logout from the system
+     * @return true if operation is successful
+     */
     @Override
     public boolean logout() {
         if (currentUser != null) {
