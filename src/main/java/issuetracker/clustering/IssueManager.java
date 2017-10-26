@@ -8,11 +8,20 @@ import issuetracker.exception.IssueNotFoundException;
 import issuetracker.exception.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import weka.clusterers.DBSCAN;
+import weka.core.Attribute;
+import weka.core.FastVector;
+import weka.core.Instance;
+import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.StringToWordVector;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.StringReader;
+import java.net.URL;
+import java.util.*;
 
 public class IssueManager {
 
@@ -21,56 +30,55 @@ public class IssueManager {
 
     public IssueManager(FirebaseAdapter firebaseAdapter) {
         this.firebaseAdapter = firebaseAdapter;
-//        try {
-//            URL testResourceURL = getClass().getClassLoader().getResource("test.arff");
-//            File testFile = new File(testResourceURL.getFile());
-//            Instances instances = new Instances(new BufferedReader(new FileReader(testFile)));
-//            StringToWordVector s = new StringToWordVector();
-//            s.setInputFormat(instances);
-//            instances = Filter.useFilter(instances, s);
-//            DBSCAN dbscan = new DBSCAN();
-//            System.out.println(instances.toString());
-//            dbscan.setEpsilon(1);
-//            dbscan.setMinPoints(1);
-//            dbscan.buildClusterer(instances);
-//            System.out.println(dbscan.toString());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException(e.getMessage());
-//        }
-
-//
-//        Map<Integer, String> trainingData = new HashMap<>();
-//        BufferedReader br = null;
-//        try {
-//            br = new BufferedReader(new FileReader(getClass().getClassLoader().getResource("training_data_content.txt").getFile()));
-//            String currentLine;
-//            while ((currentLine = br.readLine()) != null) {
-//                String[] values = currentLine.split("\\t");
-//                trainingData.put(Integer.parseInt(values[0]), String.join(" ", Arrays.copyOfRange(values, 1, values.length)));
-//            }
-////            for (int i : trainingData.keySet()) {
-////                System.out.println(trainingData.get(i));
-////            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        FastVector training = new FastVector();
-//        training.addElement(new Attribute("dunno", new FastVector()));
-//
-//        Instances dataSet = new Instances("Training_Data", training, 1000);
-//        Instance inst = new Instance(1);
-//        Attribute a1 = dataSet.attribute("dunno");
-//        for (int i : trainingData.keySet()) {
-//            inst.setValue(a1, trainingData.get(i));
-//            dataSet.add(inst);
-//        }
-//
-//        System.out.println(dataSet.toString());
-
     }
 
     public Issue generateCluster(String input) {
+        try {
+            URL testResourceURL = getClass().getClassLoader().getResource("test.arff");
+            File testFile = new File(testResourceURL.getFile());
+//            Instances instances = new Instances(new BufferedReader(new FileReader(testFile)));
+            Instances instances = new Instances(new StringReader(input));
+            StringToWordVector s = new StringToWordVector();
+            s.setInputFormat(instances);
+            instances = Filter.useFilter(instances, s);
+            DBSCAN dbscan = new DBSCAN();
+            System.out.println(instances.toString());
+            dbscan.setEpsilon(1);
+            dbscan.setMinPoints(1);
+            dbscan.buildClusterer(instances);
+            System.out.println(dbscan.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+
+
+        Map<Integer, String> trainingData = new HashMap<>();
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(getClass().getClassLoader().getResource("training_data_content.txt").getFile()));
+            String currentLine;
+            while ((currentLine = br.readLine()) != null) {
+                String[] values = currentLine.split("\\t");
+                trainingData.put(Integer.parseInt(values[0]), String.join(" ", Arrays.copyOfRange(values, 1, values.length)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FastVector training = new FastVector();
+        training.addElement(new Attribute("dunno", new FastVector()));
+
+        Instances dataSet = new Instances("Training_Data", training, 1000);
+        Instance inst = new Instance(1);
+        Attribute a1 = dataSet.attribute("dunno");
+        for (int i : trainingData.keySet()) {
+            inst.setValue(a1, trainingData.get(i));
+            dataSet.add(inst);
+        }
+
+        System.out.println(dataSet.toString());
+
         return null;
     }
 
