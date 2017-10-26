@@ -3,79 +3,87 @@ package issuetracker.clustering;
 import issuetracker.authentication.Administrator;
 import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
-import issuetracker.db.DBContext;
+import issuetracker.db.FirebaseAdapter;
 import issuetracker.exception.IssueNotFoundException;
 import issuetracker.exception.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import weka.clusterers.DBSCAN;
+import weka.core.Attribute;
+import weka.core.FastVector;
+import weka.core.Instance;
+import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.StringToWordVector;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.StringReader;
+import java.net.URL;
+import java.util.*;
 
 public class IssueManager {
 
     private static Logger logger = LoggerFactory.getLogger(IssueManager.class);
-    private DBContext dBContext;
+    private FirebaseAdapter firebaseAdapter;
 
-    public IssueManager(DBContext dBContext) {
-        this.dBContext = dBContext;
-//        try {
-//            URL testResourceURL = getClass().getClassLoader().getResource("test.arff");
-//            File testFile = new File(testResourceURL.getFile());
-//            Instances instances = new Instances(new BufferedReader(new FileReader(testFile)));
-//            StringToWordVector s = new StringToWordVector();
-//            s.setInputFormat(instances);
-//            instances = Filter.useFilter(instances, s);
-//            DBSCAN dbscan = new DBSCAN();
-//            System.out.println(instances.toString());
-//            dbscan.setEpsilon(1);
-//            dbscan.setMinPoints(1);
-//            dbscan.buildClusterer(instances);
-//            System.out.println(dbscan.toString());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException(e.getMessage());
-//        }
-
-//
-//        Map<Integer, String> trainingData = new HashMap<>();
-//        BufferedReader br = null;
-//        try {
-//            br = new BufferedReader(new FileReader(getClass().getClassLoader().getResource("training_data_content.txt").getFile()));
-//            String currentLine;
-//            while ((currentLine = br.readLine()) != null) {
-//                String[] values = currentLine.split("\\t");
-//                trainingData.put(Integer.parseInt(values[0]), String.join(" ", Arrays.copyOfRange(values, 1, values.length)));
-//            }
-////            for (int i : trainingData.keySet()) {
-////                System.out.println(trainingData.get(i));
-////            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        FastVector training = new FastVector();
-//        training.addElement(new Attribute("dunno", new FastVector()));
-//
-//        Instances dataSet = new Instances("Training_Data", training, 1000);
-//        Instance inst = new Instance(1);
-//        Attribute a1 = dataSet.attribute("dunno");
-//        for (int i : trainingData.keySet()) {
-//            inst.setValue(a1, trainingData.get(i));
-//            dataSet.add(inst);
-//        }
-//
-//        System.out.println(dataSet.toString());
-
+    public IssueManager(FirebaseAdapter firebaseAdapter) {
+        this.firebaseAdapter = firebaseAdapter;
     }
 
     public Issue generateCluster(String input) {
+        try {
+            URL testResourceURL = getClass().getClassLoader().getResource("test.arff");
+            File testFile = new File(testResourceURL.getFile());
+//            Instances instances = new Instances(new BufferedReader(new FileReader(testFile)));
+            Instances instances = new Instances(new StringReader(input));
+            StringToWordVector s = new StringToWordVector();
+            s.setInputFormat(instances);
+            instances = Filter.useFilter(instances, s);
+            DBSCAN dbscan = new DBSCAN();
+            System.out.println(instances.toString());
+            dbscan.setEpsilon(1);
+            dbscan.setMinPoints(1);
+            dbscan.buildClusterer(instances);
+            System.out.println(dbscan.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+
+
+        Map<Integer, String> trainingData = new HashMap<>();
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(getClass().getClassLoader().getResource("training_data_content.txt").getFile()));
+            String currentLine;
+            while ((currentLine = br.readLine()) != null) {
+                String[] values = currentLine.split("\\t");
+                trainingData.put(Integer.parseInt(values[0]), String.join(" ", Arrays.copyOfRange(values, 1, values.length)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FastVector training = new FastVector();
+        training.addElement(new Attribute("dunno", new FastVector()));
+
+        Instances dataSet = new Instances("Training_Data", training, 1000);
+        Instance inst = new Instance(1);
+        Attribute a1 = dataSet.attribute("dunno");
+        for (int i : trainingData.keySet()) {
+            inst.setValue(a1, trainingData.get(i));
+            dataSet.add(inst);
+        }
+
+        System.out.println(dataSet.toString());
+
         return null;
     }
 
     public List<Issue> retrieveIssuesOrderedByPriority() {
-        List<Issue> issues = dBContext.retrieveAllIssues();
+        List<Issue> issues = firebaseAdapter.retrieveAllIssues();
         if (issues != null) {
             issues.sort(Comparator.comparingInt(Issue::getPriority));
             Collections.reverse(issues);
@@ -84,13 +92,13 @@ public class IssueManager {
     }
 
     public List<Question> retrieveUnassignedQuestions() {
-        return  dBContext.retrieveUnassignedQuestions();
+        return  firebaseAdapter.retrieveUnassignedQuestions();
     }
 
     public void addQuestion(Issue issue, Question question) {
         issue.addQuestion(question);
-        dBContext.updateIssue(issue);
-        dBContext.assignQuestion(Long.toString(question.getQuestionID()));
+        firebaseAdapter.updateIssue(issue);
+        firebaseAdapter.assignQuestion(Long.toString(question.getQuestionID()));
     }
 
     public void removeQuestion(Issue issue, Question question) {
@@ -105,16 +113,16 @@ public class IssueManager {
 
         question.setAssignedToIssue(false);
         if (issue.getQuestions().size() == 0) {
-            dBContext.deleteIssue(issue);
+            firebaseAdapter.deleteIssue(issue);
             removeIssueFromAssignedDevelopers(issue);
         } else {
-            dBContext.updateIssue(issue);
-            dBContext.unAssignQuestion(Long.toString(question.getQuestionID()));
+            firebaseAdapter.updateIssue(issue);
+            firebaseAdapter.unAssignQuestion(Long.toString(question.getQuestionID()));
         }
     }
 
     public void deleteIssue(Issue issue) {
-        dBContext.deleteIssue(issue);
+        firebaseAdapter.deleteIssue(issue);
         removeIssueFromAssignedDevelopers(issue);
         if (issue.getQuestions() == null) {
             return;
@@ -128,67 +136,67 @@ public class IssueManager {
                     .setPosts(posts)
                     .setSummary(question.getInformation())
                     .setTitle(question.getQuestion());
-            dBContext.saveNewIssue(newIssue);
+            firebaseAdapter.saveNewIssue(newIssue);
         }
     }
 
     public void assignIssue(Administrator admin, Issue issue, Developer dev) {
         checkAdminAndDeveloperExist(admin, dev);
-        if (dBContext.getIssue(issue.getId()) != null) {
+        if (firebaseAdapter.getIssue(issue.getId()) != null) {
             issue.addAssignee(dev);
-            dBContext.updateIssue(issue);
+            firebaseAdapter.updateIssue(issue);
             dev.addIssue(issue);
-            dBContext.saveUser(dev);
+            firebaseAdapter.saveUser(dev);
         } else {
             throw new IssueNotFoundException();
         }
     }
 
     public void assignIssue(Issue issue, Developer dev) {
-        Developer developer = (Developer) dBContext.getUser(dev.getEmail());
+        Developer developer = (Developer) firebaseAdapter.getUser(dev.getEmail());
         if (dev == null) {
             throw new UserException("Developer not found!");
         }
 
         issue.addAssignee(developer);
         developer.addIssue(issue);
-        dBContext.saveUser(developer);
-        dBContext.updateIssue(issue);
+        firebaseAdapter.saveUser(developer);
+        firebaseAdapter.updateIssue(issue);
     }
 
     public void unAssignIssue(Administrator admin, Issue issue, Developer dev) {
         checkAdminAndDeveloperExist(admin, dev);
-        if (dBContext.getIssue(issue.getId()) != null) {
+        if (firebaseAdapter.getIssue(issue.getId()) != null) {
             issue.removeAssignee(dev);
-            dBContext.updateIssue(issue);
+            firebaseAdapter.updateIssue(issue);
             dev.removeIssue(issue);
-            dBContext.saveUser(dev);
+            firebaseAdapter.saveUser(dev);
         } else {
             throw new IssueNotFoundException();
         }
     }
 
     public void unAssignIssue(Issue issue, Developer dev) {
-        Developer developer = (Developer) dBContext.getUser(dev.getEmail());
+        Developer developer = (Developer) firebaseAdapter.getUser(dev.getEmail());
         if (developer == null) {
             throw new UserException("Developer not found!");
         }
 
         issue.removeAssignee(dev);
-        dBContext.updateIssue(issue);
+        firebaseAdapter.updateIssue(issue);
         dev.removeIssue(issue);
-        dBContext.saveUser(dev);
+        firebaseAdapter.saveUser(dev);
     }
 
     public void resolveIssue(Developer dev, Issue issue) {
-        User developer = dBContext.getUser(dev.getEmail());
+        User developer = firebaseAdapter.getUser(dev.getEmail());
         if (developer == null || developer instanceof Administrator) {
             throw new UserException("Developer not found!");
         }
 
-        if (dBContext.getIssue(issue.getId()) != null) {
+        if (firebaseAdapter.getIssue(issue.getId()) != null) {
             issue.resolve(dev);
-            dBContext.updateIssue(issue);
+            firebaseAdapter.updateIssue(issue);
             removeIssueFromAssignedDevelopers(issue);
         } else {
             throw new IssueNotFoundException();
@@ -197,12 +205,12 @@ public class IssueManager {
     }
 
     private void checkAdminAndDeveloperExist(Administrator admin, Developer dev) {
-        User administrator = dBContext.getUser(admin.getEmail());
+        User administrator = firebaseAdapter.getUser(admin.getEmail());
         if (administrator == null) {
             throw new UserException("Admin not found!");
         }
 
-        User developer = dBContext.getUser(dev.getEmail());
+        User developer = firebaseAdapter.getUser(dev.getEmail());
         if (developer == null) {
             throw new UserException("Developer not found!");
         }
@@ -211,10 +219,10 @@ public class IssueManager {
     private void removeIssueFromAssignedDevelopers(Issue issue) {
         if (issue.getAssignees().size() > 0) {
             for (String email : issue.getAssignees()) {
-                User developer = dBContext.getUser(email);
+                User developer = firebaseAdapter.getUser(email);
                 if (developer != null) {
                     ((Developer) developer).removeIssue(issue);
-                    dBContext.saveUser(developer);
+                    firebaseAdapter.saveUser(developer);
                 }
             }
         }
