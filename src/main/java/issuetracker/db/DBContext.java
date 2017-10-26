@@ -11,13 +11,24 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class FirebaseAdapter {
+/**
+ * Implementation agnostic database access class. Calls to this class should not have to worry about the database
+ * implementation.
+ */
+public class DBContext {
 
-    private static Logger logger = LoggerFactory.getLogger(FirebaseAdapter.class);
+    private static Logger logger = LoggerFactory.getLogger(DBContext.class);
 
+    // Using Firebase as our database
     protected IFirebaseContext db = FirebaseContext.getInstance();
 
-    public FirebaseAdapter registerUser(User newUser){
+    /**
+     * Place a new user object in the database
+     *
+     * @param newUser User object to be wrote to database
+     * @return Returns this object for ease of use. Following "Method Chaining" design pattern.
+     */
+    public DBContext registerUser(User newUser) {
         // Map user to if they're admin or developer.
 
         db.write(db.getRoot().child("mappings")
@@ -31,13 +42,27 @@ public class FirebaseAdapter {
         return this;
     }
 
-    public FirebaseAdapter updateLoginStatus(User user, boolean isLoggedin) {
+    /**
+     * Following Firebases realtime database model a user logging in on our system will propigate to firebase so that
+     * we can see that they're logged in on the entire system.
+     *
+     * @param user       The user object
+     * @param isLoggedin Status of their login
+     * @return Returns this object for ease of use. Following "Method Chaining" design pattern.
+     */
+    public DBContext updateLoginStatus(User user, boolean isLoggedin) {
         db.write(db.getRoot().child("users").child(user.getEmail().hashCode() + "").child("loggedIn"), isLoggedin);
         return this;
     }
 
+    /**
+     * Get a user corresponding to this email.
+     *
+     * @param email Email of the user
+     * @return User object representing the actions and information related to this user
+     */
     public User getUser(String email) {
-        // Check mapping for this email
+        // Check mapping for this email using the hashcode of this email address as the id
         DatabaseReference mappingRef = db.getRoot()
                 .child("mappings")
                 .child(email.hashCode() + "");
@@ -49,6 +74,8 @@ public class FirebaseAdapter {
             return null;
         }
 
+        // Once we've discovered weather this user is an administrator or developer we can then type the user to a
+        // developer or admin.
         DatabaseReference userRef = db.getRoot()
                 .child("users")
                 .child(email.hashCode() + "");
@@ -64,6 +91,11 @@ public class FirebaseAdapter {
         }
     }
 
+    /**
+     * Save a new user to the database
+     *
+     * @param user User to save.
+     */
     public void saveUser(User user) {
         DatabaseReference userRef = db.getRoot()
                 .child("users")
@@ -72,6 +104,13 @@ public class FirebaseAdapter {
         db.write(userRef, user);
     }
 
+
+    /**
+     * Retrieve an issue from the database using the id
+     *
+     * @param issueID Unique ID of the issue.
+     * @return <code>Issue</code> object retrieved from the database.
+     */
     public Issue getIssue(String issueID) {
         DatabaseReference issuesRef = db.getRoot()
                 .child("issues")
@@ -85,14 +124,21 @@ public class FirebaseAdapter {
         return issue;
     }
 
+    /**
+     * Save a new <code>Issue</code> object to the database.
+     *
+     * @param issue Issue object to save to database.
+     */
     public void saveNewIssue(Issue issue) {
         DatabaseReference issuesRef;
         if (issue.getId() == null) {
+            // If an issue has no id then make a new issue object.
             issuesRef = db.getRoot()
                     .child("issues")
                     .push();
             issue.setId(issuesRef.getKey());
         } else {
+            // If an issue object has the same id rewrite it.
             issuesRef = db.getRoot()
                     .child("issues")
                     .child(issue.getId());
@@ -100,6 +146,11 @@ public class FirebaseAdapter {
         db.write(issuesRef, issue);
     }
 
+    /**
+     * Save a question (Forum post) to the database.
+     *
+     * @param question <code>Question</code> object relating to a forum post.
+     */
     public void saveNewQuestion(Question question) {
         DatabaseReference questionsRef;
 
@@ -112,12 +163,20 @@ public class FirebaseAdapter {
         db.write(questionsRef, question);
     }
 
+    /**
+     * Get a question (forum post) from the database.
+     *
+     * @param questionID Unique ID pertaining to the question
+     * @return <code>Question</code> constructed from the database information.
+     */
     public Question getQuestion(String questionID) {
         DatabaseReference questionsRef = db.getRoot()
                 .child("questions")
                 .child(questionID);
 
+        // Try and get a question from the parent label "Questions".
         Question question = db.read(questionsRef, Question.class);
+        // If there is no question in this parent object it must be in the "Unassigned" child label.
         if (question == null) {
             questionsRef = db.getRoot()
                     .child("questions")
@@ -134,6 +193,11 @@ public class FirebaseAdapter {
         return question;
     }
 
+    /**
+     * Mark a question as assigned.
+     *
+     * @param questionID the question id to be assigned.
+     */
     public void assignQuestion(String questionID) {
         DatabaseReference questionsRef = db.getRoot().child("questions").child("unassigned").child(questionID);
 
@@ -148,6 +212,11 @@ public class FirebaseAdapter {
         }
     }
 
+    /**
+     * Mark a question as unassigned.
+     *
+     * @param questionID the id of a question to be marked.
+     */
     public void unAssignQuestion(String questionID) {
         DatabaseReference questionsRef = db.getRoot().child("questions").child(questionID);
 
@@ -162,6 +231,11 @@ public class FirebaseAdapter {
         }
     }
 
+    /**
+     * Update an issue in the database to the version currently in the system.
+     *
+     * @param issue Issue to be updated
+     */
     public void updateIssue(Issue issue) {
         DatabaseReference issuesRef = db.getRoot()
                 .child("issues")
@@ -169,6 +243,11 @@ public class FirebaseAdapter {
         db.write(issuesRef, issue);
     }
 
+    /**
+     * Remove an issue from the database.
+     *
+     * @param issue Issue to be removed.
+     */
     public void deleteIssue(Issue issue) {
         DatabaseReference issuesRef = db.getRoot()
                 .child("issues")
@@ -176,12 +255,22 @@ public class FirebaseAdapter {
         db.deleteValue(issuesRef);
     }
 
+    /**
+     * Get all the issues in the system.
+     *
+     * @return List of all issues in the system.
+     */
     public List<Issue> retrieveAllIssues() {
         DatabaseReference issuesRef = db.getRoot()
                 .child("issues");
         return db.readChildren(issuesRef, Issue.class);
     }
 
+    /**
+     * Get all unassigned issues in the  system
+     *
+     * @return List of all unassigned issues in the system.
+     */
     public List<Question> retrieveUnassignedQuestions() {
         DatabaseReference questionsRef = db.getRoot()
                 .child("questions").child("unassigned");

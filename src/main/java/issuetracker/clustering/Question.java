@@ -2,9 +2,7 @@ package issuetracker.clustering;
 
 import issuetracker.exception.InvalidQuestionFormatException;
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import weka.core.converters.CSVLoader;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -12,15 +10,49 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the Question model
+ */
 public class Question implements Comparable<Question>{
 
+    /**
+     * Stores the UID of this Question
+     */
     private long questionID;
+
+    /**
+     * Stores the question of this Question
+     */
     private String question;
+
+    /**
+     * Stores the date this Question was asked
+     */
     private String date;
+
+    /**
+     * Stores the author of this Question
+     */
     private String author;
+
+    /**
+     * Stores the forum ID associated with this Question
+     */
     private long forumID;
+
+    /**
+     * Stores the summary of this Question
+     */
     private String information;
+
+    /**
+     * Stores the URL of this Question
+     */
     private String url;
+
+    /**
+     * True if this Question is associated with an Issue
+     */
     private boolean isAssignedToIssue;
 
     public static String toARFF(List<Question> questions) {

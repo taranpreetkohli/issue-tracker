@@ -1,15 +1,13 @@
 package issuetracker;
 
 import issuetracker.authentication.*;
-import issuetracker.cli.view.Command;
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 import issuetracker.exception.IncorrectPasswordException;
 import issuetracker.exception.UserException;
 import org.junit.*;
 import org.mockito.Mockito;
 
 import java.util.InvalidPropertiesFormatException;
-import java.util.Map;
 
 public class AuthenticationManagerTest {
     private IAuthenticationManager authManager;
@@ -18,7 +16,7 @@ public class AuthenticationManagerTest {
     private String existingEmail;
     private String existingPassword;
     private User me;
-    private FirebaseAdapter db;
+    private DBContext db;
 
 
     @BeforeClass
@@ -31,7 +29,7 @@ public class AuthenticationManagerTest {
 
     @Before
     public void setUp() {
-        db = Mockito.mock(FirebaseAdapter.class);
+        db = Mockito.mock(DBContext.class);
         authManager = new AuthenticationManager(db);
         try {
             Mockito.doReturn(new Administrator("admin@gmail.com", "adminPassword")).when(db).getUser("admin@gmail.com");
@@ -47,7 +45,7 @@ public class AuthenticationManagerTest {
 
     @After
     public void tearDown() {
-        db = Mockito.mock(FirebaseAdapter.class);
+        db = Mockito.mock(DBContext.class);
     }
 
     @Test

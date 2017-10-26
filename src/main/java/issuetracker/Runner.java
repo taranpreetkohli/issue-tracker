@@ -5,7 +5,7 @@ import issuetracker.cli.CLIManager;
 import issuetracker.clustering.Issue;
 import issuetracker.clustering.IssueManager;
 import issuetracker.clustering.Question;
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +18,10 @@ public class Runner {
     private static Logger logger = LoggerFactory.getLogger(Runner.class);
 
     public static void main(String[] args) throws IOException {
+        //Uncomment to populate database with sample data
 //        setUpIssuesQuestions();
 
-        new CLIManager(new AuthenticationManager(new FirebaseAdapter()), new IssueManager(new FirebaseAdapter())).loginCLI();
+        new CLIManager(new AuthenticationManager(new DBContext()), new IssueManager(new DBContext())).loginCLI();
     }
 
     private static void setUpIssuesQuestions() {
@@ -111,31 +112,33 @@ public class Runner {
         Issue issue6 = new Issue().setId("6").setTitle("Issue 6").setSummary("Pellentesque convallis mi eu ex eleifend porta. Donec ut nisl ligula. Nam at leo consequat, feugiat dolor non, laoreet nisi. Vestibulum nec euismod diam, ac cursus tellus. Nunc ut feugiat enim. Vestibulum ultrices faucibus lacinia.").setUsers(users1).setPosts(posts6);
 
 
-        FirebaseAdapter firebaseAdapter = new FirebaseAdapter();
+        DBContext dBContext = new DBContext();
 
-        firebaseAdapter.saveNewQuestion(question1);
-        firebaseAdapter.saveNewQuestion(question2);
-        firebaseAdapter.saveNewQuestion(question3);
-        firebaseAdapter.saveNewQuestion(question4);
-        firebaseAdapter.saveNewQuestion(question5);
-        firebaseAdapter.saveNewQuestion(question6);
-        firebaseAdapter.saveNewQuestion(question7);
-        firebaseAdapter.saveNewQuestion(question8);
-        firebaseAdapter.saveNewQuestion(question9);
-        firebaseAdapter.saveNewQuestion(question10);
-        firebaseAdapter.saveNewQuestion(question11);
-        firebaseAdapter.saveNewQuestion(question12);
-        firebaseAdapter.saveNewQuestion(question13);
-        firebaseAdapter.saveNewQuestion(question14);
-        firebaseAdapter.saveNewQuestion(question15);
-        firebaseAdapter.saveNewQuestion(question16);
+        //Save questions to database
+        dBContext.saveNewQuestion(question1);
+        dBContext.saveNewQuestion(question2);
+        dBContext.saveNewQuestion(question3);
+        dBContext.saveNewQuestion(question4);
+        dBContext.saveNewQuestion(question5);
+        dBContext.saveNewQuestion(question6);
+        dBContext.saveNewQuestion(question7);
+        dBContext.saveNewQuestion(question8);
+        dBContext.saveNewQuestion(question9);
+        dBContext.saveNewQuestion(question10);
+        dBContext.saveNewQuestion(question11);
+        dBContext.saveNewQuestion(question12);
+        dBContext.saveNewQuestion(question13);
+        dBContext.saveNewQuestion(question14);
+        dBContext.saveNewQuestion(question15);
+        dBContext.saveNewQuestion(question16);
 
-        firebaseAdapter.saveNewIssue(issue1);
-        firebaseAdapter.saveNewIssue(issue2);
-        firebaseAdapter.saveNewIssue(issue3);
-        firebaseAdapter.saveNewIssue(issue4);
-        firebaseAdapter.saveNewIssue(issue5);
-        firebaseAdapter.saveNewIssue(issue6);
+        //Save issues to database
+        dBContext.saveNewIssue(issue1);
+        dBContext.saveNewIssue(issue2);
+        dBContext.saveNewIssue(issue3);
+        dBContext.saveNewIssue(issue4);
+        dBContext.saveNewIssue(issue5);
+        dBContext.saveNewIssue(issue6);
     }
 
 }

@@ -5,9 +5,14 @@ import issuetracker.clustering.Issue;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the Developer model
+ */
 public class Developer extends User {
 
-    public final String value = "Dev";
+    /**
+     * Stores the list of issue IDs associated with the issues this Developer is assigned to
+     */
     private List<String> issues;
 
     public Developer() {

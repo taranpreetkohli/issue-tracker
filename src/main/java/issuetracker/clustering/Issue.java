@@ -9,14 +9,44 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the Issue model
+ */
 public class Issue {
 
+    /**
+     * Stores the UID of this Issue
+     */
     private String id;
+
+    /**
+     * Stores the title of this Issue
+     */
     private String title;
+
+    /**
+     * Stores the Questions associated with this Issue
+     */
     private List<Question> posts;
+
+    /**
+     * Stores the Users associated with this Issue
+     */
     private List<String> users;
+
+    /**
+     * Stores the summary of this Issue
+     */
     private String summary;
+
+    /**
+     * Stores the list of developers assigned to this Issue
+     */
     private List<String> assignees;
+
+    /**
+     * Stores the status of this Issue
+     */
     private IssueStatus status;
 
     public Issue() {
@@ -77,6 +107,12 @@ public class Issue {
         return this;
     }
 
+    /**
+     * Adds a developer to this Issue, so that they're assigned to this Issue
+     *
+     * @param developer
+     * @return
+     */
     public Issue addAssignee(Developer developer) {
         assignees.add(developer.getEmail());
         if (status == IssueStatus.UNASSIGNED) {
@@ -85,6 +121,11 @@ public class Issue {
         return this;
     }
 
+    /**
+     * Removes the Developer assigned to this issue
+     * @param developer
+     * @return
+     */
     public Issue removeAssignee(Developer developer) {
         if (assignees.contains(developer.getEmail())) {
             assignees.remove(developer.getEmail());
@@ -94,6 +135,11 @@ public class Issue {
         return this;
     }
 
+    /**
+     * Resolves the issue
+     * @param developer
+     * @return
+     */
     public Issue resolve(Developer developer) {
         if (status == IssueStatus.RESOLVED) {
             throw new IssueAlreadyResolvedException("This issue cannot be resolved again!");
@@ -162,6 +208,9 @@ public class Issue {
         this.status = status;
     }
 
+    /**
+     * IssueStatus enumeration describing the current status of an Issue
+     */
     public enum IssueStatus {
         UNASSIGNED,
         RESOLVED,

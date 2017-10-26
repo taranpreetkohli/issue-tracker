@@ -1,30 +1,50 @@
 package issuetracker.authentication;
 
+import issuetracker.db.DBContext;
 import issuetracker.exception.IncorrectPasswordException;
 import issuetracker.exception.UserException;
-import issuetracker.db.FirebaseAdapter;
 
 import java.util.InvalidPropertiesFormatException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Handles Authentication of users.
+ */
 public class AuthenticationManager implements IAuthenticationManager {
 
     public final Pattern VALID_EMAIL_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     private User currentUser;
 
-    private FirebaseAdapter firebaseAdapter;
+    private DBContext dBContext;
 
-    public AuthenticationManager(FirebaseAdapter firebaseAdapter) {
-        this.firebaseAdapter = firebaseAdapter;
+    /**
+     * Authentication manager is responsible for handling the creation of User objects and child classes.
+     *
+     * @param dBContext The Database context currently used by the system
+     * @see User
+     * @see Developer
+     * @see Administrator
+     */
+    public AuthenticationManager(DBContext dBContext) {
+        this.dBContext = dBContext;
     }
 
+    /**
+     * Allows a user to login
+     *
+     * @param email    assigned to the user account
+     * @param password assigned to the user account
+     * @return User model representing the logged-in user
+     * @throws InvalidPropertiesFormatException
+     * @throws InstantiationException
+     */
     @Override
     public User login(String email, String password) throws InvalidPropertiesFormatException, InstantiationException {
         isEmailValid(email);
 
-        User retrievedUser = firebaseAdapter.getUser(email);
+        User retrievedUser = dBContext.getUser(email);
 
         if (retrievedUser == null) {
             throw new InstantiationException("User does not exist");
@@ -35,12 +55,19 @@ public class AuthenticationManager implements IAuthenticationManager {
         }
 
         currentUser = retrievedUser;
-        firebaseAdapter.updateLoginStatus(currentUser, true);
+        dBContext.updateLoginStatus(currentUser, true);
         currentUser.setLoggedIn(true);
 
         return currentUser;
     }
 
+    /**
+     * Allows an administrator to add a new developer to the database
+     * @param email The email assigned to this user
+     * @param password The password assigned to this user
+     * @return User model representing the newly created Developer
+     * @throws InvalidPropertiesFormatException
+     */
     @Override
     public User addUser(String email, String password) throws InvalidPropertiesFormatException {
 
@@ -48,12 +75,12 @@ public class AuthenticationManager implements IAuthenticationManager {
             isPasswordValid(password);
             isEmailValid(email);
 
-            if (firebaseAdapter.getUser(email) != null) {
+            if (dBContext.getUser(email) != null) {
                 throw new UserException("User already exists");
             }
 
             User newUser = new Developer(email, password);
-            firebaseAdapter.registerUser(newUser);
+            dBContext.registerUser(newUser);
 
             return newUser;
         } else {
@@ -61,11 +88,15 @@ public class AuthenticationManager implements IAuthenticationManager {
         }
     }
 
+    /**
+     * Allows a user to logout from the system
+     * @return true if operation is successful
+     */
     @Override
     public boolean logout() {
         if (currentUser != null) {
             String email = currentUser.getEmail();
-            firebaseAdapter.updateLoginStatus(firebaseAdapter.getUser(email), false);
+            dBContext.updateLoginStatus(dBContext.getUser(email), false);
             currentUser.setLoggedIn(false);
             currentUser = null;
 
@@ -75,6 +106,13 @@ public class AuthenticationManager implements IAuthenticationManager {
         }
     }
 
+    /**
+     * Ensure that an email address that was entered is actually in an email format.
+     *
+     * @param email email passed to the Authentication Manager
+     * @return true if the email passes, throws an exception otherwise
+     * @throws InvalidPropertiesFormatException
+     */
     private boolean isEmailValid(String email) throws InvalidPropertiesFormatException {
         Matcher matcher = VALID_EMAIL_REGEX.matcher(email);
         if (matcher.find()) {
@@ -84,6 +122,13 @@ public class AuthenticationManager implements IAuthenticationManager {
         }
     }
 
+    /**
+     * Ensure that the password given follows a convention. In this case more than 8 characters.
+     *
+     * @param password the password given in by the local systme
+     * @return true if password is valid
+     * @throws InvalidPropertiesFormatException
+     */
     private boolean isPasswordValid(String password) throws InvalidPropertiesFormatException {
         if (password.length() < 8) {
             throw new InvalidPropertiesFormatException("Password is less than length of eight characters.");
@@ -92,16 +137,23 @@ public class AuthenticationManager implements IAuthenticationManager {
         }
     }
 
-    public User getCurrentUser(){
+    /**
+     * Get the user who is currently <i>Logged in</i> to the AuthenticationManager and is there fore the user accessing
+     * the system.
+     *
+     * @return
+     */
+    public User getCurrentUser() {
         return this.currentUser;
-    }
-    @Override
-    public FirebaseAdapter getDb() {
-        return firebaseAdapter;
     }
 
     @Override
-    public void setDb(FirebaseAdapter db) {
-        this.firebaseAdapter = db;
+    public DBContext getDb() {
+        return dBContext;
+    }
+
+    @Override
+    public void setDb(DBContext db) {
+        this.dBContext = db;
     }
 }

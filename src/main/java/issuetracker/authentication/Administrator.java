@@ -1,5 +1,8 @@
 package issuetracker.authentication;
 
+/**
+ * Represents the Administrator model
+ */
 public class Administrator extends User{
 
     public Administrator() {

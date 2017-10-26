@@ -5,12 +5,15 @@ import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
 import issuetracker.cli.CLIManager;
 import issuetracker.clustering.Issue;
-import issuetracker.db.FirebaseAdapter;
+import issuetracker.db.DBContext;
 
 import java.util.List;
 
+/**
+ * Handles logic for viewing and assigning issues when logged in as a developer
+ */
 public class DViewCommand extends Command{
-    private FirebaseAdapter firebaseAdapter = new FirebaseAdapter();
+    private DBContext dBContext = new DBContext();
 
     @Override
     public void run(AuthenticationManager authenticationManager, CLIManager cliManager) {
@@ -18,7 +21,7 @@ public class DViewCommand extends Command{
             cliManager.showMenu();
         }
 
-        Issue issue = firebaseAdapter.getIssue(userInput);
+        Issue issue = dBContext.getIssue(userInput);
 
         if (issue == null) {
             System.out.println("Issue with ID: " + userInput + " does not exist");
@@ -30,6 +33,7 @@ public class DViewCommand extends Command{
 
         List<String> assignedUsers = issue.getAssignees();
 
+        //Displays issue details as well as who is currently assigned
         if (!assignedUsers.isEmpty()) {
             System.out.println("Current Assignees: ");
             for (String user : assignedUsers) {
@@ -52,6 +56,7 @@ public class DViewCommand extends Command{
 
         String userCommand = cliManager.retrieveUserInput();
 
+        //Developer can assign themselves to the issue or go back
         switch (userCommand.toUpperCase()) {
             case "ASSIGN":
                 cliManager.getIssueManager().assignIssue(issue, (Developer) currentUser);
