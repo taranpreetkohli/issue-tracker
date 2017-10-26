@@ -1,8 +1,8 @@
 package issuetracker.authentication;
 
+import issuetracker.db.FirebaseAdapter;
 import issuetracker.exception.IncorrectPasswordException;
 import issuetracker.exception.UserException;
-import issuetracker.db.DBContext;
 
 import java.util.InvalidPropertiesFormatException;
 import java.util.regex.Matcher;
@@ -17,7 +17,7 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     private User currentUser;
 
-    private DBContext dBContext;
+    private FirebaseAdapter dBContext;
 
     /**
      * Authentication manager is responsible for handling the creation of User objects and child classes.
@@ -27,7 +27,7 @@ public class AuthenticationManager implements IAuthenticationManager {
      * @see Developer
      * @see Administrator
      */
-    public AuthenticationManager(DBContext dBContext) {
+    public AuthenticationManager(FirebaseAdapter dBContext) {
         this.dBContext = dBContext;
     }
 
@@ -128,12 +128,12 @@ public class AuthenticationManager implements IAuthenticationManager {
     }
 
     @Override
-    public DBContext getDb() {
+    public FirebaseAdapter getDb() {
         return dBContext;
     }
 
     @Override
-    public void setDb(DBContext db) {
+    public void setDb(FirebaseAdapter db) {
         this.dBContext = db;
     }
 }

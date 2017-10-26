@@ -5,7 +5,7 @@ import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
 import issuetracker.cli.CLIManager;
 import issuetracker.clustering.Issue;
-import issuetracker.db.DBContext;
+import issuetracker.db.FirebaseAdapter;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * Handles logic for viewing and assigning issues when logged in as a developer
  */
 public class DViewCommand extends Command{
-    private DBContext dBContext = new DBContext();
+    private FirebaseAdapter dBContext = new FirebaseAdapter();
 
     @Override
     public void run(AuthenticationManager authenticationManager, CLIManager cliManager) {

@@ -5,7 +5,7 @@ import issuetracker.authentication.Developer;
 import issuetracker.clustering.Issue;
 import issuetracker.clustering.IssueManager;
 import issuetracker.clustering.Question;
-import issuetracker.db.DBContext;
+import issuetracker.db.FirebaseAdapter;
 import issuetracker.exception.DeveloperNotAssignedException;
 import issuetracker.exception.IssueAlreadyResolvedException;
 import org.junit.Before;
@@ -35,7 +35,7 @@ public class IssueManagerTest {
     private IssueManager issueManager;
 
     @Mock
-    private DBContext dBContext;
+    private FirebaseAdapter dBContext;
 
     @Mock
     private Administrator admin;

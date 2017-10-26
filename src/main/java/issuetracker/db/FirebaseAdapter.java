@@ -15,9 +15,9 @@ import java.util.List;
  * Implementation agnostic database access class. Calls to this class should not have to worry about the database
  * implementation.
  */
-public class DBContext {
+public class FirebaseAdapter {
 
-    private static Logger logger = LoggerFactory.getLogger(DBContext.class);
+    private static Logger logger = LoggerFactory.getLogger(FirebaseAdapter.class);
 
     // Using Firebase as our database
     protected IFirebaseContext db = FirebaseContext.getInstance();
@@ -28,7 +28,7 @@ public class DBContext {
      * @param newUser User object to be wrote to database
      * @return Returns this object for ease of use. Following "Method Chaining" design pattern.
      */
-    public DBContext registerUser(User newUser) {
+    public FirebaseAdapter registerUser(User newUser) {
         // Map user to if they're admin or developer.
 
         db.write(db.getRoot().child("mappings")
@@ -50,7 +50,7 @@ public class DBContext {
      * @param isLoggedin Status of their login
      * @return Returns this object for ease of use. Following "Method Chaining" design pattern.
      */
-    public DBContext updateLoginStatus(User user, boolean isLoggedin) {
+    public FirebaseAdapter updateLoginStatus(User user, boolean isLoggedin) {
         db.write(db.getRoot().child("users").child(user.getEmail().hashCode() + "").child("loggedIn"), isLoggedin);
         return this;
     }

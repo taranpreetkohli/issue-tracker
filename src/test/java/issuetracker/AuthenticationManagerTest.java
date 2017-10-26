@@ -1,7 +1,7 @@
 package issuetracker;
 
 import issuetracker.authentication.*;
-import issuetracker.db.DBContext;
+import issuetracker.db.FirebaseAdapter;
 import issuetracker.exception.IncorrectPasswordException;
 import issuetracker.exception.UserException;
 import org.junit.*;
@@ -16,7 +16,7 @@ public class AuthenticationManagerTest {
     private String existingEmail;
     private String existingPassword;
     private User me;
-    private DBContext db;
+    private FirebaseAdapter db;
 
 
     @BeforeClass
@@ -29,7 +29,7 @@ public class AuthenticationManagerTest {
 
     @Before
     public void setUp() {
-        db = Mockito.mock(DBContext.class);
+        db = Mockito.mock(FirebaseAdapter.class);
         authManager = new AuthenticationManager(db);
         try {
             Mockito.doReturn(new Administrator("admin@gmail.com", "adminPassword")).when(db).getUser("admin@gmail.com");
@@ -45,7 +45,7 @@ public class AuthenticationManagerTest {
 
     @After
     public void tearDown() {
-        db = Mockito.mock(DBContext.class);
+        db = Mockito.mock(FirebaseAdapter.class);
     }
 
     @Test

@@ -5,7 +5,7 @@ import issuetracker.authentication.AuthenticationManager;
 import issuetracker.authentication.Developer;
 import issuetracker.cli.CLIManager;
 import issuetracker.clustering.Issue;
-import issuetracker.db.DBContext;
+import issuetracker.db.FirebaseAdapter;
 import issuetracker.exception.UserException;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  * Handles logic for viewing and assigning issues when logged in as an admin
  */
 public class AViewCommand extends Command{
-    private DBContext dBContext = new DBContext();
+    private FirebaseAdapter dBContext = new FirebaseAdapter();
 
     @Override
     public void run(AuthenticationManager authenticationManager, CLIManager cliManager) {

@@ -5,7 +5,7 @@ import issuetracker.authentication.Developer;
 import issuetracker.authentication.User;
 import issuetracker.cli.CLIManager;
 import issuetracker.clustering.Issue;
-import issuetracker.db.DBContext;
+import issuetracker.db.FirebaseAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class DManageCommand extends Command{
     private final List<String> validDevCommand = new ArrayList<>(Arrays.asList("unassign", "close"));
-    private DBContext dBContext = new DBContext();
+    private FirebaseAdapter dBContext = new FirebaseAdapter();
 
 
     @Override
